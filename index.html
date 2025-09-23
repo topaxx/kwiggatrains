@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yoga Routine Builder</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Hoofdscherm - Routine Lijst -->
+        <div id="main-screen" class="screen active">
+            <header>
+                <h1>My Yoga Routines</h1>
+            </header>
+            <div id="routines-list" class="routines-container">
+                <!-- Routines worden hier dynamisch toegevoegd -->
+            </div>
+            <button id="add-routine-btn" class="add-button">
+                <span>+</span>
+                Add New Routine
+            </button>
+            <button id="show-history-btn" class="history-button">
+                📊 Show History
+            </button>
+        </div>
+
+        <!-- Routine Builder Scherm -->
+        <div id="routine-builder" class="screen">
+            <header>
+                <button id="back-from-builder" class="back-button">← Back</button>
+                <h1>Build Routine</h1>
+            </header>
+            
+            <!-- Stap 1: Routine naam -->
+            <div id="name-step" class="builder-step active">
+                <div class="step-content">
+                    <input type="text" id="routine-name-input" placeholder="Routine name..." maxlength="30">
+                    <div class="step-buttons">
+                        <button id="cancel-routine" class="cancel-button">Cancel</button>
+                        <button id="next-to-poses" class="next-button" disabled>Next</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stap 2: Poses selecteren -->
+            <div id="poses-step" class="builder-step">
+                <div class="step-content">
+                    
+                    <!-- Routine poses lijst -->
+                    <div class="routine-poses-section">
+                        <div class="routine-poses-header">
+                            <h4>My Routine</h4>
+                        </div>
+                        <div id="routine-poses-list" class="routine-poses-list">
+                            <p class="empty-message">Add poses to your routine</p>
+                        </div>
+                    </div>
+
+                    <!-- Collapsible poses grid -->
+                    <div class="poses-selection-section">
+                        <div class="poses-selection-header" id="poses-selection-header">
+                            <h4>Yoga Poses</h4>
+                            <button id="toggle-poses-grid" class="toggle-button rotated">
+                                <span id="toggle-icon">▼</span>
+                            </button>
+                        </div>
+                        <div id="poses-grid-container" class="poses-grid-container expanded">
+                            <div id="poses-grid" class="poses-grid">
+                                <!-- Yoga poses worden hier dynamisch toegevoegd -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-buttons">
+                        <button id="back-to-name" class="back-step-button">← Back</button>
+                        <button id="save-routine-btn" class="save-button" disabled>Save Routine</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tijd selectie popup -->
+        <div id="time-selection-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-pose-name">Select time</h3>
+                    <button id="close-modal" class="close-button">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="time-options">
+                        <div class="time-option" data-time="30">30s</div>
+                        <div class="time-option" data-time="60">1m</div>
+                        <div class="time-option" data-time="120">2m</div>
+                        <div class="time-option" data-time="180">3m</div>
+                        <div class="time-option" data-time="300">5m</div>
+                        <div class="time-option" data-time="600">10m</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Verwijder bevestiging popup -->
+        <div id="delete-confirmation-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Delete Routine</h3>
+                    <button id="close-delete-modal" class="close-button">×</button>
+                </div>
+                <div class="modal-body">
+                    <p id="delete-confirmation-text">Weet je zeker dat je deze routine wilt verwijderen?</p>
+                    <div class="modal-buttons">
+                        <button id="cancel-delete" class="cancel-button">Cancel</button>
+                        <button id="confirm-delete" class="delete-button">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Routine voltooid popup -->
+        <div id="completion-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>🎉 Routine Complete!</h3>
+                    <button id="close-completion-modal" class="close-button">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-buttons">
+                        <button id="close-completion" class="next-button">Back to Overview</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Scherm -->
+        <div id="history-screen" class="screen">
+            <header>
+                <button id="back-from-history" class="back-button">← Back</button>
+                <h1>📊 History</h1>
+            </header>
+            
+            <div class="history-content">
+                <div id="history-stats" class="history-stats">
+                    <!-- Stats worden hier dynamisch toegevoegd -->
+                </div>
+                
+                <div id="history-list" class="history-list">
+                    <!-- History entries worden hier dynamisch toegevoegd -->
+                </div>
+                
+                <div class="history-actions">
+                    <button id="export-history-btn" class="export-history-button">📥 Export History</button>
+                    <button id="import-history-btn" class="import-history-button">📤 Import History</button>
+                    <button id="clear-history-btn" class="clear-history-button">Clear History</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clear History Confirmation Modal -->
+        <div id="clear-history-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Clear History</h3>
+                    <button id="close-clear-history-modal" class="close-button">×</button>
+                </div>
+                <div class="modal-body">
+                    <p id="clear-history-text">Are you sure you want to clear all history? This cannot be undone.</p>
+                    <div class="modal-buttons">
+                        <button id="cancel-clear-history" class="cancel-button">Cancel</button>
+                        <button id="confirm-clear-history" class="delete-button">Clear History</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Import History Modal -->
+        <div id="import-history-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Import History</h3>
+                    <button id="close-import-history-modal" class="close-button">×</button>
+                </div>
+                <div class="modal-body">
+                    <p>Select a JSON file to import history data.</p>
+                    <input type="file" id="import-file-input" accept=".json" style="display: none;">
+                    <div class="file-input-area" id="file-input-area">
+                        <div class="file-input-content">
+                            <div class="file-input-icon">📁</div>
+                            <div class="file-input-text">Click to select JSON file</div>
+                            <div class="file-input-hint">or drag and drop</div>
+                        </div>
+                    </div>
+                    <div class="modal-buttons">
+                        <button id="cancel-import-history" class="cancel-button">Cancel</button>
+                        <button id="confirm-import-history" class="next-button" disabled>Import History</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Import Success Modal -->
+        <div id="import-success-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>✅ Import Successful</h3>
+                    <button id="close-import-success-modal" class="close-button">×</button>
+                </div>
+                <div class="modal-body">
+                    <p id="import-success-text">History imported successfully!</p>
+                    <div class="modal-buttons">
+                        <button id="close-import-success" class="next-button">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Routine Uitvoering Scherm -->
+        <div id="routine-execution" class="screen">
+            <header>
+                <button id="back-from-execution" class="back-button">← Back</button>
+                <h1 id="execution-routine-name">Routine</h1>
+            </header>
+            
+            <div class="execution-content">
+                <div class="pose-display">
+                    <img id="current-pose-image" src="" alt="Huidige pose">
+                    <h2 id="current-pose-name">Pose Naam</h2>
+                </div>
+                
+                <div class="timer-section">
+                    <div class="timer-circle">
+                        <div class="timer-text">
+                            <span id="timer-display">00:00</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="execution-controls">
+                    <button id="previous-pose-btn" class="control-button">◀</button>
+                    <button id="pause-resume-btn" class="control-button">⏸</button>
+                    <button id="next-pose-btn" class="control-button">▶</button>
+                </div>
+
+                <div class="pose-counter">
+                    <span id="pose-counter">1 / 5</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

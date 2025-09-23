@@ -1,0 +1,77 @@
+[
+  {
+    "id": 1,
+    "name": "Ankle Stretch",
+    "image": "Yoga Poses/anklestretch_pose.png"
+  },
+  {
+    "id": 2,
+    "name": "Bridge Pose",
+    "image": "Yoga Poses/bridge_pose.png"
+  },
+  {
+    "id": 3,
+    "name": "Butterfly Pose",
+    "image": "Yoga Poses/butterfly_pose.png"
+  },
+  {
+    "id": 4,
+    "name": "Camel Pose",
+    "image": "Yoga Poses/camel_pose.png"
+  },
+  {
+    "id": 5,
+    "name": "Caterpillar Pose",
+    "image": "Yoga Poses/catterpilar_pose.png"
+  },
+  {
+    "id": 6,
+    "name": "Child's Pose",
+    "image": "Yoga Poses/childs_pose.png"
+  },
+  {
+    "id": 7,
+    "name": "Dangling Pose",
+    "image": "Yoga Poses/dangling_pose.png"
+  },
+  {
+    "id": 8,
+    "name": "Downward Facing Dog",
+    "image": "Yoga Poses/downwardfacingdog_pose.png"
+  },
+  {
+    "id": 9,
+    "name": "Frog Pose",
+    "image": "Yoga Poses/frog_pose.png"
+  },
+  {
+    "id": 10,
+    "name": "Half Butterfly",
+    "image": "Yoga Poses/halfbutterfly_pose.png"
+  },
+  {
+    "id": 11,
+    "name": "Happy Baby",
+    "image": "Yoga Poses/happybaby_pose.png"
+  },
+  {
+    "id": 12,
+    "name": "Saddle Pose",
+    "image": "Yoga Poses/saddle_pose.png"
+  },
+  {
+    "id": 13,
+    "name": "Seal Pose",
+    "image": "Yoga Poses/seal_pose.png"
+  },
+  {
+    "id": 14,
+    "name": "Sphinx Pose",
+    "image": "Yoga Poses/sphinx_pose.png"
+  },
+  {
+    "id": 15,
+    "name": "Swan Pose",
+    "image": "Yoga Poses/swan_pose.png"
+  }
+]
