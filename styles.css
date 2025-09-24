@@ -64,7 +64,7 @@ header h1 {
 }
 
 .routine-item {
-    background: linear-gradient(135deg, #556bcc 0%, #ae78e4 100%);
+    background: #556bcc;
     border-radius: 8px;
     padding: 25px 20px;
     margin-bottom: 15px;
@@ -618,6 +618,28 @@ header h1 {
 .modal-buttons .delete-button:hover {
     background: #c53030;
     /* Remove hover animation */
+}
+
+/* Rename modal specific styling */
+#rename-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    transition: border-color 0.2s ease;
+}
+
+#rename-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* White star icon for paused state */
+#pause-resume-btn[data-state="paused"] {
+    color: white;
 }
 
 /* Routine Uitvoering styling */

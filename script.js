@@ -39,6 +39,7 @@ let timer = null;
 let isPaused = false;
 let currentStep = 'name'; // 'name' or 'poses'
 let routineToDelete = null;
+let routineToRename = null;
 let currentTimeLeft = 0; // Track remaining time for pause/resume
 let completionLog = JSON.parse(localStorage.getItem('yogaCompletionLog') || '[]');
 let bellSound = null; // Audio object for bell sound
@@ -93,6 +94,24 @@ function stopAllSounds() {
     if (bowlSound && !bowlSound.paused) {
         fadeOutSound(bowlSound, fadeOutSteps, stepDuration);
     }
+}
+
+// Stop routine execution completely
+function stopRoutineExecution() {
+    // Clear timer
+    clearTimeout(timer);
+    timer = null;
+    
+    // Reset execution state
+    isPaused = false;
+    currentPoseIndex = 0;
+    currentTimeLeft = 0;
+    
+    // Reset execution routine
+    currentExecutionRoutine = null;
+    
+    // Stop all sounds
+    stopAllSounds();
 }
 
 // Fade out individual sound
@@ -182,6 +201,11 @@ const importSuccessModal = document.getElementById('import-success-modal');
 const closeImportSuccessModalBtn = document.getElementById('close-import-success-modal');
 const closeImportSuccessBtn = document.getElementById('close-import-success');
 const importSuccessText = document.getElementById('import-success-text');
+const renameModal = document.getElementById('rename-modal');
+const closeRenameModalBtn = document.getElementById('close-rename-modal');
+const cancelRenameBtn = document.getElementById('cancel-rename');
+const confirmRenameBtn = document.getElementById('confirm-rename');
+const renameInput = document.getElementById('rename-input');
 
 // Initialize app
 function init() {
@@ -232,6 +256,17 @@ function setupEventListeners() {
     closeImportSuccessModalBtn.addEventListener('click', hideImportSuccessModal);
     closeImportSuccessBtn.addEventListener('click', hideImportSuccessModal);
     
+    // Rename modal listeners
+    closeRenameModalBtn.addEventListener('click', hideRenameModal);
+    cancelRenameBtn.addEventListener('click', hideRenameModal);
+    confirmRenameBtn.addEventListener('click', confirmRenameRoutine);
+    renameInput.addEventListener('input', updateRenameButton);
+    renameInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            confirmRenameRoutine();
+        }
+    });
+    
     // File input listeners
     fileInputArea.addEventListener('click', () => importFileInput.click());
     importFileInput.addEventListener('change', handleFileSelect);
@@ -246,14 +281,16 @@ function setupEventListeners() {
 function showMainScreen() {
     hideAllScreens();
     mainScreen.classList.add('active');
-    // Stop any playing sounds when returning to main screen
-    stopAllSounds();
+    // Stop routine execution and all sounds when returning to main screen
+    stopRoutineExecution();
     renderRoutines();
 }
 
 function showHistoryScreen() {
     hideAllScreens();
     historyScreen.classList.add('active');
+    // Stop routine execution and all sounds when viewing history
+    stopRoutineExecution();
     // Refresh completion log from localStorage before rendering
     completionLog = JSON.parse(localStorage.getItem('yogaCompletionLog') || '[]');
     console.log('Loading history screen, found', completionLog.length, 'entries');
@@ -263,6 +300,8 @@ function showHistoryScreen() {
 function showRoutineBuilder() {
     hideAllScreens();
     routineBuilder.classList.add('active');
+    // Stop routine execution and all sounds when creating new routine
+    stopRoutineExecution();
     currentRoutine = [];
     currentRoutineName = "";
     selectedPose = null;
@@ -290,8 +329,9 @@ function showRoutineExecution(routine) {
     timerDisplay.textContent = "00:00";
     progressFill.style.width = "0%";
     
-    // Reset pause button
+    // Reset pause button to show pause icon (routine is running)
     pauseResumeBtn.innerHTML = "⏸";
+    pauseResumeBtn.setAttribute('data-state', 'running');
     
     executionRoutineName.textContent = routine.name;
     startRoutineExecution();
@@ -360,7 +400,7 @@ function togglePosesGrid() {
 // Modal functions
 function showTimeModal(pose) {
     selectedPose = pose;
-    modalPoseName.textContent = `Selecteer tijd voor ${pose.name}`;
+    modalPoseName.textContent = `Select time for ${pose.name}`;
     timeSelectionModal.classList.add('active');
     
     // Clear previous selections
@@ -377,7 +417,7 @@ function hideTimeModal() {
 function showDeleteConfirmation(routineId) {
     routineToDelete = routines.find(r => r.id === routineId);
     if (routineToDelete) {
-        deleteConfirmationText.textContent = `Weet je zeker dat je "${routineToDelete.name}" wilt verwijderen?`;
+        deleteConfirmationText.textContent = `Are you sure you want to delete "${routineToDelete.name}"?`;
         deleteConfirmationModal.classList.add('active');
     }
 }
@@ -403,6 +443,59 @@ function confirmDeleteRoutine() {
     }
 }
 
+// Rename modal functions
+function showRenameModal(routineId) {
+    routineToRename = routines.find(r => r.id === routineId);
+    if (routineToRename) {
+        renameInput.value = routineToRename.name;
+        renameModal.classList.add('active');
+        renameInput.focus();
+        renameInput.select();
+        updateRenameButton();
+    }
+}
+
+function hideRenameModal() {
+    renameModal.classList.remove('active');
+    routineToRename = null;
+    renameInput.value = '';
+}
+
+function updateRenameButton() {
+    const hasName = renameInput.value.trim().length > 0;
+    const isDifferent = renameInput.value.trim() !== (routineToRename ? routineToRename.name : '');
+    confirmRenameBtn.disabled = !(hasName && isDifferent);
+}
+
+function confirmRenameRoutine() {
+    if (!routineToRename) return;
+    
+    const newName = renameInput.value.trim();
+    if (!newName || newName === routineToRename.name) {
+        hideRenameModal();
+        return;
+    }
+    
+    // Check if name already exists
+    const nameExists = routines.some(r => r.name === newName && r.id !== routineToRename.id);
+    if (nameExists) {
+        alert('A routine with this name already exists. Please choose a different name.');
+        return;
+    }
+    
+    // Update routine name
+    routineToRename.name = newName;
+    
+    // Update localStorage
+    localStorage.setItem('yogaRoutines', JSON.stringify(routines));
+    
+    // Re-render routines
+    renderRoutines();
+    
+    // Hide modal
+    hideRenameModal();
+}
+
 // Completion modal functions
 function showCompletionModal() {
     // Log routine completion
@@ -412,8 +505,8 @@ function showCompletionModal() {
 
 function hideCompletionModal() {
     completionModal.classList.remove('active');
-    // Stop any playing sounds
-    stopAllSounds();
+    // Stop routine execution and all sounds
+    stopRoutineExecution();
     showMainScreen();
     // Refresh completion log from localStorage in case it was updated
     completionLog = JSON.parse(localStorage.getItem('yogaCompletionLog') || '[]');
@@ -859,7 +952,7 @@ function renderRoutines() {
     routinesList.innerHTML = '';
     
     if (routines.length === 0) {
-        routinesList.innerHTML = '<p style="text-align: center; color: #a0aec0; font-style: italic; padding: 40px;">Nog geen routines gemaakt</p>';
+        routinesList.innerHTML = '<p style="text-align: center; color: #a0aec0; font-style: italic; padding: 40px;">No routines created yet</p>';
         return;
     }
     
@@ -872,8 +965,8 @@ function renderRoutines() {
                 <div class="routine-duration">${formatDuration(routine.totalDuration)}</div>
             </div>
             <div class="routine-actions">
-                <button class="routine-rename-btn" onclick="showRenameModal(${routine.id})" title="Routine hernoemen">✏️</button>
-                <button class="routine-delete-btn" onclick="showDeleteConfirmation(${routine.id})" title="Routine verwijderen">🗑</button>
+                <button class="routine-rename-btn" onclick="showRenameModal(${routine.id})" title="Rename routine">✏️</button>
+                <button class="routine-delete-btn" onclick="showDeleteConfirmation(${routine.id})" title="Delete routine">🗑</button>
             </div>
         `;
         
@@ -883,6 +976,18 @@ function renderRoutines() {
             if (!e.target.closest('.routine-actions')) {
                 showRoutineExecution(routine);
             }
+        });
+        
+        // Add click listeners to action buttons to prevent event propagation
+        const renameBtn = routineElement.querySelector('.routine-rename-btn');
+        const deleteBtn = routineElement.querySelector('.routine-delete-btn');
+        
+        renameBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+        
+        deleteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
         });
         
         routinesList.appendChild(routineElement);
@@ -950,7 +1055,7 @@ function addPoseToRoutine() {
 
 function renderRoutinePoses() {
     if (currentRoutine.length === 0) {
-        routinePosesList.innerHTML = '<p class="empty-message">Voeg poses toe aan je routine</p>';
+        routinePosesList.innerHTML = '<p class="empty-message">Add poses to your routine</p>';
         return;
     }
     
@@ -961,7 +1066,7 @@ function renderRoutinePoses() {
                 <div class="pose-name">${pose.name}</div>
                 <div class="pose-duration">${formatDuration(pose.duration)}</div>
             </div>
-            <button class="delete-pose" onclick="removePoseFromRoutine(${index})">Verwijder</button>
+            <button class="delete-pose" onclick="removePoseFromRoutine(${index})">Remove</button>
         </div>
     `).join('');
     
@@ -1115,15 +1220,19 @@ function resumeTimer() {
 
 function togglePause() {
     isPaused = !isPaused;
-    // Keep the same icon regardless of state
-    pauseResumeBtn.innerHTML = '⏸';
     
-    if (!isPaused) {
-        // Resume timer from where it was paused
-        resumeTimer();
-    } else {
+    if (isPaused) {
+        // Show star icon when paused
+        pauseResumeBtn.innerHTML = '✯';
+        pauseResumeBtn.setAttribute('data-state', 'paused');
         // Pause timer
         clearTimeout(timer);
+    } else {
+        // Show pause icon when running
+        pauseResumeBtn.innerHTML = '⏸';
+        pauseResumeBtn.setAttribute('data-state', 'running');
+        // Resume timer from where it was paused
+        resumeTimer();
     }
 }
 
