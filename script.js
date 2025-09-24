@@ -871,13 +871,16 @@ function renderRoutines() {
                 <div class="routine-name">${routine.name}</div>
                 <div class="routine-duration">${formatDuration(routine.totalDuration)}</div>
             </div>
-            <button class="routine-delete-btn" onclick="showDeleteConfirmation(${routine.id})" title="Routine verwijderen">🗑</button>
+            <div class="routine-actions">
+                <button class="routine-rename-btn" onclick="showRenameModal(${routine.id})" title="Routine hernoemen">✏️</button>
+                <button class="routine-delete-btn" onclick="showDeleteConfirmation(${routine.id})" title="Routine verwijderen">🗑</button>
+            </div>
         `;
         
-        // Add click listener to routine element (not the delete button)
+        // Add click listener to routine element (not the action buttons)
         routineElement.addEventListener('click', (e) => {
-            // Only trigger if not clicking on delete button
-            if (!e.target.classList.contains('routine-delete-btn')) {
+            // Only trigger if not clicking on action buttons
+            if (!e.target.closest('.routine-actions')) {
                 showRoutineExecution(routine);
             }
         });
