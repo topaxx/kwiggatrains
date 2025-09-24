@@ -677,6 +677,13 @@ header h1 {
     color: white;
 }
 
+#pause-resume-btn i {
+    color: white !important;
+    font-size: 1rem;
+    display: inline-block;
+    line-height: 1;
+}
+
 /* FontAwesome icons styling */
 .routine-rename-btn i,
 .routine-delete-btn i {
@@ -772,7 +779,7 @@ header h1 {
     font-weight: 600;
     cursor: pointer;
     transition: transform 0.2s ease;
-    min-width: 50px;
+    min-width: 70px;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -334,7 +334,7 @@ function showRoutineExecution(routine) {
     progressFill.style.width = "0%";
     
     // Reset pause button to show pause icon (routine is running)
-    pauseResumeBtn.innerHTML = "⏸";
+    pauseResumeBtn.innerHTML = '<i class="fas fa-pause"></i>';
     pauseResumeBtn.setAttribute('data-state', 'running');
     
     executionRoutineName.textContent = routine.name;
@@ -1246,13 +1246,13 @@ function togglePause() {
     
     if (isPaused) {
         // Show star icon when paused
-        pauseResumeBtn.innerHTML = '✯';
+        pauseResumeBtn.innerHTML = '<i class="fas fa-star"></i>';
         pauseResumeBtn.setAttribute('data-state', 'paused');
         // Pause timer
         clearTimeout(timer);
     } else {
         // Show pause icon when running
-        pauseResumeBtn.innerHTML = '⏸';
+        pauseResumeBtn.innerHTML = '<i class="fas fa-pause"></i>';
         pauseResumeBtn.setAttribute('data-state', 'running');
         // Resume timer from where it was paused
         resumeTimer();
