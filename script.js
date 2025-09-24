@@ -11,10 +11,11 @@ const yogaPoses = [
     { id: 9, name: "Frog Pose", image: "yoga_pose_images/frog_pose.png" },
     { id: 10, name: "Half Butterfly", image: "yoga_pose_images/halfbutterfly_pose.png" },
     { id: 11, name: "Happy Baby", image: "yoga_pose_images/happybaby_pose.png" },
-    { id: 12, name: "Saddle Pose", image: "yoga_pose_images/saddle_pose.png" },
-    { id: 13, name: "Seal Pose", image: "yoga_pose_images/seal_pose.png" },
-    { id: 14, name: "Sphinx Pose", image: "yoga_pose_images/sphinx_pose.png" },
-    { id: 15, name: "Swan Pose", image: "yoga_pose_images/swan_pose.png" }
+    { id: 12, name: "Meditate", image: "yoga_pose_images/butterfly_pose.png" },
+    { id: 13, name: "Saddle Pose", image: "yoga_pose_images/saddle_pose.png" },
+    { id: 14, name: "Seal Pose", image: "yoga_pose_images/seal_pose.png" },
+    { id: 15, name: "Sphinx Pose", image: "yoga_pose_images/sphinx_pose.png" },
+    { id: 16, name: "Swan Pose", image: "yoga_pose_images/swan_pose.png" }
 ];
 
 // Tijd opties
@@ -24,7 +25,10 @@ const timeOptions = [
     { value: 120, label: "2m" },
     { value: 180, label: "3m" },
     { value: 300, label: "5m" },
-    { value: 600, label: "10m" }
+    { value: 600, label: "10m" },
+    { value: 900, label: "15m" },
+    { value: 1200, label: "20m" },
+    { value: 1800, label: "30m" }
 ];
 
 // App state
@@ -965,8 +969,8 @@ function renderRoutines() {
                 <div class="routine-duration">${formatDuration(routine.totalDuration)}</div>
             </div>
             <div class="routine-actions">
-                <button class="routine-rename-btn" onclick="showRenameModal(${routine.id})" title="Rename routine">✏️</button>
-                <button class="routine-delete-btn" onclick="showDeleteConfirmation(${routine.id})" title="Delete routine">🗑</button>
+                <button class="routine-rename-btn" onclick="showRenameModal(${routine.id})" title="Rename routine"><i class="fas fa-edit"></i></button>
+                <button class="routine-delete-btn" onclick="showDeleteConfirmation(${routine.id})" title="Delete routine"><i class="fas fa-trash"></i></button>
             </div>
         `;
         
@@ -1061,9 +1065,9 @@ function renderRoutinePoses() {
     
     routinePosesList.innerHTML = currentRoutine.map((pose, index) => `
         <div class="routine-pose-item" data-index="${index}">
-            <img src="${pose.image}" alt="${pose.name}">
             <div class="pose-info">
                 <div class="pose-name">${pose.name}</div>
+                <img src="${pose.image}" alt="${pose.name}" class="pose-image">
                 <div class="pose-duration">${formatDuration(pose.duration)}</div>
             </div>
             <button class="delete-pose" onclick="removePoseFromRoutine(${index})">Remove</button>

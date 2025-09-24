@@ -74,6 +74,9 @@ header h1 {
     transition: none;
     position: relative;
     min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .routine-content {
@@ -101,11 +104,12 @@ header h1 {
     flex-direction: column;
     gap: 6px;
     z-index: 10;
+    pointer-events: auto;
 }
 
 .routine-delete-btn, .routine-rename-btn {
     border: none;
-    border-radius: 50%;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 1.2rem;
     transition: all 0.2s ease;
@@ -116,10 +120,13 @@ header h1 {
     align-items: center;
     justify-content: center;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    padding: 0;
+    margin: 0;
+    line-height: 1;
 }
 
 .routine-rename-btn {
-    background: #39d47a;
+    background: #667eea;
     color: white;
 }
 
@@ -129,15 +136,11 @@ header h1 {
 }
 
 .routine-rename-btn:hover {
-    background: #38a169;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+    background: #667eea;
 }
 
 .routine-delete-btn:hover {
-    background: #c53030;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+    background: #ec4259;
 }
 
 .add-button {
@@ -168,7 +171,7 @@ header h1 {
 .history-button {
     width: 100%;
     
-    background: linear-gradient(135deg, #dd7ce7 0%, #e26878 100%);
+    background: #ca83ca;
     
     color: white;
     border: none;
@@ -300,8 +303,6 @@ header h1 {
 }
 
 .routine-pose-item {
-    display: flex;
-    align-items: center;
     background: white;
     border: 1px solid #e2e8f0;
     border-radius: 8px;
@@ -309,28 +310,35 @@ header h1 {
     margin-bottom: 8px;
     cursor: move;
     transition: all 0.2s ease;
+    position: relative;
+    text-align: center;
 }
 
 .routine-pose-item:hover {
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.routine-pose-item img {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 6px;
-    margin-right: 12px;
-}
-
 .routine-pose-item .pose-info {
-    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-right: 60px; /* Space for delete button */
 }
 
 .routine-pose-item .pose-name {
     font-weight: 500;
     color: #2d3748;
-    margin-bottom: 2px;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.routine-pose-item .pose-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 8px;
 }
 
 .routine-pose-item .pose-duration {
@@ -347,6 +355,9 @@ header h1 {
     cursor: pointer;
     font-size: 0.8rem;
     transition: all 0.2s ease;
+    position: absolute;
+    top: 12px;
+    right: 12px;
 }
 
 .routine-pose-item .delete-pose:hover {
@@ -642,6 +653,22 @@ header h1 {
     color: white;
 }
 
+/* FontAwesome icons styling */
+.routine-rename-btn i,
+.routine-delete-btn i {
+    color: white !important;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+}
+
+
 /* Routine Uitvoering styling */
 .execution-content {
     text-align: center;
@@ -657,13 +684,14 @@ header h1 {
     object-fit: cover;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 #current-pose-name {
     color: #2d3748;
     font-size: 1.5rem;
     font-weight: 600;
+    margin-top: 50px;
 }
 
 .timer-section {

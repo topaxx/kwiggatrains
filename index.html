@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yoga Routine Builder</title>
+    <title>Routine Builder App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -18,7 +19,7 @@
             </div>
             <button id="add-routine-btn" class="add-button">
                 <span>+</span>
-                Add New Routine
+                New Routine
             </button>
             <button id="show-history-btn" class="history-button">
                 📊 Show History
@@ -95,6 +96,9 @@
                         <div class="time-option" data-time="180">3m</div>
                         <div class="time-option" data-time="300">5m</div>
                         <div class="time-option" data-time="600">10m</div>
+                        <div class="time-option" data-time="900">15m</div>
+                        <div class="time-option" data-time="1200">20m</div>
+                        <div class="time-option" data-time="1800">30m</div>
                     </div>
                 </div>
             </div>
@@ -240,8 +244,8 @@
             
             <div class="execution-content">
                 <div class="pose-display">
-                    <img id="current-pose-image" src="" alt="Huidige pose">
                     <h2 id="current-pose-name">Pose Naam</h2>
+                    <img id="current-pose-image" src="" alt="Huidige pose">
                 </div>
                 
                 <div class="timer-section">
