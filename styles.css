@@ -42,9 +42,12 @@ header {
 }
 
 header h1 {
-    color: #4a5568;
-    font-size: 1.4rem;
-    font-weight: 600;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 2.5rem;
+    font-weight: 800;
     word-wrap: break-word;
     overflow-wrap: break-word;
     hyphens: auto;
@@ -54,6 +57,9 @@ header h1 {
     width: 100%;
     z-index: 1;
     margin-bottom: 30px;
+    top: -10px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    letter-spacing: -0.02em;
 }
 
 .back-button {
@@ -188,8 +194,9 @@ header h1 {
     /* Remove hover animation */
 }
 
-.add-button span {
+.add-button i {
     font-size: 1.5rem;
+    margin-right: 8px;
 }
 
 .history-button {
