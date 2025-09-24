@@ -798,6 +798,9 @@ function renderHistoryStats() {
     const totalPoses = completionLog.reduce((sum, entry) => sum + entry.poseCount, 0);
     const uniqueRoutines = new Set(completionLog.map(entry => entry.routineName)).size;
     
+    // Calculate average routines per week
+    const averageRoutinesPerWeek = calculateAverageRoutinesPerWeek();
+    
     // Calculate favorite routine
     const routineCounts = {};
     completionLog.forEach(entry => {
@@ -806,8 +809,8 @@ function renderHistoryStats() {
     const favoriteRoutine = Object.keys(routineCounts).reduce((a, b) => 
         routineCounts[a] > routineCounts[b] ? a : b, 'None');
     
-    // Calculate longest daily streak
-    const longestStreak = calculateLongestStreak();
+// Calculate longest daily streak
+const longestStreak = calculateLongestStreak();
     
     historyStats.innerHTML = `
         <div class="stats-grid">
@@ -820,8 +823,8 @@ function renderHistoryStats() {
                 <div class="stat-label">Time</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">${totalPoses}</div>
-                <div class="stat-label">Poses</div>
+                <div class="stat-number">${averageRoutinesPerWeek}</div>
+                <div class="stat-label">Avg/Week</div>
             </div>
             <div class="stat-item">
                 <div class="stat-number">${uniqueRoutines}</div>
@@ -837,6 +840,25 @@ function renderHistoryStats() {
             </div>
         </div>
     `;
+}
+
+// Function to calculate average routines per week
+function calculateAverageRoutinesPerWeek() {
+    if (completionLog.length === 0) return 0;
+    
+    // Get the date range
+    const dates = completionLog.map(entry => new Date(entry.completedAt));
+    const earliestDate = new Date(Math.min(...dates));
+    const latestDate = new Date(Math.max(...dates));
+    
+    // Calculate weeks between first and last completion
+    const timeDiff = latestDate.getTime() - earliestDate.getTime();
+    const weeksDiff = Math.max(1, Math.ceil(timeDiff / (1000 * 60 * 60 * 24 * 7)));
+    
+    // Calculate average routines per week
+    const averagePerWeek = completionLog.length / weeksDiff;
+    
+    return Math.round(averagePerWeek * 10) / 10; // Round to 1 decimal place
 }
 
 function calculateLongestStreak() {
