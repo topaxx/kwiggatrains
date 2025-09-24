@@ -338,6 +338,12 @@ function showRoutineExecution(routine) {
     timerDisplay.textContent = "00:00";
     progressFill.style.width = "0%";
     
+    // Reset circle progress
+    const circleProgress = document.querySelector('.progress-ring-fill');
+    if (circleProgress) {
+        circleProgress.style.strokeDashoffset = "446";
+    }
+    
     // Reset pause button to show pause icon (routine is running)
     pauseResumeBtn.innerHTML = '<i class="fas fa-pause"></i>';
     pauseResumeBtn.setAttribute('data-state', 'running');
@@ -1214,6 +1220,12 @@ function startTimer() {
     // Reset progress bar
     progressFill.style.width = "0%";
     
+    // Reset circle progress
+    const circleProgress = document.querySelector('.progress-ring-fill');
+    if (circleProgress) {
+        circleProgress.style.strokeDashoffset = "446";
+    }
+    
     resumeTimer();
 }
 
@@ -1228,19 +1240,28 @@ function resumeTimer() {
         if (isPaused) return;
         
         const minutes = Math.floor(currentTimeLeft / 60);
-        const seconds = currentTimeLeft % 60;
-        timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        const seconds = Math.floor(currentTimeLeft % 60);
+        const deciseconds = Math.floor((currentTimeLeft % 1) * 10);
+        timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${deciseconds}`;
         
         const progress = ((pose.duration - currentTimeLeft) / pose.duration) * 100;
         progressFill.style.width = `${progress}%`;
+        
+        // Update circle progress
+        const circleProgress = document.querySelector('.progress-ring-fill');
+        if (circleProgress) {
+            const circumference = 2 * Math.PI * 71; // radius = 71
+            const offset = circumference - (progress / 100) * circumference;
+            circleProgress.style.strokeDashoffset = offset;
+        }
         
         if (currentTimeLeft <= 0) {
             nextPose();
             return;
         }
         
-        currentTimeLeft--;
-        timer = setTimeout(updateTimer, 1000);
+        currentTimeLeft -= 0.1;
+        timer = setTimeout(updateTimer, 100);
     };
     
     updateTimer();

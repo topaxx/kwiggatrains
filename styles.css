@@ -744,8 +744,6 @@ header h1 {
 .timer-circle {
     width: 150px;
     height: 150px;
-    border: 4px solid #e2e8f0;
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -753,10 +751,38 @@ header h1 {
     position: relative;
 }
 
+.timer-circle svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.timer-circle .progress-ring {
+    fill: none;
+    stroke: #e2e8f0;
+    stroke-width: 4;
+}
+
+.timer-circle .progress-ring-fill {
+    fill: none;
+    stroke: url(#gradient);
+    stroke-width: 4;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.3s ease;
+}
+
+.timer-circle .gradient-defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+
 .timer-text {
     font-size: 2rem;
     font-weight: 700;
     color: #2d3748;
+    position: absolute;
+    z-index: 1;
 }
 
 .progress-bar {
@@ -765,6 +791,7 @@ header h1 {
     background: #e2e8f0;
     border-radius: 3px;
     overflow: hidden;
+    display: none;
 }
 
 .progress-fill {
