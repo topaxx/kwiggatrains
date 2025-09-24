@@ -802,7 +802,7 @@ function renderHistoryStats() {
         <div class="stats-grid">
             <div class="stat-item">
                 <div class="stat-number">${totalCompletions}</div>
-                <div class="stat-label">Completed</div>
+                <div class="stat-label">Completed Routines</div>
             </div>
             <div class="stat-item">
                 <div class="stat-number">${Math.round(totalTime / 60)}m</div>
@@ -906,15 +906,19 @@ function renderHistoryList() {
     let html = '';
     sortedMonths.forEach(month => {
         // Add month divider
+        const itemCount = groupedEntries[month].length;
         html += `
             <div class="month-divider">
                 <div class="month-line"></div>
-                <div class="month-label">${month}</div>
+                <div class="month-label clickable-month" data-month="${month}">
+                    <span class="month-text">${month} (${itemCount})</span>
+                </div>
                 <div class="month-line"></div>
             </div>
         `;
         
-        // Add entries for this month
+        // Add entries for this month in collapsible container
+        html += `<div class="month-entries" data-month="${month}">`;
         groupedEntries[month].forEach(entry => {
             const date = new Date(entry.completedAt);
             const formattedDate = date.toLocaleDateString('en-US', {
@@ -946,9 +950,24 @@ function renderHistoryList() {
                 </div>
             `;
         });
+        html += `</div>`;
     });
     
     historyList.innerHTML = html;
+    
+    // Add event listeners for collapsible months
+    document.querySelectorAll('.clickable-month').forEach(monthHeader => {
+        monthHeader.addEventListener('click', () => {
+            const month = monthHeader.dataset.month;
+            const monthEntries = document.querySelector(`.month-entries[data-month="${month}"]`);
+            
+            if (monthEntries.style.display === 'none') {
+                monthEntries.style.display = 'block';
+            } else {
+                monthEntries.style.display = 'none';
+            }
+        });
+    });
 }
 
 // Render functions
