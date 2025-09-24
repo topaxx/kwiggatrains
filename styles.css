@@ -571,8 +571,7 @@ header h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
-    border-bottom: 1px solid #e2e8f0;
+    padding: 15px 20px;
 }
 
 .modal-header h3 {
@@ -582,7 +581,7 @@ header h1 {
 }
 
 .modal-body {
-    padding: 20px;
+    padding: 0 20px 15px 20px;
 }
 
 .time-options {
