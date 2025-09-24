@@ -330,12 +330,14 @@ header h1 {
     background: white;
     border: 1px solid #e2e8f0;
     border-radius: 8px;
-    padding: 12px;
-    margin-bottom: 8px;
+    padding: 8px 12px;
+    margin-bottom: 6px;
     cursor: move;
     transition: all 0.2s ease;
     position: relative;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .routine-pose-item:hover {
@@ -344,30 +346,31 @@ header h1 {
 
 .routine-pose-item .pose-info {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    text-align: center;
+    gap: 12px;
+    flex: 1;
     padding-right: 60px; /* Space for delete button */
 }
 
 .routine-pose-item .pose-name {
     font-weight: 600;
     color: #2d3748;
-    margin-bottom: 8px;
-    font-size: 1rem;
+    font-size: 0.9rem;
+    margin: 0;
 }
 
 .routine-pose-item .pose-image {
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     object-fit: cover;
     border-radius: 6px;
-    margin-bottom: 8px;
+    flex-shrink: 0;
 }
 
 .routine-pose-item .pose-duration {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: #718096;
+    margin-left: auto;
 }
 
 .routine-pose-item .delete-pose {
@@ -375,17 +378,27 @@ header h1 {
     color: #c53030;
     border: none;
     border-radius: 4px;
-    padding: 6px 10px;
+    padding: 6px;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     transition: all 0.2s ease;
     position: absolute;
-    top: 12px;
-    right: 12px;
+    top: 8px;
+    right: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .routine-pose-item .delete-pose:hover {
     background: #feb2b2;
+}
+
+.routine-pose-item .delete-pose i {
+    color: #c53030;
+    font-size: 0.8rem;
 }
 
 /* Poses selection section */

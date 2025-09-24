@@ -316,6 +316,11 @@ function showRoutineBuilder() {
     // Show name step first
     showStep('name');
     updateNextButton();
+    
+    // Focus on the routine name input
+    setTimeout(() => {
+        routineNameInput.focus();
+    }, 100);
 }
 
 function showRoutineExecution(routine) {
@@ -1085,11 +1090,11 @@ function renderRoutinePoses() {
     routinePosesList.innerHTML = currentRoutine.map((pose, index) => `
         <div class="routine-pose-item" data-index="${index}">
             <div class="pose-info">
-                <div class="pose-name">${pose.name}</div>
                 <img src="${pose.image}" alt="${pose.name}" class="pose-image">
+                <div class="pose-name">${pose.name}</div>
                 <div class="pose-duration">${formatDuration(pose.duration)}</div>
             </div>
-            <button class="delete-pose" onclick="removePoseFromRoutine(${index})">Remove</button>
+            <button class="delete-pose" onclick="removePoseFromRoutine(${index})"><i class="fas fa-trash"></i></button>
         </div>
     `).join('');
     
