@@ -1359,7 +1359,6 @@ function startRoutineExecution() {
     timer = null;
     
     showCurrentPose();
-    startTimer();
 }
 
 function showCurrentPose() {
@@ -1367,6 +1366,18 @@ function showCurrentPose() {
     currentPoseImage.src = pose.image;
     currentPoseName.textContent = pose.name;
     poseCounter.textContent = `${currentPoseIndex + 1} / ${currentExecutionRoutine.poses.length}`;
+    
+    // Check if this is a reps-based item
+    if (pose.unit === 'reps') {
+        // For reps-based items, show reps count and disable timer
+        timerDisplay.textContent = `${pose.duration} reps`;
+        pauseResumeBtn.style.display = 'none'; // Hide pause button for reps
+        // Don't start timer for reps-based items
+    } else {
+        // For time-based items, show timer and enable pause button
+        pauseResumeBtn.style.display = 'block'; // Show pause button for time-based
+        startTimer(); // Start timer for time-based items
+    }
     
     // Enable/disable previous button based on pose index
     if (currentPoseIndex > 0) {
@@ -1425,7 +1436,7 @@ function resumeTimer() {
         }
         
         if (currentTimeLeft <= 0) {
-            nextPose();
+            autoNextPose();
             return;
         }
         
@@ -1459,11 +1470,25 @@ function nextPose() {
     timer = null;
     
     if (currentPoseIndex < currentExecutionRoutine.poses.length - 1) {
-        // Play bell sound when pose timer ends (not the last pose)
+        // Don't play sound when user manually clicks next button
+        currentPoseIndex++;
+        showCurrentPose(); // showCurrentPose will handle timer start for time-based items
+    } else {
+        // Routine completed - play bowl sound instead of bell
+        playBowlSound();
+        showCompletionModal();
+    }
+}
+
+function autoNextPose() {
+    clearTimeout(timer);
+    timer = null;
+    
+    if (currentPoseIndex < currentExecutionRoutine.poses.length - 1) {
+        // Play bell sound when timer automatically ends (not the last pose)
         playBellSound();
         currentPoseIndex++;
-        showCurrentPose();
-        startTimer(); // Start fresh timer for new pose
+        showCurrentPose(); // showCurrentPose will handle timer start for time-based items
     } else {
         // Routine completed - play bowl sound instead of bell
         playBowlSound();
@@ -1480,8 +1505,7 @@ function previousPose() {
     
     if (currentPoseIndex > 0) {
         currentPoseIndex--;
-        showCurrentPose();
-        startTimer(); // Start fresh timer for previous pose
+        showCurrentPose(); // showCurrentPose will handle timer start for time-based items
     }
 }
 
