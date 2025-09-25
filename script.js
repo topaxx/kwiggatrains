@@ -1,54 +1,54 @@
 // Yoga poses data - using images from Yoga Poses folder
 const yogaPoses = [
-    { id: 1, name: "Ankle Stretch", image: "yoga_images/anklestretch_pose.png" },
-    { id: 2, name: "Bridge Pose", image: "yoga_images/bridge_pose.png" },
-    { id: 3, name: "Butterfly Pose", image: "yoga_images/butterfly_pose.png" },
-    { id: 4, name: "Camel Pose", image: "yoga_images/camel_pose.png" },
-    { id: 5, name: "Caterpillar Pose", image: "yoga_images/catterpilar_pose.png" },
-    { id: 6, name: "Child's Pose", image: "yoga_images/childs_pose.png" },
-    { id: 7, name: "Dangling Pose", image: "yoga_images/dangling_pose.png" },
-    { id: 8, name: "Downward Facing Dog", image: "yoga_images/downwardfacingdog_pose.png" },
-    { id: 9, name: "Frog Pose", image: "yoga_images/frog_pose.png" },
-    { id: 10, name: "Half Butterfly", image: "yoga_images/halfbutterfly_pose.png" },
-    { id: 11, name: "Happy Baby", image: "yoga_images/happybaby_pose.png" },
-    { id: 12, name: "Meditate", image: "yoga_images/butterfly_pose.png" },
-    { id: 13, name: "Saddle Pose", image: "yoga_images/saddle_pose.png" },
-    { id: 14, name: "Seal Pose", image: "yoga_images/seal_pose.png" },
-    { id: 15, name: "Sphinx Pose", image: "yoga_images/sphinx_pose.png" },
-    { id: 16, name: "Swan Pose", image: "yoga_images/swan_pose.png" }
+    { id: 1, name: "Ankle Stretch", image: "images/yoga_images/anklestretch_pose.png" },
+    { id: 2, name: "Bridge Pose", image: "images/yoga_images/bridge_pose.png" },
+    { id: 3, name: "Butterfly Pose", image: "images/yoga_images/butterfly_pose.png" },
+    { id: 4, name: "Camel Pose", image: "images/yoga_images/camel_pose.png" },
+    { id: 5, name: "Caterpillar Pose", image: "images/yoga_images/catterpilar_pose.png" },
+    { id: 6, name: "Child's Pose", image: "images/yoga_images/childs_pose.png" },
+    { id: 7, name: "Dangling Pose", image: "images/yoga_images/dangling_pose.png" },
+    { id: 8, name: "Downward Facing Dog", image: "images/yoga_images/downwardfacingdog_pose.png" },
+    { id: 9, name: "Frog Pose", image: "images/yoga_images/frog_pose.png" },
+    { id: 10, name: "Half Butterfly", image: "images/yoga_images/halfbutterfly_pose.png" },
+    { id: 11, name: "Happy Baby", image: "images/yoga_images/happybaby_pose.png" },
+    { id: 12, name: "Meditate", image: "images/yoga_images/butterfly_pose.png" },
+    { id: 13, name: "Saddle Pose", image: "images/yoga_images/saddle_pose.png" },
+    { id: 14, name: "Seal Pose", image: "images/yoga_images/seal_pose.png" },
+    { id: 15, name: "Sphinx Pose", image: "images/yoga_images/sphinx_pose.png" },
+    { id: 16, name: "Swan Pose", image: "images/yoga_images/swan_pose.png" }
 ];
 
 // Exercises data - using images from exercise_images folder
 const exercises = [
-    { id: 0, name: "Walking", image: "exercise_images/exercise_ghibli_walking.gif" },
-    { id: 1, name: "Cycling", image: "exercise_images/exercise_ghibli_cycling.gif" },
-    { id: 2, name: "Running", image: "exercise_images/exercise_ghibli_running.gif" },
-    { id: 3, name: "Swimming", image: "exercise_images/cartoon_swimming.gif" },
-    { id: 4, name: "Push-ups", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 5, name: "Squats", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 6, name: "Plank", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 7, name: "Lunges", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 8, name: "Burpees", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 9, name: "Mountain Climbers", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 10, name: "Jumping Jacks", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 11, name: "Wall Sit", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 12, name: "Tricep Dips", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 13, name: "High Knees", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 14, name: "Glute Bridges", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 15, name: "Russian Twists", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 16, name: "Calf Raises", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 17, name: "Leg Raises", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 18, name: "Bear Crawl", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 19, name: "Single Leg Deadlift", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 20, name: "Side Plank", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 21, name: "Pike Push-ups", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 22, name: "Jump Squats", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 23, name: "Hollow Body Hold", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 24, name: "Arm Circles", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 25, name: "Hip Thrusts", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 26, name: "Superman", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 27, name: "Flutter Kicks", image: "exercise_images/exercise_ghibli.gif" },
-    { id: 28, name: "Crab Walk", image: "exercise_images/exercise_ghibli.gif" }
+    { id: 0, name: "Walking", image: "images/exercise_images/exercise_ghibli_walking.gif" },
+    { id: 1, name: "Cycling", image: "images/exercise_images/exercise_ghibli_cycling.gif" },
+    { id: 2, name: "Running", image: "images/exercise_images/exercise_ghibli_running.gif" },
+    { id: 3, name: "Swimming", image: "images/exercise_images/cartoon_swimming.gif" },
+    { id: 4, name: "Push-ups", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 5, name: "Squats", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 6, name: "Plank", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 7, name: "Lunges", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 8, name: "Burpees", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 9, name: "Mountain Climbers", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 10, name: "Jumping Jacks", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 11, name: "Wall Sit", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 12, name: "Tricep Dips", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 13, name: "High Knees", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 14, name: "Glute Bridges", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 15, name: "Russian Twists", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 16, name: "Calf Raises", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 17, name: "Leg Raises", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 18, name: "Bear Crawl", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 19, name: "Single Leg Deadlift", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 20, name: "Side Plank", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 21, name: "Pike Push-ups", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 22, name: "Jump Squats", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 23, name: "Hollow Body Hold", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 24, name: "Arm Circles", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 25, name: "Hip Thrusts", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 26, name: "Superman", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 27, name: "Flutter Kicks", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 28, name: "Crab Walk", image: "images/exercise_images/exercise_ghibli.gif" }
 ];
 
 // Tijd opties
@@ -91,14 +91,14 @@ let bowlSound = null; // Audio object for bowl sound
 
 // Initialize bell sound
 function initBellSound() {
-    bellSound = new Audio('bellsound.mp3');
+    bellSound = new Audio('sounds/bellsound.mp3');
     bellSound.preload = 'auto';
     bellSound.volume = 0.7; // Set volume to 70%
 }
 
 // Initialize bowl sound
 function initBowlSound() {
-    bowlSound = new Audio('bowlsound.mp3');
+    bowlSound = new Audio('sounds/bowlsound.mp3');
     bowlSound.preload = 'auto';
     bowlSound.volume = 1; // Set volume to 100%
 }
