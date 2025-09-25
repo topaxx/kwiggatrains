@@ -54,12 +54,14 @@ header h1 {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 100%;
+    width: calc(100% - 80px); /* Leave space for back button */
     z-index: 1;
     margin-bottom: 30px;
     top: -10px;
     text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     letter-spacing: -0.02em;
+    padding: 0 20px; /* Add padding to prevent text from touching edges */
+    box-sizing: border-box;
 }
 
 .back-button {
@@ -891,7 +893,8 @@ header h1 {
     color: #2d3748;
     font-size: 1.5rem;
     font-weight: 600;
-    margin-top: 50px;
+    margin-top: calc(80px + 2.5rem + 20px); /* header height + font size + extra spacing */
+    transition: margin-top 0.3s ease;
 }
 
 .timer-section {
@@ -1295,6 +1298,15 @@ header h1 {
 @media (max-width: 480px) {
     .screen {
         padding: 15px;
+    }
+    
+    header h1 {
+        font-size: 2rem; /* Smaller font size for mobile */
+        width: calc(100% - 100px); /* More space for back button on mobile */
+    }
+    
+    #current-pose-name {
+        margin-top: calc(80px + 2rem + 20px); /* Adjusted for mobile font size */
     }
     
     .poses-grid {
