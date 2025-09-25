@@ -20,31 +20,35 @@ const yogaPoses = [
 
 // Exercises data - using images from exercise_images folder
 const exercises = [
-    { id: 0, name: "Push-ups", image: "exercise_images/pushups.png" },
-    { id: 1, name: "Squats", image: "exercise_images/squats.png" },
-    { id: 2, name: "Plank", image: "exercise_images/plank.png" },
-    { id: 3, name: "Lunges", image: "exercise_images/lunges.png" },
-    { id: 4, name: "Burpees", image: "exercise_images/burpees.png" },
-    { id: 5, name: "Mountain Climbers", image: "exercise_images/mountain_climbers.png" },
-    { id: 6, name: "Jumping Jacks", image: "exercise_images/jumping_jacks.png" },
-    { id: 7, name: "Wall Sit", image: "exercise_images/wall_sit.png" },
-    { id: 8, name: "Tricep Dips", image: "exercise_images/tricep_dips.png" },
-    { id: 9, name: "High Knees", image: "exercise_images/high_knees.png" },
-    { id: 10, name: "Glute Bridges", image: "exercise_images/glute_bridges.png" },
-    { id: 11, name: "Russian Twists", image: "exercise_images/russian_twists.png" },
-    { id: 12, name: "Calf Raises", image: "exercise_images/calf_raises.png" },
-    { id: 13, name: "Leg Raises", image: "exercise_images/leg_raises.png" },
-    { id: 14, name: "Bear Crawl", image: "exercise_images/bear_crawl.png" },
-    { id: 15, name: "Single Leg Deadlift", image: "exercise_images/single_leg_deadlift.png" },
-    { id: 16, name: "Side Plank", image: "exercise_images/side_plank.png" },
-    { id: 17, name: "Pike Push-ups", image: "exercise_images/pike_pushups.png" },
-    { id: 18, name: "Jump Squats", image: "exercise_images/jump_squats.png" },
-    { id: 19, name: "Hollow Body Hold", image: "exercise_images/hollow_body_hold.png" },
-    { id: 20, name: "Arm Circles", image: "exercise_images/arm_circles.png" },
-    { id: 21, name: "Hip Thrusts", image: "exercise_images/hip_thrusts.png" },
-    { id: 22, name: "Superman", image: "exercise_images/superman.png" },
-    { id: 23, name: "Flutter Kicks", image: "exercise_images/flutter_kicks.png" },
-    { id: 24, name: "Crab Walk", image: "exercise_images/crab_walk.png" }
+    { id: 0, name: "Walking", image: "exercise_images/walking.png" },
+    { id: 1, name: "Cycling", image: "exercise_images/cycling.png" },
+    { id: 2, name: "Running", image: "exercise_images/running.png" },
+    { id: 3, name: "Swimming", image: "exercise_images/swimming.png" },
+    { id: 4, name: "Push-ups", image: "exercise_images/pushups.png" },
+    { id: 5, name: "Squats", image: "exercise_images/squats.png" },
+    { id: 6, name: "Plank", image: "exercise_images/plank.png" },
+    { id: 7, name: "Lunges", image: "exercise_images/lunges.png" },
+    { id: 8, name: "Burpees", image: "exercise_images/burpees.png" },
+    { id: 9, name: "Mountain Climbers", image: "exercise_images/mountain_climbers.png" },
+    { id: 10, name: "Jumping Jacks", image: "exercise_images/jumping_jacks.png" },
+    { id: 11, name: "Wall Sit", image: "exercise_images/wall_sit.png" },
+    { id: 12, name: "Tricep Dips", image: "exercise_images/tricep_dips.png" },
+    { id: 13, name: "High Knees", image: "exercise_images/high_knees.png" },
+    { id: 14, name: "Glute Bridges", image: "exercise_images/glute_bridges.png" },
+    { id: 15, name: "Russian Twists", image: "exercise_images/russian_twists.png" },
+    { id: 16, name: "Calf Raises", image: "exercise_images/calf_raises.png" },
+    { id: 17, name: "Leg Raises", image: "exercise_images/leg_raises.png" },
+    { id: 18, name: "Bear Crawl", image: "exercise_images/bear_crawl.png" },
+    { id: 19, name: "Single Leg Deadlift", image: "exercise_images/single_leg_deadlift.png" },
+    { id: 20, name: "Side Plank", image: "exercise_images/side_plank.png" },
+    { id: 21, name: "Pike Push-ups", image: "exercise_images/pike_pushups.png" },
+    { id: 22, name: "Jump Squats", image: "exercise_images/jump_squats.png" },
+    { id: 23, name: "Hollow Body Hold", image: "exercise_images/hollow_body_hold.png" },
+    { id: 24, name: "Arm Circles", image: "exercise_images/arm_circles.png" },
+    { id: 25, name: "Hip Thrusts", image: "exercise_images/hip_thrusts.png" },
+    { id: 26, name: "Superman", image: "exercise_images/superman.png" },
+    { id: 27, name: "Flutter Kicks", image: "exercise_images/flutter_kicks.png" },
+    { id: 28, name: "Crab Walk", image: "exercise_images/crab_walk.png" }
 ];
 
 // Tijd opties
@@ -57,7 +61,13 @@ const timeOptions = [
     { value: 600, label: "10m" },
     { value: 900, label: "15m" },
     { value: 1200, label: "20m" },
-    { value: 1800, label: "30m" }
+    { value: 1800, label: "30m" },
+    { value: 2700, label: "45m" },
+    { value: 3600, label: "1h" },
+    { value: 4500, label: "1h 15m" },
+    { value: 5400, label: "1h 30m" },
+    { value: 6300, label: "1h 45m" },
+    { value: 7200, label: "2h" }
 ];
 
 // App state
@@ -189,6 +199,7 @@ const saveRoutineBtn = document.getElementById('save-routine-btn');
 const currentPoseImage = document.getElementById('current-pose-image');
 const currentPoseName = document.getElementById('current-pose-name');
 const timerDisplay = document.getElementById('timer-display');
+const timerCircle = document.querySelector('.timer-circle');
 const progressFill = document.getElementById('progress-fill');
 const pauseResumeBtn = document.getElementById('pause-resume-btn');
 const nextPoseBtn = document.getElementById('next-pose-btn');
@@ -625,9 +636,15 @@ function logRoutineCompletion() {
     // Calculate reps and time stats
     let totalTime = 0;
     let totalReps = 0;
+    let yogaPoseCount = 0;
     
     if (currentExecutionRoutine.poses) {
         currentExecutionRoutine.poses.forEach(pose => {
+            // Only count yoga poses (not exercises)
+            if (pose.type === 'pose') {
+                yogaPoseCount++;
+            }
+            
             if (pose.unit === 'reps') {
                 totalReps += pose.duration;
             } else {
@@ -643,7 +660,7 @@ function logRoutineCompletion() {
         completedAt: new Date().toISOString(),
         timestamp: Date.now(),
         duration: currentExecutionRoutine.totalDuration,
-        poseCount: currentExecutionRoutine.poses.length,
+        poseCount: yogaPoseCount, // Only count yoga poses
         totalTime: totalTime,
         totalReps: totalReps
     };
@@ -1091,10 +1108,12 @@ function renderHistoryList() {
                             <span>Duration:</span>
                             <span>${displayText}</span>
                         </div>
+                        ${entry.poseCount > 0 ? `
                         <div class="history-detail-item">
                             <span>Poses:</span>
                             <span>${entry.poseCount}</span>
                         </div>
+                        ` : ''}
                     </div>
                 </div>
             `;
@@ -1430,14 +1449,47 @@ function showCurrentPose() {
     poseCounter.textContent = `${currentPoseIndex + 1} / ${currentExecutionRoutine.poses.length}`;
     
     // Check if this is a reps-based item
+    console.log('Pose unit:', pose.unit, 'Duration:', pose.duration);
     if (pose.unit === 'reps') {
         // For reps-based items, show reps count and disable timer
-        timerDisplay.textContent = `${pose.duration} reps`;
+        timerCircle.style.display = 'none'; // Hide the circle for reps
         pauseResumeBtn.style.display = 'none'; // Hide pause button for reps
+        
+        // Create or show reps display element
+        let repsDisplay = document.getElementById('reps-display');
+        if (!repsDisplay) {
+            repsDisplay = document.createElement('div');
+            repsDisplay.id = 'reps-display';
+            repsDisplay.style.cssText = `
+                font-size: 2rem;
+                font-weight: 700;
+                color: #2d3748;
+                text-align: center;
+                margin: 20px auto;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                letter-spacing: -0.02em;
+            `;
+            timerCircle.parentNode.insertBefore(repsDisplay, timerCircle.nextSibling);
+        }
+        repsDisplay.textContent = `${pose.duration} reps`;
+        repsDisplay.style.display = 'block';
+        
         // Don't start timer for reps-based items
     } else {
         // For time-based items, show timer and enable pause button
+        timerCircle.style.display = 'flex'; // Show the circle for time-based
         pauseResumeBtn.style.display = 'block'; // Show pause button for time-based
+        
+        // Hide reps display if it exists
+        const repsDisplay = document.getElementById('reps-display');
+        if (repsDisplay) {
+            repsDisplay.style.display = 'none';
+        }
+        
         startTimer(); // Start timer for time-based items
     }
     
