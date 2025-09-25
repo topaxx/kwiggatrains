@@ -747,11 +747,10 @@ header h1 {
     border-top: 1px solid #e2e8f0;
 }
 
-.repetitions-section h4 {
+.repetitions-section h3 {
     color: #4a5568;
-    font-size: 1rem;
+    font-size: 1.2rem;
     margin: 0 0 15px 0;
-    font-weight: 600;
 }
 
 .repetitions-options {

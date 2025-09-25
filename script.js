@@ -475,8 +475,8 @@ function toggleExercisesGrid() {
 
 // Modal functions
 function showTimeModal(item) {
-    // Check if it's a pose or exercise by checking if it exists in exercises array
-    const isExercise = exercises.some(exercise => exercise.id === item.id);
+    // Check if it's a pose or exercise by checking the image path
+    const isExercise = item.image && item.image.includes('exercise_images/');
     
     if (isExercise) {
         // It's an exercise
