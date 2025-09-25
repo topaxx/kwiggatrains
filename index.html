@@ -72,6 +72,21 @@
                         </div>
                     </div>
 
+                    <!-- Collapsible exercises grid -->
+                    <div class="exercises-selection-section">
+                        <div class="exercises-selection-header" id="exercises-selection-header">
+                            <h4>Exercises</h4>
+                            <button id="toggle-exercises-grid" class="toggle-button rotated">
+                                <span id="toggle-exercises-icon">▼</span>
+                            </button>
+                        </div>
+                        <div id="exercises-grid-container" class="exercises-grid-container expanded">
+                            <div id="exercises-grid" class="exercises-grid">
+                                <!-- Exercises worden hier dynamisch toegevoegd -->
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="step-buttons">
                         <button id="back-to-name" class="back-step-button">← Back</button>
                         <button id="save-routine-btn" class="save-button" disabled>Save Routine</button>
@@ -98,6 +113,22 @@
                         <div class="time-option" data-time="900">15m</div>
                         <div class="time-option" data-time="1200">20m</div>
                         <div class="time-option" data-time="1800">30m</div>
+                    </div>
+                    
+                    <!-- Repetitions section for exercises -->
+                    <div id="repetitions-section" class="repetitions-section" style="display: none;">
+                        <h4>Repetitions</h4>
+                        <div class="repetitions-options">
+                            <div class="repetition-option" data-reps="5">5</div>
+                            <div class="repetition-option" data-reps="10">10</div>
+                            <div class="repetition-option" data-reps="15">15</div>
+                            <div class="repetition-option" data-reps="20">20</div>
+                            <div class="repetition-option" data-reps="25">25</div>
+                            <div class="repetition-option" data-reps="30">30</div>
+                            <div class="repetition-option" data-reps="40">40</div>
+                            <div class="repetition-option" data-reps="50">50</div>
+                            <div class="repetition-option" data-reps="100">100</div>
+                        </div>
                     </div>
                 </div>
             </div>

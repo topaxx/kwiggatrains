@@ -374,6 +374,7 @@ header h1 {
     flex-shrink: 0;
 }
 
+
 .routine-pose-item .pose-duration {
     font-size: 0.75rem;
     color: #718096;
@@ -491,14 +492,85 @@ header h1 {
     overflow-x: hidden;
 }
 
-/* Custom scrollbar for poses grid */
-.poses-grid::-webkit-scrollbar {
+/* Exercises selection section */
+.exercises-selection-section {
+    margin-bottom: 30px;
+}
+
+.exercises-selection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: white;
+    border-radius: 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.exercises-selection-header:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.exercises-selection-header h4 {
+    color: #4a5568;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.exercises-grid-container {
+    background: white;
+    border-radius: 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    margin-top: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    max-height: 0;
+    opacity: 0;
+    border-top: none;
+}
+
+.exercises-grid-container.expanded {
+    max-height: 400px;
+    opacity: 1;
+    margin-top: 0;
+}
+
+.exercises-grid-container.collapsed {
+    max-height: 0;
+    opacity: 0;
+}
+
+.exercises-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 20px;
+    max-height: 360px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Custom scrollbar for exercises grid */
+.exercises-grid::-webkit-scrollbar {
     width: 6px;
 }
 
-.poses-grid::-webkit-scrollbar-track {
+.exercises-grid::-webkit-scrollbar-track {
     background: #f1f1f1;
     border-radius: 3px;
+}
+
+.exercises-grid::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 3px;
+}
+
+.exercises-grid::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
 }
 
 .poses-grid::-webkit-scrollbar-thumb {
@@ -553,6 +625,41 @@ header h1 {
 }
 
 .pose-option .pose-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+/* Exercise option styling */
+.exercise-option {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.exercise-option:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+}
+
+.exercise-option.selected {
+    border-color: #667eea;
+    background: #f7fafc;
+}
+
+.exercise-option img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.exercise-option .exercise-name {
     font-size: 0.9rem;
     font-weight: 600;
     color: #4a5568;
@@ -628,6 +735,50 @@ header h1 {
 }
 
 .time-option.selected {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+/* Repetitions section styling */
+.repetitions-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.repetitions-section h4 {
+    color: #4a5568;
+    font-size: 1rem;
+    margin: 0 0 15px 0;
+    font-weight: 600;
+}
+
+.repetitions-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.repetition-option {
+    padding: 12px 16px;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4a5568;
+    transition: all 0.2s ease;
+}
+
+.repetition-option:hover {
+    border-color: #667eea;
+    transform: translateY(-1px);
+}
+
+.repetition-option.selected {
     background: #667eea;
     color: white;
     border-color: #667eea;

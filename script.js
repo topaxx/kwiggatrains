@@ -18,6 +18,35 @@ const yogaPoses = [
     { id: 16, name: "Swan Pose", image: "yoga_pose_images/swan_pose.png" }
 ];
 
+// Exercises data - using images from exercise_images folder
+const exercises = [
+    { id: 0, name: "Push-ups", image: "exercise_images/pushups.png" },
+    { id: 1, name: "Squats", image: "exercise_images/squats.png" },
+    { id: 2, name: "Plank", image: "exercise_images/plank.png" },
+    { id: 3, name: "Lunges", image: "exercise_images/lunges.png" },
+    { id: 4, name: "Burpees", image: "exercise_images/burpees.png" },
+    { id: 5, name: "Mountain Climbers", image: "exercise_images/mountain_climbers.png" },
+    { id: 6, name: "Jumping Jacks", image: "exercise_images/jumping_jacks.png" },
+    { id: 7, name: "Wall Sit", image: "exercise_images/wall_sit.png" },
+    { id: 8, name: "Tricep Dips", image: "exercise_images/tricep_dips.png" },
+    { id: 9, name: "High Knees", image: "exercise_images/high_knees.png" },
+    { id: 10, name: "Glute Bridges", image: "exercise_images/glute_bridges.png" },
+    { id: 11, name: "Russian Twists", image: "exercise_images/russian_twists.png" },
+    { id: 12, name: "Calf Raises", image: "exercise_images/calf_raises.png" },
+    { id: 13, name: "Leg Raises", image: "exercise_images/leg_raises.png" },
+    { id: 14, name: "Bear Crawl", image: "exercise_images/bear_crawl.png" },
+    { id: 15, name: "Single Leg Deadlift", image: "exercise_images/single_leg_deadlift.png" },
+    { id: 16, name: "Side Plank", image: "exercise_images/side_plank.png" },
+    { id: 17, name: "Pike Push-ups", image: "exercise_images/pike_pushups.png" },
+    { id: 18, name: "Jump Squats", image: "exercise_images/jump_squats.png" },
+    { id: 19, name: "Hollow Body Hold", image: "exercise_images/hollow_body_hold.png" },
+    { id: 20, name: "Arm Circles", image: "exercise_images/arm_circles.png" },
+    { id: 21, name: "Hip Thrusts", image: "exercise_images/hip_thrusts.png" },
+    { id: 22, name: "Superman", image: "exercise_images/superman.png" },
+    { id: 23, name: "Flutter Kicks", image: "exercise_images/flutter_kicks.png" },
+    { id: 24, name: "Crab Walk", image: "exercise_images/crab_walk.png" }
+];
+
 // Tijd opties
 const timeOptions = [
     { value: 30, label: "30s" },
@@ -35,6 +64,7 @@ const timeOptions = [
 let currentRoutine = [];
 let currentRoutineName = "";
 let selectedPose = null;
+let selectedExercise = null;
 let selectedTime = null;
 let routines = JSON.parse(localStorage.getItem('yogaRoutines') || '[]');
 let currentExecutionRoutine = null;
@@ -153,6 +183,7 @@ const backFromHistory = document.getElementById('back-from-history');
 const clearHistoryBtn = document.getElementById('clear-history-btn');
 const routineNameInput = document.getElementById('routine-name-input');
 const posesGrid = document.getElementById('poses-grid');
+const exercisesGrid = document.getElementById('exercises-grid');
 const routinePosesList = document.getElementById('routine-poses-list');
 const saveRoutineBtn = document.getElementById('save-routine-btn');
 const currentPoseImage = document.getElementById('current-pose-image');
@@ -172,11 +203,15 @@ const nextToPosesBtn = document.getElementById('next-to-poses');
 const cancelRoutineBtn = document.getElementById('cancel-routine');
 const backToNameBtn = document.getElementById('back-to-name');
 const posesGridContainer = document.getElementById('poses-grid-container');
+const exercisesGridContainer = document.getElementById('exercises-grid-container');
 const togglePosesGridBtn = document.getElementById('toggle-poses-grid');
+const toggleExercisesGridBtn = document.getElementById('toggle-exercises-grid');
 const toggleIcon = document.getElementById('toggle-icon');
+const toggleExercisesIcon = document.getElementById('toggle-exercises-icon');
 const timeSelectionModal = document.getElementById('time-selection-modal');
 const closeModalBtn = document.getElementById('close-modal');
 const modalPoseName = document.getElementById('modal-pose-name');
+const repetitionsSection = document.getElementById('repetitions-section');
 const deleteConfirmationModal = document.getElementById('delete-confirmation-modal');
 const closeDeleteModalBtn = document.getElementById('close-delete-modal');
 const cancelDeleteBtn = document.getElementById('cancel-delete');
@@ -235,6 +270,7 @@ function setupEventListeners() {
     cancelRoutineBtn.addEventListener('click', showMainScreen);
     backToNameBtn.addEventListener('click', goToNameStep);
     document.getElementById('poses-selection-header').addEventListener('click', togglePosesGrid);
+    document.getElementById('exercises-selection-header').addEventListener('click', toggleExercisesGrid);
     closeModalBtn.addEventListener('click', hideTimeModal);
     closeDeleteModalBtn.addEventListener('click', hideDeleteModal);
     cancelDeleteBtn.addEventListener('click', hideDeleteModal);
@@ -309,9 +345,13 @@ function showRoutineBuilder() {
     currentRoutine = [];
     currentRoutineName = "";
     selectedPose = null;
+    selectedExercise = null;
     selectedTime = null;
     currentStep = 'name';
     routineNameInput.value = "";
+    
+    // Render exercises
+    renderExercises();
     
     // Show name step first
     showStep('name');
@@ -379,10 +419,14 @@ function showStep(step) {
 function goToPosesStep() {
     currentRoutineName = routineNameInput.value.trim();
     showStep('poses');
-    // Ensure poses grid is open when entering poses step
-    posesGridContainer.classList.remove('collapsed');
-    posesGridContainer.classList.add('expanded');
-    togglePosesGridBtn.classList.add('rotated');
+    // Start with poses grid collapsed
+    posesGridContainer.classList.remove('expanded');
+    posesGridContainer.classList.add('collapsed');
+    togglePosesGridBtn.classList.remove('rotated');
+    // Start with exercises grid collapsed
+    exercisesGridContainer.classList.remove('expanded');
+    exercisesGridContainer.classList.add('collapsed');
+    toggleExercisesGridBtn.classList.remove('rotated');
 }
 
 function goToNameStep() {
@@ -412,19 +456,60 @@ function togglePosesGrid() {
     }
 }
 
+function toggleExercisesGrid() {
+    const isCollapsed = exercisesGridContainer.classList.contains('collapsed');
+    
+    if (isCollapsed) {
+        exercisesGridContainer.classList.remove('collapsed');
+        exercisesGridContainer.classList.add('expanded');
+        toggleExercisesGridBtn.classList.add('rotated');
+    } else {
+        exercisesGridContainer.classList.remove('expanded');
+        exercisesGridContainer.classList.add('collapsed');
+        toggleExercisesGridBtn.classList.remove('rotated');
+        // Clear any selected exercise when collapsing
+        document.querySelectorAll('.exercise-option').forEach(el => el.classList.remove('selected'));
+        selectedExercise = null;
+    }
+}
+
 // Modal functions
-function showTimeModal(pose) {
-    selectedPose = pose;
-    modalPoseName.textContent = `Select time for ${pose.name}`;
+function showTimeModal(item) {
+    // Check if it's a pose or exercise by checking if it exists in exercises array
+    const isExercise = exercises.some(exercise => exercise.id === item.id);
+    
+    if (isExercise) {
+        // It's an exercise
+        selectedExercise = item;
+        selectedPose = null;
+        // Show repetitions section for exercises
+        repetitionsSection.style.display = 'block';
+        modalPoseName.textContent = `Select duration for ${item.name}`;
+    } else {
+        // It's a pose
+        selectedPose = item;
+        selectedExercise = null;
+        // Hide repetitions section for poses
+        repetitionsSection.style.display = 'none';
+        modalPoseName.textContent = `Select time for ${item.name}`;
+    }
+    
     timeSelectionModal.classList.add('active');
     
     // Clear previous selections
     document.querySelectorAll('.time-option').forEach(el => el.classList.remove('selected'));
+    document.querySelectorAll('.repetition-option').forEach(el => el.classList.remove('selected'));
+    
+    // Add event listeners for repetition options
+    document.querySelectorAll('.repetition-option').forEach(option => {
+        option.addEventListener('click', () => selectRepetition(parseInt(option.dataset.reps)));
+    });
 }
 
 function hideTimeModal() {
     timeSelectionModal.classList.remove('active');
     selectedPose = null;
+    selectedExercise = null;
     selectedTime = null;
 }
 
@@ -1065,6 +1150,21 @@ function renderPoses() {
     });
 }
 
+function renderExercises() {
+    exercisesGrid.innerHTML = '';
+    
+    exercises.forEach(exercise => {
+        const exerciseElement = document.createElement('div');
+        exerciseElement.className = 'exercise-option';
+        exerciseElement.innerHTML = `
+            <img src="${exercise.image}" alt="${exercise.name}">
+            <div class="exercise-name">${exercise.name}</div>
+        `;
+        exerciseElement.addEventListener('click', () => selectExercise(exercise));
+        exercisesGrid.appendChild(exerciseElement);
+    });
+}
+
 function selectPose(pose) {
     // Remove previous selection
     document.querySelectorAll('.pose-option').forEach(el => el.classList.remove('selected'));
@@ -1074,6 +1174,17 @@ function selectPose(pose) {
     
     // Keep poses grid open and show time modal
     showTimeModal(pose);
+}
+
+function selectExercise(exercise) {
+    // Remove previous selection
+    document.querySelectorAll('.exercise-option').forEach(el => el.classList.remove('selected'));
+    
+    // Select new exercise
+    event.target.closest('.exercise-option').classList.add('selected');
+    
+    // Keep exercises grid open and show time modal
+    showTimeModal(exercise);
 }
 
 function selectTime(time) {
@@ -1088,20 +1199,41 @@ function selectTime(time) {
     addPoseToRoutine();
 }
 
+function selectRepetition(reps) {
+    // Remove previous repetition selection
+    document.querySelectorAll('.repetition-option').forEach(el => el.classList.remove('selected'));
+    
+    // Select new repetition
+    event.target.classList.add('selected');
+    selectedTime = reps; // Use selectedTime for consistency
+    
+    // Add exercise to routine
+    addPoseToRoutine();
+}
+
 function addPoseToRoutine() {
-    if (selectedPose && selectedTime) {
-        const routinePose = {
+    if ((selectedPose || selectedExercise) && selectedTime) {
+        const routineItem = selectedPose ? {
             ...selectedPose,
-            duration: selectedTime
+            duration: selectedTime,
+            type: 'pose',
+            unit: 'seconds'
+        } : {
+            ...selectedExercise,
+            duration: selectedTime,
+            type: 'exercise',
+            unit: document.querySelector('.repetition-option.selected') ? 'reps' : 'seconds'
         };
         
-        currentRoutine.push(routinePose);
+        currentRoutine.push(routineItem);
         renderRoutinePoses();
         updateSaveButton();
         
-        // Clear pose selection
+        // Clear selections
         document.querySelectorAll('.pose-option').forEach(el => el.classList.remove('selected'));
+        document.querySelectorAll('.exercise-option').forEach(el => el.classList.remove('selected'));
         selectedPose = null;
+        selectedExercise = null;
         selectedTime = null;
         
         // Hide modal
@@ -1111,20 +1243,35 @@ function addPoseToRoutine() {
 
 function renderRoutinePoses() {
     if (currentRoutine.length === 0) {
-        routinePosesList.innerHTML = '<p class="empty-message">Add poses to your routine</p>';
+        routinePosesList.innerHTML = '<p class="empty-message">Add poses and exercises to your routine</p>';
         return;
     }
     
-    routinePosesList.innerHTML = currentRoutine.map((pose, index) => `
-        <div class="routine-pose-item" data-index="${index}">
-            <div class="pose-info">
-                <img src="${pose.image}" alt="${pose.name}" class="pose-image">
-                <div class="pose-name">${pose.name}</div>
-                <div class="pose-duration">${formatDuration(pose.duration)}</div>
-            </div>
-            <button class="delete-pose" onclick="removePoseFromRoutine(${index})"><i class="fas fa-trash"></i></button>
-        </div>
-    `).join('');
+    routinePosesList.innerHTML = currentRoutine.map((item, index) => {
+        if (item.type === 'exercise') {
+            return `
+                <div class="routine-pose-item" data-index="${index}">
+                    <div class="pose-info">
+                        <img src="${item.image}" alt="${item.name}" class="pose-image">
+                        <div class="pose-name">${item.name}</div>
+                        <div class="pose-duration">${item.unit === 'reps' ? `${item.duration} reps` : formatDuration(item.duration)}</div>
+                    </div>
+                    <button class="delete-pose" onclick="removePoseFromRoutine(${index})"><i class="fas fa-trash"></i></button>
+                </div>
+            `;
+        } else {
+            return `
+                <div class="routine-pose-item" data-index="${index}">
+                    <div class="pose-info">
+                        <img src="${item.image}" alt="${item.name}" class="pose-image">
+                        <div class="pose-name">${item.name}</div>
+                        <div class="pose-duration">${formatDuration(item.duration)}</div>
+                    </div>
+                    <button class="delete-pose" onclick="removePoseFromRoutine(${index})"><i class="fas fa-trash"></i></button>
+                </div>
+            `;
+        }
+    }).join('');
     
     // Make poses sortable
     makeSortable();
