@@ -232,6 +232,28 @@ header h1 {
     /* Remove hover animation */
 }
 
+.settings-button {
+    width: 100%;
+    background: #4a5568;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: transform 0.2s ease;
+    margin-top: 15px;
+}
+
+.settings-button:hover {
+    /* Remove hover animation */
+}
+
 /* Routine Builder styling */
 .builder-step {
     display: none;

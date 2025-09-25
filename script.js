@@ -186,6 +186,7 @@ const routineExecution = document.getElementById('routine-execution');
 const historyScreen = document.getElementById('history-screen');
 const routinesList = document.getElementById('routines-list');
 const addRoutineBtn = document.getElementById('add-routine-btn');
+const settingsBtn = document.getElementById('settings-btn');
 const showHistoryBtn = document.getElementById('show-history-btn');
 const backFromBuilder = document.getElementById('back-from-builder');
 const backFromExecution = document.getElementById('back-from-execution');
@@ -292,7 +293,8 @@ function setupEventListeners() {
     // Routine name input listener
     routineNameInput.addEventListener('input', updateNextButton);
     
-    // History screen listeners
+    // Settings and History screen listeners
+    settingsBtn.addEventListener('click', showSettingsScreen);
     showHistoryBtn.addEventListener('click', showHistoryScreen);
     backFromHistory.addEventListener('click', showMainScreen);
     exportHistoryBtn.addEventListener('click', exportHistory);
@@ -335,6 +337,11 @@ function showMainScreen() {
     // Stop routine execution and all sounds when returning to main screen
     stopRoutineExecution();
     renderRoutines();
+}
+
+function showSettingsScreen() {
+    // For now, just show an alert - can be expanded later
+    alert('Settings functionality coming soon!');
 }
 
 function showHistoryScreen() {
