@@ -94,7 +94,7 @@ header h1 {
 }
 
 .routine-item {
-    background: #556bcc;
+    background: #5d6fbf; /* #556bcc; */
     border-radius: 8px;
     padding: 25px 20px;
     margin-bottom: 15px;

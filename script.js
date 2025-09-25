@@ -622,6 +622,20 @@ function logRoutineCompletion() {
     
     console.log('Logging routine completion for:', currentExecutionRoutine);
     
+    // Calculate reps and time stats
+    let totalTime = 0;
+    let totalReps = 0;
+    
+    if (currentExecutionRoutine.poses) {
+        currentExecutionRoutine.poses.forEach(pose => {
+            if (pose.unit === 'reps') {
+                totalReps += pose.duration;
+            } else {
+                totalTime += pose.duration;
+            }
+        });
+    }
+    
     const completionEntry = {
         id: Date.now(),
         routineName: currentExecutionRoutine.name,
@@ -629,7 +643,9 @@ function logRoutineCompletion() {
         completedAt: new Date().toISOString(),
         timestamp: Date.now(),
         duration: currentExecutionRoutine.totalDuration,
-        poseCount: currentExecutionRoutine.poses.length
+        poseCount: currentExecutionRoutine.poses.length,
+        totalTime: totalTime,
+        totalReps: totalReps
     };
     
     completionLog.unshift(completionEntry); // Add to beginning of array
@@ -881,7 +897,7 @@ function renderHistoryStats() {
     const totalCompletions = completionLog.length;
     const totalTime = completionLog.reduce((sum, entry) => sum + entry.duration, 0);
     const totalPoses = completionLog.reduce((sum, entry) => sum + entry.poseCount, 0);
-    const uniqueRoutines = new Set(completionLog.map(entry => entry.routineName)).size;
+    const totalReps = completionLog.reduce((sum, entry) => sum + (entry.totalReps || 0), 0);
     
     // Calculate average routines per week
     const averageRoutinesPerWeek = calculateAverageRoutinesPerWeek();
@@ -905,15 +921,15 @@ const longestStreak = calculateLongestStreak();
             </div>
             <div class="stat-item">
                 <div class="stat-number">${Math.round(totalTime / 60)}m</div>
-                <div class="stat-label">Time</div>
+                <div class="stat-label">Total Time</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">${totalReps}</div>
+                <div class="stat-label">Total Reps</div>
             </div>
             <div class="stat-item">
                 <div class="stat-number">${averageRoutinesPerWeek}</div>
                 <div class="stat-label">Avg/Week</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">${uniqueRoutines}</div>
-                <div class="stat-label">Unique Routines</div>
             </div>
             <div class="stat-item">
                 <div class="stat-number">${longestStreak}</div>
@@ -1047,7 +1063,22 @@ function renderHistoryList() {
                 minute: '2-digit'
             });
             
-            const durationMinutes = Math.round(entry.duration / 60);
+            // Create display text for reps and time
+            let displayText = '';
+            const hasReps = entry.totalReps && entry.totalReps > 0;
+            const hasTime = entry.totalTime && entry.totalTime > 0;
+            
+            if (hasReps && hasTime) {
+                // Both reps and time
+                displayText = `${entry.totalReps} reps + ${formatDuration(entry.totalTime)}`;
+            } else if (hasReps) {
+                // Only reps
+                displayText = `${entry.totalReps} reps`;
+            } else {
+                // Only time (fallback to duration for backwards compatibility)
+                const durationMinutes = Math.round((entry.totalTime || entry.duration) / 60);
+                displayText = `${durationMinutes}m`;
+            }
             
             html += `
                 <div class="history-item">
@@ -1058,7 +1089,7 @@ function renderHistoryList() {
                     <div class="history-details">
                         <div class="history-detail-item">
                             <span>Duration:</span>
-                            <span>${durationMinutes}m</span>
+                            <span>${displayText}</span>
                         </div>
                         <div class="history-detail-item">
                             <span>Poses:</span>
@@ -1098,12 +1129,43 @@ function renderRoutines() {
     }
     
     routines.forEach((routine, index) => {
+        // Calculate stats for the routine
+        let totalTime = 0;
+        let totalReps = 0;
+        let hasTimeItems = false;
+        let hasRepsItems = false;
+        
+        if (routine.poses) {
+            routine.poses.forEach(pose => {
+                if (pose.unit === 'reps') {
+                    totalReps += pose.duration;
+                    hasRepsItems = true;
+                } else {
+                    totalTime += pose.duration;
+                    hasTimeItems = true;
+                }
+            });
+        }
+        
+        // Create display text
+        let displayText = '';
+        if (hasRepsItems && hasTimeItems) {
+            // Both reps and time
+            displayText = `${totalReps} reps + ${formatDuration(totalTime)}`;
+        } else if (hasRepsItems) {
+            // Only reps
+            displayText = `${totalReps} reps`;
+        } else {
+            // Only time (or fallback to totalDuration for backwards compatibility)
+            displayText = formatDuration(totalTime || routine.totalDuration || 0);
+        }
+        
         const routineElement = document.createElement('div');
         routineElement.className = 'routine-item';
         routineElement.innerHTML = `
             <div class="routine-content">
                 <div class="routine-name">${routine.name}</div>
-                <div class="routine-duration">${formatDuration(routine.totalDuration)}</div>
+                <div class="routine-duration">${displayText}</div>
             </div>
             <div class="routine-actions">
                 <button class="routine-rename-btn" onclick="showRenameModal(${routine.id})" title="Rename routine"><i class="fas fa-edit"></i></button>
