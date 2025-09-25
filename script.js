@@ -1093,8 +1093,7 @@ function renderHistoryList() {
                 displayText = `${entry.totalReps} reps`;
             } else {
                 // Only time (fallback to duration for backwards compatibility)
-                const durationMinutes = Math.round((entry.totalTime || entry.duration) / 60);
-                displayText = `${durationMinutes}m`;
+                displayText = formatDuration(entry.totalTime || entry.duration || 0);
             }
             
             html += `
@@ -1625,15 +1624,28 @@ function previousPose() {
 
 // Utility functions
 function formatDuration(seconds) {
-    const minutes = Math.floor(seconds / 60);
+    const totalMinutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     
-    if (minutes === 0) {
+    // If 60 minutes or more, show in hours and minutes
+    if (totalMinutes >= 60) {
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        
+        if (minutes === 0) {
+            return `${hours}h`;
+        } else {
+            return `${hours}h ${minutes}min`;
+        }
+    }
+    
+    // For less than 60 minutes, show in minutes and seconds
+    if (totalMinutes === 0) {
         return `${remainingSeconds}s`;
     } else if (remainingSeconds === 0) {
-        return `${minutes}m`;
+        return `${totalMinutes}m`;
     } else {
-        return `${minutes}m ${remainingSeconds}s`;
+        return `${totalMinutes}m ${remainingSeconds}s`;
     }
 }
 
