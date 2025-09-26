@@ -3,38 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Routine Builder App</title>
+    <title>KwiggaTrains シ</title>
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="app">
+        <!-- Global Header -->
+        <header>
+            <h1>ಠ_ರೃ &nbsp;&nbsp;  KwiggaTrains &nbsp;&nbsp; シ</h1>
+        </header>
+        
         <!-- Hoofdscherm - Routine Lijst -->
         <div id="main-screen" class="screen active">
-            <header>
-                <h1>My Routines</h1>
-            </header>
             <div id="routines-list" class="routines-container">
                 <!-- Routines worden hier dynamisch toegevoegd -->
             </div>
-            <button id="add-routine-btn" class="add-button">
-                Add Routine
-            </button>
-            <button id="show-history-btn" class="history-button">
-                <i class="fas fa-chart-line"></i> History
-            </button>
-            <button id="settings-btn" class="settings-button">
-                <i class="fas fa-cog"></i> Settings
-            </button>
         </div>
 
         <!-- Routine Builder Scherm -->
         <div id="routine-builder" class="screen">
-            <header>
+            <div class="screen-header">
                 <button id="back-from-builder" class="back-button"><i class="fas fa-arrow-left"></i></button>
                 <h1>Add Routine</h1>
-            </header>
+            </div>
             
             <!-- Stap 1: Routine naam -->
             <div id="name-step" class="builder-step active">
@@ -178,10 +171,10 @@
 
         <!-- History Scherm -->
         <div id="history-screen" class="screen">
-            <header>
+            <div class="screen-header">
                 <button id="back-from-history" class="back-button"><i class="fas fa-arrow-left"></i></button>
                 <h1>History</h1>
-            </header>
+            </div>
             
             <div class="history-content">
                 <div id="history-stats" class="history-stats">
@@ -277,10 +270,10 @@
 
         <!-- Routine Uitvoering Scherm -->
         <div id="routine-execution" class="screen">
-            <header>
+            <div class="screen-header">
                 <button id="back-from-execution" class="back-button"><i class="fas fa-arrow-left"></i></button>
                 <h1 id="execution-routine-name">Routine</h1>
-            </header>
+            </div>
             
             <div class="execution-content">
                 <div class="pose-display">
@@ -320,6 +313,18 @@
                 </div>
             </div>
         </div>
+        <!-- Global Footer -->
+        <footer class="main-footer">
+            <button id="add-routine-btn" class="add-button">
+                シ Add Train
+            </button>
+            <button id="show-history-btn" class="history-button">
+                <i class="fas fa-chart-line"></i> History
+            </button>
+            <button id="settings-btn" class="settings-button">
+                <i class="fas fa-cog"></i> Settings
+            </button>
+        </footer>
     </div>
 
     <script src="script.js"></script>

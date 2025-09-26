@@ -24,7 +24,9 @@ body {
 .screen {
     display: none;
     min-height: 100vh;
-    padding: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top:0px;
     padding-bottom: 100px;
 }
 
@@ -32,13 +34,16 @@ body {
     display: block;
 }
 
-/* Header styling */
+/* Header styling - Global */
 header {
     text-align: center;
-    margin-bottom: 30px;
-    margin-top: 10px;
-    position: relative;
-    padding-bottom: 30px;
+    position: sticky;
+    top: 0px;
+    height: 80px;
+    background: #f2f1f8;
+    z-index: 1000;
+    padding: 20px 20px 30px 20px;
+    width: 100%;
 }
 
 header h1 {
@@ -46,7 +51,7 @@ header h1 {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    font-size: clamp(1.2rem, 4vw, 2.5rem); /* Responsive font size */
+    font-size: 1.7rem; /* Responsive font size */
     font-weight: 800;
     word-wrap: break-word;
     overflow-wrap: break-word;
@@ -56,8 +61,9 @@ header h1 {
     transform: translateX(-50%);
     width: calc(100% - 80px); /* Leave space for back button */
     z-index: 1;
-    margin-bottom: 30px;
-    top: -10px;
+    top: 0px;
+    margin-top: 20px;
+    margin-bottom: 10px;
     text-shadow: 0 2px 4px rgba(0,0,0,0.1);
     letter-spacing: -0.02em;
     padding: 0 20px; /* Add padding to prevent text from touching edges */
@@ -66,7 +72,7 @@ header h1 {
 
 /* Main screen title should stay full size */
 #main-screen header h1 {
-    font-size: 2.5rem !important; /* Fixed size for main page */
+    font-size: 2rem !important; /* Fixed size for main page */
     width: 100% !important; /* Full width on main page */
     padding: 0 !important; /* No extra padding on main page */
 }
@@ -100,6 +106,37 @@ header h1 {
 /* Hoofdscherm styling */
 .routines-container {
     margin-bottom: 30px;
+    overflow-x: hidden;
+}
+
+/* Screen header styling */
+.screen-header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.screen-header h1 {
+    flex: 1;
+    text-align: center;
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+/* Footer styling - Global */
+.main-footer {
+    position: sticky;
+    bottom: 0;
+    background: #f7fafc;
+    padding: 15px 20px;
+    border-top: 1px solid #e2e8f0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 .routine-item {
@@ -188,7 +225,7 @@ header h1 {
     color: white;
     border: none;
     border-radius: 12px;
-    padding: 20px;
+    padding: 8px 20px;
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
@@ -197,6 +234,7 @@ header h1 {
     justify-content: center;
     gap: 10px;
     transition: transform 0.2s ease;
+    margin-top: 5px;
 }
 
 .add-button:hover {
@@ -210,13 +248,11 @@ header h1 {
 
 .history-button {
     width: 100%;
-    
     background: #ca83ca;
-    
     color: white;
     border: none;
     border-radius: 12px;
-    padding: 20px;
+    padding: 12px 20px;
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
@@ -225,7 +261,7 @@ header h1 {
     justify-content: center;
     gap: 10px;
     transition: transform 0.2s ease;
-    margin-top: 15px;
+    margin-top: 0;
 }
 
 .history-button:hover {
@@ -238,7 +274,7 @@ header h1 {
     color: white;
     border: none;
     border-radius: 12px;
-    padding: 20px;
+    padding: 12px 20px;
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
@@ -247,7 +283,7 @@ header h1 {
     justify-content: center;
     gap: 10px;
     transition: transform 0.2s ease;
-    margin-top: 15px;
+    margin-top: 0;
 }
 
 .settings-button:hover {
