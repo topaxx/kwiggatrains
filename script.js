@@ -206,7 +206,7 @@ const pauseResumeBtn = document.getElementById('pause-resume-btn');
 const nextPoseBtn = document.getElementById('next-pose-btn');
 const previousPoseBtn = document.getElementById('previous-pose-btn');
 const poseCounter = document.getElementById('pose-counter');
-const executionRoutineName = document.getElementById('execution-routine-name');
+//const executionRoutineName = document.getElementById('execution-routine-name');
 
 // New DOM elements for step-by-step flow
 const nameStep = document.getElementById('name-step');
@@ -417,7 +417,7 @@ function showRoutineExecution(routine) {
     pauseResumeBtn.innerHTML = '<i class="fas fa-pause"></i>';
     pauseResumeBtn.setAttribute('data-state', 'running');
     
-    executionRoutineName.textContent = routine.name;
+    //executionRoutineName.textContent = routine.name;
     startRoutineExecution();
 }
 
