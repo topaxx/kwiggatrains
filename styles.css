@@ -21,7 +21,7 @@ body {
 #app {
     max-width: 480px;
     margin: 0 auto;
-    min-height: 100vh;
+    min-height: calc(100vh - 150px); /* Account for footer height */
     background: #f2f1f8;
     box-shadow: 0 0 20px rgba(0,0,0,0.1);
 }
@@ -29,11 +29,10 @@ body {
 /* Screen management */
 .screen {
     display: none;
-    min-height: 100vh;
+    min-height: calc(100vh - 155px); /* Account for footer height */
     padding-left: 20px;
     padding-right: 20px;
     padding-top:0px;
-    padding-bottom: 100px;
 }
 
 .screen.active {
@@ -143,6 +142,7 @@ header h1 {
     display: flex;
     flex-direction: row;
     gap: 10px;
+    height: 75px;
 }
 
 .routine-item {
@@ -332,6 +332,10 @@ header h1 {
 
 #routine-name-input:focus, #rename-routine-input:focus {
     border-color: #667eea;
+}
+
+#routine-execution{
+    min-height: calc(100vh - 175px);
 }
 
 .step-buttons {
