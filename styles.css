@@ -3,6 +3,12 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 body {
@@ -78,10 +84,10 @@ header h1 {
 }
 
 .back-button {
-    position: absolute;
+    position: fixed;
     left: 20px;
-    top: 60%;
-    transform: translateY(-50%);
+    top: 20px;
+    transform: none;
     background: #667eea;
     border: none;
     border-radius: 8px;
@@ -95,22 +101,12 @@ header h1 {
     justify-content: center;
     box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
     transition: all 0.2s ease;
-    z-index: 10;
+    z-index: 9999;
 }
 
 .back-button i {
     font-size: 1.4rem;
     font-weight: 700;
-}
-
-/* Back button specifically for routine execution */
-#routine-execution .back-button {
-    position: fixed;
-    left: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-right: 0;
-    z-index: 1001;
 }
 
 /* Hoofdscherm styling */
