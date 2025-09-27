@@ -269,7 +269,10 @@ function init() {
 
 // Event listeners
 function setupEventListeners() {
-    addRoutineBtn.addEventListener('click', showRoutineBuilder);
+    addRoutineBtn.addEventListener('click', () => {
+        window.scrollTo(0, 0);
+        showRoutineBuilder();
+    });
     backFromBuilder.addEventListener('click', showMainScreen);
     backFromExecution.addEventListener('click', showMainScreen);
     saveRoutineBtn.addEventListener('click', saveRoutine);
@@ -294,8 +297,14 @@ function setupEventListeners() {
     routineNameInput.addEventListener('input', updateNextButton);
     
     // Settings and History screen listeners
-    settingsBtn.addEventListener('click', showSettingsScreen);
-    showHistoryBtn.addEventListener('click', showHistoryScreen);
+    settingsBtn.addEventListener('click', () => {
+        window.scrollTo(0, 0);
+        showSettingsScreen();
+    });
+    showHistoryBtn.addEventListener('click', () => {
+        window.scrollTo(0, 0);
+        showHistoryScreen();
+    });
     backFromHistory.addEventListener('click', showMainScreen);
     exportHistoryBtn.addEventListener('click', exportHistory);
     importHistoryBtn.addEventListener('click', showImportHistoryModal);
@@ -337,6 +346,8 @@ function showMainScreen() {
     // Stop routine execution and all sounds when returning to main screen
     stopRoutineExecution();
     renderRoutines();
+    // Scroll to top when loading main screen
+    window.scrollTo(0, 0);
 }
 
 function showSettingsScreen() {

@@ -79,7 +79,7 @@ header h1 {
 
 .back-button {
     position: absolute;
-    left: 0;
+    left: 20px;
     top: 60%;
     transform: translateY(-50%);
     background: #667eea;
@@ -135,8 +135,8 @@ header h1 {
     border-top: 1px solid #e2e8f0;
     z-index: 1000;
     display: flex;
-    flex-direction: column;
-    gap: 5px;
+    flex-direction: row;
+    gap: 10px;
 }
 
 .routine-item {
@@ -220,21 +220,21 @@ header h1 {
 }
 
 .add-button {
-    width: 100%;
+    flex: 1;
     background: linear-gradient(135deg, #39d47a 0%, #28b96c 100%);
     color: white;
     border: none;
     border-radius: 12px;
-    padding: 8px 20px;
-    font-size: 1.1rem;
+    padding: 8px 12px;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 6px;
     transition: transform 0.2s ease;
-    margin-top: 5px;
+    margin-top: 0;
 }
 
 .add-button:hover {
@@ -247,19 +247,19 @@ header h1 {
 }
 
 .history-button {
-    width: 100%;
+    flex: 1;
     background: #ca83ca;
     color: white;
     border: none;
     border-radius: 12px;
-    padding: 12px 20px;
-    font-size: 1.1rem;
+    padding: 8px 12px;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 6px;
     transition: transform 0.2s ease;
     margin-top: 0;
 }
@@ -269,21 +269,24 @@ header h1 {
 }
 
 .settings-button {
-    width: 100%;
+    flex: 0 0 auto;
     background: #4a5568;
     color: white;
     border: none;
     border-radius: 12px;
-    padding: 12px 20px;
-    font-size: 1.1rem;
+    padding: 8px 12px;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 0;
     transition: transform 0.2s ease;
     margin-top: 0;
+    width: auto;
+    height: auto;
+    min-height: 40px;
 }
 
 .settings-button:hover {
@@ -1366,7 +1369,7 @@ header h1 {
     }
     
     header h1 {
-        font-size: clamp(1rem, 3vw, 2rem); /* Responsive font size for mobile */
+        font-size: clamp(1.5rem, 4vw, 2.5rem); /* Larger responsive font size for mobile */
         width: calc(100% - 100px); /* More space for back button on mobile */
     }
     
@@ -1417,7 +1420,7 @@ header h1 {
 /* Extra small screens */
 @media (max-width: 360px) {
     header h1 {
-        font-size: clamp(0.8rem, 2.5vw, 1.5rem); /* Much smaller for very small screens */
+        font-size: clamp(1.2rem, 3.5vw, 2rem); /* Larger font size for very small screens */
     }
     
     /* Main screen title should stay full size on extra small screens too */
