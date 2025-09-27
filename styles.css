@@ -103,6 +103,16 @@ header h1 {
     font-weight: 700;
 }
 
+/* Back button specifically for routine execution */
+#routine-execution .back-button {
+    position: fixed;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-right: 0;
+    z-index: 1001;
+}
+
 /* Hoofdscherm styling */
 .routines-container {
     margin-bottom: 30px;
@@ -942,6 +952,7 @@ header h1 {
 /* Routine Uitvoering styling */
 .execution-content {
     text-align: center;
+    padding-bottom: 100px; /* Space for footer */
 }
 
 .pose-display {
@@ -961,7 +972,7 @@ header h1 {
     color: #2d3748;
     font-size: 1.5rem;
     font-weight: 600;
-    margin-top: calc(80px + 2.5rem + 20px); /* header height + font size + extra spacing */
+    margin-top: 20px; /* Reduced spacing */
     transition: margin-top 0.3s ease;
 }
 
@@ -1381,7 +1392,7 @@ header h1 {
     }
     
     #current-pose-name {
-        margin-top: calc(80px + 2rem + 20px); /* Adjusted for mobile font size */
+        margin-top: 20px; /* Reduced spacing for mobile */
     }
     
     .poses-grid {
@@ -1431,6 +1442,6 @@ header h1 {
     }
     
     #current-pose-name {
-        margin-top: calc(80px + 1.5rem + 20px); /* Adjusted for extra small font size */
+        margin-top: 20px; /* Reduced spacing for extra small screens */
     }
 }
