@@ -126,9 +126,13 @@ header h1 {
     flex: 1;
     text-align: center;
     margin: 0;
-    font-size: 1.5rem;
+    font-size: clamp(0.9rem, 1.2rem, 1.5rem);
     font-weight: 600;
     color: #2d3748;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    line-height: 1.2;
 }
 
 /* Footer styling - Global */
@@ -166,10 +170,14 @@ header h1 {
 }
 
 .routine-name {
-    font-size: 1.3rem;
+    font-size: clamp(0.8rem, 1.1rem, 1.3rem);
     font-weight: 600;
     color: #ffffff;
     margin-bottom: 8px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    line-height: 1.2;
 }
 
 .routine-duration {
@@ -1107,10 +1115,14 @@ header h1 {
 }
 
 .stat-number {
-    font-size: 2rem;
+    font-size: clamp(0.8rem, 1.5rem, 2rem);
     font-weight: 700;
     color: #667eea;
     margin-bottom: 5px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    line-height: 1.1;
 }
 
 .stat-label {

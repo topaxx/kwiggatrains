@@ -318,6 +318,10 @@ function setupEventListeners() {
     closeImportSuccessModalBtn.addEventListener('click', hideImportSuccessModal);
     closeImportSuccessBtn.addEventListener('click', hideImportSuccessModal);
     
+    // Settings modal listeners
+    document.getElementById('close-settings-modal').addEventListener('click', hideSettingsModal);
+    document.getElementById('close-settings').addEventListener('click', hideSettingsModal);
+    
     // Rename modal listeners
     closeRenameModalBtn.addEventListener('click', hideRenameModal);
     cancelRenameBtn.addEventListener('click', hideRenameModal);
@@ -351,8 +355,15 @@ function showMainScreen() {
 }
 
 function showSettingsScreen() {
-    // For now, just show an alert - can be expanded later
-    alert('Settings functionality coming soon!');
+    // Show the settings modal
+    const settingsModal = document.getElementById('settings-modal');
+    settingsModal.classList.add('active');
+}
+
+function hideSettingsModal() {
+    // Hide the settings modal
+    const settingsModal = document.getElementById('settings-modal');
+    settingsModal.classList.remove('active');
 }
 
 function showHistoryScreen() {
@@ -955,7 +966,7 @@ const longestStreak = calculateLongestStreak();
                 <div class="stat-label">Completed Routines</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">${Math.round(totalTime / 60)}m</div>
+                <div class="stat-number">${formatDuration(totalTime)}</div>
                 <div class="stat-label">Total Time</div>
             </div>
             <div class="stat-item">
@@ -971,7 +982,7 @@ const longestStreak = calculateLongestStreak();
                 <div class="stat-label">Longest Daily Streak</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">${favoriteRoutine.length > 10 ? favoriteRoutine.substring(0, 10) + '...' : favoriteRoutine}</div>
+                <div class="stat-number">${favoriteRoutine}</div>
                 <div class="stat-label">Favorite Routine</div>
             </div>
         </div>
