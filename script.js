@@ -18,37 +18,41 @@ const yogaPoses = [
     { id: 16, name: "Swan Pose", image: "images/yoga_images/swan_pose.png" }
 ];
 
-// Exercises data - using images from exercise_images folder
-const exercises = [
+// Activities data - for activities selection
+const activities = [
     { id: 0, name: "Walking", image: "images/exercise_images/exercise_ghibli_walking.gif" },
     { id: 1, name: "Cycling", image: "images/exercise_images/exercise_ghibli_cycling.gif" },
     { id: 2, name: "Running", image: "images/exercise_images/exercise_ghibli_running.gif" },
-    { id: 3, name: "Swimming", image: "images/exercise_images/cartoon_swimming.gif" },
-    { id: 4, name: "Push-ups", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 5, name: "Squats", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 6, name: "Plank", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 7, name: "Lunges", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 8, name: "Burpees", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 9, name: "Mountain Climbers", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 10, name: "Jumping Jacks", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 11, name: "Wall Sit", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 12, name: "Tricep Dips", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 13, name: "High Knees", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 14, name: "Glute Bridges", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 15, name: "Russian Twists", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 16, name: "Calf Raises", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 17, name: "Leg Raises", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 18, name: "Bear Crawl", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 19, name: "Single Leg Deadlift", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 20, name: "Side Plank", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 21, name: "Pike Push-ups", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 22, name: "Jump Squats", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 23, name: "Hollow Body Hold", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 24, name: "Arm Circles", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 25, name: "Hip Thrusts", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 26, name: "Superman", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 27, name: "Flutter Kicks", image: "images/exercise_images/exercise_ghibli.gif" },
-    { id: 28, name: "Crab Walk", image: "images/exercise_images/exercise_ghibli.gif" }
+    { id: 3, name: "Swimming", image: "images/exercise_images/cartoon_swimming.gif" }
+];
+
+// Exercises data - using images from exercise_images folder
+const exercises = [
+    { id: 0, name: "Push-ups", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 1, name: "Squats", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 2, name: "Plank", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 3, name: "Lunges", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 4, name: "Burpees", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 5, name: "Mountain Climbers", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 6, name: "Jumping Jacks", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 7, name: "Wall Sit", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 8, name: "Tricep Dips", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 9, name: "High Knees", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 10, name: "Glute Bridges", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 11, name: "Russian Twists", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 12, name: "Calf Raises", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 13, name: "Leg Raises", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 14, name: "Bear Crawl", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 15, name: "Single Leg Deadlift", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 16, name: "Side Plank", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 17, name: "Pike Push-ups", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 18, name: "Jump Squats", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 19, name: "Hollow Body Hold", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 20, name: "Arm Circles", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 21, name: "Hip Thrusts", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 22, name: "Superman", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 23, name: "Flutter Kicks", image: "images/exercise_images/exercise_ghibli.gif" },
+    { id: 24, name: "Crab Walk", image: "images/exercise_images/exercise_ghibli.gif" }
 ];
 
 // Tijd opties
@@ -88,6 +92,11 @@ let currentTimeLeft = 0; // Track remaining time for pause/resume
 let completionLog = JSON.parse(localStorage.getItem('yogaCompletionLog') || '[]');
 let bellSound = null; // Audio object for bell sound
 let bowlSound = null; // Audio object for bowl sound
+
+// Authentication state
+let currentUser = null;
+let isAuthenticated = false;
+let auth0Client = null;
 
 // Initialize bell sound
 function initBellSound() {
@@ -191,6 +200,8 @@ const showHistoryBtn = document.getElementById('show-history-btn');
 const backFromBuilder = document.getElementById('back-from-builder');
 const backFromExecution = document.getElementById('back-from-execution');
 const backFromHistory = document.getElementById('back-from-history');
+const backFromSettings = document.getElementById('back-from-settings');
+const settingsScreen = document.getElementById('settings-screen');
 const clearHistoryBtn = document.getElementById('clear-history-btn');
 const routineNameInput = document.getElementById('routine-name-input');
 const posesGrid = document.getElementById('poses-grid');
@@ -217,8 +228,10 @@ const backToNameBtn = document.getElementById('back-to-name');
 const posesGridContainer = document.getElementById('poses-grid-container');
 const exercisesGridContainer = document.getElementById('exercises-grid-container');
 const togglePosesGridBtn = document.getElementById('toggle-poses-grid');
+const toggleActivitiesGridBtn = document.getElementById('toggle-activities-grid');
 const toggleExercisesGridBtn = document.getElementById('toggle-exercises-grid');
 const toggleIcon = document.getElementById('toggle-icon');
+const toggleActivitiesIcon = document.getElementById('toggle-activities-icon');
 const toggleExercisesIcon = document.getElementById('toggle-exercises-icon');
 const timeSelectionModal = document.getElementById('time-selection-modal');
 const closeModalBtn = document.getElementById('close-modal');
@@ -258,10 +271,41 @@ const cancelRenameBtn = document.getElementById('cancel-rename');
 const confirmRenameBtn = document.getElementById('confirm-rename');
 const renameInput = document.getElementById('rename-input');
 
+// Authentication DOM elements
+const userModal = document.getElementById('user-modal');
+const closeUserModalBtn = document.getElementById('close-user-modal');
+const userModalTitle = document.getElementById('user-modal-title');
+const loginContent = document.getElementById('login-content');
+const userContent = document.getElementById('user-content');
+const twitterLoginBtn = document.getElementById('twitter-login-btn');
+const userAvatarImg = document.getElementById('user-avatar-img');
+const userName = document.getElementById('user-name');
+const userEmail = document.getElementById('user-email');
+const logoutBtn = document.getElementById('logout-btn');
+
+// User ID Modal elements
+const useridModal = document.getElementById('userid-modal');
+const closeUseridModalBtn = document.getElementById('close-userid-modal');
+const closeUseridBtn = document.getElementById('close-userid');
+const useridAvatarImg = document.getElementById('userid-avatar-img');
+const useridName = document.getElementById('userid-name');
+const useridEmail = document.getElementById('userid-email');
+const useridDisplay = document.getElementById('userid-display');
+
+// Settings screen authentication elements
+const settingsLoginContent = document.getElementById('settings-login-content');
+const settingsUserContent = document.getElementById('settings-user-content');
+const settingsTwitterLoginBtn = document.getElementById('settings-twitter-login-btn');
+const settingsUserAvatarImg = document.getElementById('settings-user-avatar-img');
+const settingsUserName = document.getElementById('settings-user-name');
+const settingsUserEmail = document.getElementById('settings-user-email');
+const settingsLogoutBtn = document.getElementById('settings-logout-btn');
+
 // Initialize app
 function init() {
     initBellSound();
     initBowlSound();
+    initAuthentication();
     renderRoutines();
     renderPoses();
     setupEventListeners();
@@ -285,6 +329,7 @@ function setupEventListeners() {
     cancelRoutineBtn.addEventListener('click', showMainScreen);
     backToNameBtn.addEventListener('click', goToNameStep);
     document.getElementById('poses-selection-header').addEventListener('click', togglePosesGrid);
+    document.getElementById('activities-selection-header').addEventListener('click', toggleActivitiesGrid);
     document.getElementById('exercises-selection-header').addEventListener('click', toggleExercisesGrid);
     closeModalBtn.addEventListener('click', hideTimeModal);
     closeDeleteModalBtn.addEventListener('click', hideDeleteModal);
@@ -306,6 +351,7 @@ function setupEventListeners() {
         showHistoryScreen();
     });
     backFromHistory.addEventListener('click', showMainScreen);
+    backFromSettings.addEventListener('click', showMainScreen);
     exportHistoryBtn.addEventListener('click', exportHistory);
     importHistoryBtn.addEventListener('click', showImportHistoryModal);
     clearHistoryBtn.addEventListener('click', showClearHistoryConfirmation);
@@ -318,9 +364,9 @@ function setupEventListeners() {
     closeImportSuccessModalBtn.addEventListener('click', hideImportSuccessModal);
     closeImportSuccessBtn.addEventListener('click', hideImportSuccessModal);
     
-    // Settings modal listeners
-    document.getElementById('close-settings-modal').addEventListener('click', hideSettingsModal);
-    document.getElementById('close-settings').addEventListener('click', hideSettingsModal);
+    // Settings screen login listeners
+    settingsTwitterLoginBtn.addEventListener('click', handleTwitterLogin);
+    settingsLogoutBtn.addEventListener('click', handleLogout);
     
     // Rename modal listeners
     closeRenameModalBtn.addEventListener('click', hideRenameModal);
@@ -341,6 +387,15 @@ function setupEventListeners() {
     fileInputArea.addEventListener('dragover', handleDragOver);
     fileInputArea.addEventListener('dragleave', handleDragLeave);
     fileInputArea.addEventListener('drop', handleFileDrop);
+    
+    // Authentication event listeners
+    closeUserModalBtn.addEventListener('click', hideUserModal);
+    twitterLoginBtn.addEventListener('click', handleTwitterLogin);
+    logoutBtn.addEventListener('click', handleLogout);
+    
+    // User ID Modal event listeners
+    closeUseridModalBtn.addEventListener('click', hideUseridModal);
+    closeUseridBtn.addEventListener('click', hideUseridModal);
 }
 
 // Screen navigation
@@ -355,15 +410,12 @@ function showMainScreen() {
 }
 
 function showSettingsScreen() {
-    // Show the settings modal
-    const settingsModal = document.getElementById('settings-modal');
-    settingsModal.classList.add('active');
-}
-
-function hideSettingsModal() {
-    // Hide the settings modal
-    const settingsModal = document.getElementById('settings-modal');
-    settingsModal.classList.remove('active');
+    hideAllScreens();
+    settingsScreen.classList.add('active');
+    // Update settings screen with current auth state
+    updateSettingsAuthUI();
+    // Scroll to top when loading settings screen
+    window.scrollTo(0, 0);
 }
 
 function showHistoryScreen() {
@@ -390,6 +442,9 @@ function showRoutineBuilder() {
     currentStep = 'name';
     routineNameInput.value = "";
     
+    // Render activities
+    renderActivities();
+    
     // Render exercises
     renderExercises();
     
@@ -401,6 +456,58 @@ function showRoutineBuilder() {
     setTimeout(() => {
         routineNameInput.focus();
     }, 100);
+}
+
+// Toggle functions for collapsible sections
+function togglePosesGrid() {
+    const container = posesGridContainer;
+    const icon = toggleIcon;
+    
+    if (container.classList.contains('expanded')) {
+        container.classList.remove('expanded');
+        container.classList.add('collapsed');
+        icon.textContent = '▶';
+        togglePosesGridBtn.classList.remove('rotated');
+    } else {
+        container.classList.remove('collapsed');
+        container.classList.add('expanded');
+        icon.textContent = '▼';
+        togglePosesGridBtn.classList.add('rotated');
+    }
+}
+
+function toggleActivitiesGrid() {
+    const container = document.getElementById('activities-grid-container');
+    const icon = toggleActivitiesIcon;
+    
+    if (container.classList.contains('expanded')) {
+        container.classList.remove('expanded');
+        container.classList.add('collapsed');
+        icon.textContent = '▶';
+        toggleActivitiesGridBtn.classList.remove('rotated');
+    } else {
+        container.classList.remove('collapsed');
+        container.classList.add('expanded');
+        icon.textContent = '▼';
+        toggleActivitiesGridBtn.classList.add('rotated');
+    }
+}
+
+function toggleExercisesGrid() {
+    const container = exercisesGridContainer;
+    const icon = toggleExercisesIcon;
+    
+    if (container.classList.contains('expanded')) {
+        container.classList.remove('expanded');
+        container.classList.add('collapsed');
+        icon.textContent = '▶';
+        toggleExercisesGridBtn.classList.remove('rotated');
+    } else {
+        container.classList.remove('collapsed');
+        container.classList.add('expanded');
+        icon.textContent = '▼';
+        toggleExercisesGridBtn.classList.add('rotated');
+    }
 }
 
 function showRoutineExecution(routine) {
@@ -1259,6 +1366,22 @@ function renderPoses() {
     });
 }
 
+function renderActivities() {
+    const activitiesGrid = document.getElementById('activities-grid');
+    activitiesGrid.innerHTML = '';
+    
+    activities.forEach(activity => {
+        const activityElement = document.createElement('div');
+        activityElement.className = 'activity-option';
+        activityElement.innerHTML = `
+            <img src="${activity.image}" alt="${activity.name}">
+            <div class="activity-name">${activity.name}</div>
+        `;
+        activityElement.addEventListener('click', () => selectActivity(activity));
+        activitiesGrid.appendChild(activityElement);
+    });
+}
+
 function renderExercises() {
     exercisesGrid.innerHTML = '';
     
@@ -1283,6 +1406,17 @@ function selectPose(pose) {
     
     // Keep poses grid open and show time modal
     showTimeModal(pose);
+}
+
+function selectActivity(activity) {
+    // Remove previous selection
+    document.querySelectorAll('.activity-option').forEach(el => el.classList.remove('selected'));
+    
+    // Select new activity
+    event.target.closest('.activity-option').classList.add('selected');
+    
+    // Keep activities grid open and show time modal
+    showTimeModal(activity);
 }
 
 function selectExercise(exercise) {
@@ -1675,6 +1809,222 @@ function formatDuration(seconds) {
         return `${totalMinutes}m`;
     } else {
         return `${totalMinutes}m ${remainingSeconds}s`;
+    }
+}
+
+// Authentication functions
+async function initAuthentication() {
+    try {
+        // Initialize Auth0 Client
+        auth0Client = await auth0.createAuth0Client({
+            domain: 'dev-d2madmmyraemi5zr.us.auth0.com',  // Replace with your Auth0 domain (e.g., 'your-tenant.auth0.com')
+            clientId: '0TuLbrEuL5humLnQC7rLn7eDGqIaxFiE',  // Replace with your Auth0 client ID
+            authorizationParams: {
+                redirect_uri: window.location.origin
+            },
+            cacheLocation: 'localstorage'
+        });
+
+        // Check if we're returning from Auth0 login
+        const query = window.location.search;
+        if (query.includes('code=') && query.includes('state=')) {
+            try {
+                await auth0Client.handleRedirectCallback();
+                // Clean up the URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            } catch (error) {
+                console.error('Error handling redirect callback:', error);
+            }
+        }
+
+        // Check if user is authenticated
+        isAuthenticated = await auth0Client.isAuthenticated();
+
+        if (isAuthenticated) {
+            currentUser = await auth0Client.getUser();
+            updateAuthButton();
+            console.log('User authenticated:', currentUser);
+            
+            // Show User ID modal after successful login
+            setTimeout(() => {
+                showUseridModal();
+            }, 500); // Small delay to ensure UI is ready
+        }
+    } catch (error) {
+        console.error('Error initializing Auth0:', error);
+        console.log('Checking for fallback demo mode...');
+        
+        // Fallback: check localStorage for demo user
+        const savedUser = localStorage.getItem('yogaUser');
+        if (savedUser) {
+            try {
+                currentUser = JSON.parse(savedUser);
+                isAuthenticated = true;
+                updateAuthButton();
+            } catch (error) {
+                console.error('Error parsing saved user:', error);
+                localStorage.removeItem('yogaUser');
+            }
+        }
+    }
+}
+
+function showUserModal() {
+    if (isAuthenticated) {
+        showUserInfo();
+    } else {
+        showLoginForm();
+    }
+    userModal.classList.add('active');
+}
+
+function hideUserModal() {
+    userModal.classList.remove('active');
+}
+
+function showLoginForm() {
+    userModalTitle.textContent = 'Login';
+    loginContent.style.display = 'block';
+    userContent.style.display = 'none';
+}
+
+function showUserInfo() {
+    userModalTitle.textContent = 'Account';
+    loginContent.style.display = 'none';
+    userContent.style.display = 'block';
+    
+    if (currentUser) {
+        const displayName = currentUser.name || currentUser.nickname || 'User';
+        userAvatarImg.src = currentUser.picture || '';
+        userAvatarImg.alt = displayName;
+        userName.textContent = displayName;
+        userEmail.textContent = currentUser.email || '';
+    }
+}
+
+function updateSettingsAuthUI() {
+    if (currentUser) {
+        // User is logged in, show user info
+        settingsLoginContent.style.display = 'none';
+        settingsUserContent.style.display = 'block';
+        
+        // Show logout button in header
+        const settingsLogoutBtn = document.getElementById('settings-logout-btn');
+        settingsLogoutBtn.style.display = 'flex';
+        
+        const displayName = currentUser.name || currentUser.nickname || 'User';
+        settingsUserAvatarImg.src = currentUser.picture || '';
+        settingsUserAvatarImg.alt = displayName;
+        settingsUserName.textContent = displayName;
+        settingsUserEmail.textContent = currentUser.email || '';
+    } else {
+        // User is not logged in, show login form
+        settingsLoginContent.style.display = 'block';
+        settingsUserContent.style.display = 'none';
+        
+        // Hide logout button in header
+        const settingsLogoutBtn = document.getElementById('settings-logout-btn');
+        settingsLogoutBtn.style.display = 'none';
+    }
+}
+
+function showUseridModal() {
+    if (currentUser) {
+        const displayName = currentUser.name || currentUser.nickname || 'User';
+        
+        // Update modal content
+        useridAvatarImg.src = currentUser.picture || '';
+        useridAvatarImg.alt = displayName;
+        useridName.textContent = displayName;
+        useridEmail.textContent = currentUser.email || '';
+        useridDisplay.textContent = currentUser.sub || 'No ID available';
+        
+        // Show modal
+        useridModal.classList.add('active');
+    }
+}
+
+function hideUseridModal() {
+    useridModal.classList.remove('active');
+}
+
+async function handleTwitterLogin() {
+    try {
+        if (auth0Client) {
+            // Redirect to Auth0 Universal Login
+            await auth0Client.loginWithRedirect({
+                authorizationParams: {
+                    redirect_uri: window.location.origin
+                }
+            });
+        } else {
+            throw new Error('Auth0 client not initialized');
+        }
+    } catch (error) {
+        console.error('Error during login:', error);
+        console.log('Falling back to demo mode...');
+        // Fallback for demo purposes - simulate login
+        simulateTwitterLogin();
+    }
+}
+
+function simulateTwitterLogin() {
+    // Demo function for testing without actual Auth0 setup
+    currentUser = {
+        sub: 'twitter|demo_123',
+        nickname: 'demo_user',
+        name: 'Demo Twitter User',
+        picture: 'https://via.placeholder.com/100/1DA1F2/ffffff?text=X',
+        email: 'demo@twitter.com'
+    };
+    
+    isAuthenticated = true;
+    localStorage.setItem('yogaUser', JSON.stringify(currentUser));
+    updateAuthButton();
+    hideUserModal();
+    
+    console.log('Demo Twitter user logged in:', currentUser);
+}
+
+async function handleLogout() {
+    try {
+        if (auth0Client) {
+            // Logout from Auth0
+            await auth0Client.logout({
+                logoutParams: {
+                    returnTo: window.location.origin
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Error during logout:', error);
+    }
+    
+    // Clear local state
+    currentUser = null;
+    isAuthenticated = false;
+    localStorage.removeItem('yogaUser');
+    updateAuthButton();
+    hideUserModal();
+    
+    console.log('User logged out');
+}
+
+function updateAuthButton() {
+    if (isAuthenticated && currentUser) {
+        // Show user avatar and name (use nickname for Twitter users)
+        const displayName = currentUser.name || currentUser.nickname || 'User';
+        authButton.innerHTML = `
+            <img src="${currentUser.picture || ''}" alt="${displayName}" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+            <i class="fab fa-x-twitter" style="display: none;"></i>
+            <span>${displayName}</span>
+        `;
+    } else {
+        // Show login button
+        authButton.innerHTML = `
+            <i class="fas fa-user"></i>
+            <span>Login</span>
+        `;
     }
 }
 

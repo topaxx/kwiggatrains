@@ -7,6 +7,7 @@
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
 </head>
 <body>
     <div id="app">
@@ -65,6 +66,21 @@
                         <div id="poses-grid-container" class="poses-grid-container expanded">
                             <div id="poses-grid" class="poses-grid">
                                 <!-- Yoga poses worden hier dynamisch toegevoegd -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Collapsible activities grid -->
+                    <div class="activities-selection-section">
+                        <div class="activities-selection-header" id="activities-selection-header">
+                            <h4>Activities</h4>
+                            <button id="toggle-activities-grid" class="toggle-button">
+                                <span id="toggle-activities-icon">▼</span>
+                            </button>
+                        </div>
+                        <div id="activities-grid-container" class="activities-grid-container">
+                            <div id="activities-grid" class="activities-grid">
+                                <!-- Activities worden hier dynamisch toegevoegd -->
                             </div>
                         </div>
                     </div>
@@ -311,22 +327,83 @@
             </div>
         </div>
 
-        <!-- Settings Coming Soon Modal -->
-        <div id="settings-modal" class="modal">
+        <!-- Settings Screen -->
+        <div id="settings-screen" class="screen">
+            <div class="screen-header">
+                <button id="back-from-settings" class="back-button"><i class="fas fa-arrow-left"></i></button>
+                <h1>Settings</h1>
+            </div>
+            
+            <div class="settings-content">
+                <div class="settings-section">
+                    <div class="settings-section-header">
+                        <h3>Account</h3>
+                        <button id="settings-logout-btn" class="settings-logout-button" style="display: none;">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Logout
+                        </button>
+                    </div>
+                    <div class="settings-item">
+                        <div id="settings-login-content" class="login-options">
+                            <p style="text-align: center; margin-bottom: 20px; color: #4a5568;">
+                                Login om je routines op te slaan in de cloud
+                            </p>
+                            <button id="settings-twitter-login-btn" class="twitter-login-button">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Login
+                            </button>
+                        </div>
+                        <div id="settings-user-content" class="auth-content" style="display: none;">
+                            <div class="user-info">
+                                <div class="user-avatar">
+                                    <img id="settings-user-avatar-img" src="" alt="User Avatar">
+                                </div>
+                                <div class="user-details">
+                                    <h4 id="settings-user-name">User Name</h4>
+                                    <p id="settings-user-email">user@example.com</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Authentication Modal -->
+        <div id="user-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>⚙️ Settings</h3>
-                    <button id="close-settings-modal" class="close-button">×</button>
+                    <h3 id="user-modal-title">Login</h3>
+                    <button id="close-user-modal" class="close-button">×</button>
                 </div>
                 <div class="modal-body">
-                    <p style="text-align: center; font-size: 1.1rem; color: #4a5568; margin: 20px 0;">
-                        Settings are coming soon! 🚀
-                    </p>
-                    <p style="text-align: center; color: #718096; margin-bottom: 20px;">
-                        We're working on adding customization options for your workout experience.
-                    </p>
-                    <div class="modal-buttons">
-                        <button id="close-settings" class="next-button">Got it!</button>
+                    <div id="login-content" class="auth-content">
+                        <div class="login-options">
+                            <p style="text-align: center; margin-bottom: 20px; color: #4a5568;">
+                                Login om je routines op te slaan in de cloud
+                            </p>
+                            <button id="twitter-login-btn" class="twitter-login-button">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Login
+                            </button>
+                        </div>
+                    </div>
+                    <div id="user-content" class="auth-content" style="display: none;">
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                <img id="user-avatar-img" src="" alt="User Avatar">
+                            </div>
+                            <div class="user-details">
+                                <h4 id="user-name">User Name</h4>
+                                <p id="user-email">user@example.com</p>
+                            </div>
+                        </div>
+                        <div class="user-actions">
+                            <button id="logout-btn" class="logout-button">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

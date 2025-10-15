@@ -49,6 +49,10 @@ header {
     z-index: 1000;
     padding: 20px 20px 30px 20px;
     width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
 }
 
 header h1 {
@@ -56,6 +60,7 @@ header h1 {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    flex: 1;
     font-size: 1.7rem; /* Responsive font size */
     font-weight: 800;
     word-wrap: break-word;
@@ -288,7 +293,7 @@ header h1 {
     color: white;
     border: none;
     border-radius: 12px;
-    padding: 8px 12px;
+    padding: 8px;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
@@ -300,7 +305,7 @@ header h1 {
     margin-top: 0;
     width: auto;
     height: auto;
-    min-height: 40px;
+    aspect-ratio: 1 / 1;
 }
 
 .settings-button:hover {
@@ -578,6 +583,102 @@ header h1 {
     max-height: 360px;
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+/* Activities selection section */
+.activities-selection-section {
+    margin-bottom: 30px;
+}
+
+.activities-selection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: white;
+    border-radius: 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.activities-selection-header:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.activities-selection-header h4 {
+    color: #4a5568;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.activities-grid-container {
+    background: white;
+    border-radius: 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    margin-top: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    max-height: 0;
+    opacity: 0;
+    border-top: none;
+}
+
+.activities-grid-container.expanded {
+    max-height: 500px;
+    opacity: 1;
+}
+
+.activities-grid-container.collapsed {
+    max-height: 0;
+    opacity: 0;
+}
+
+.activities-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 20px;
+    max-height: 360px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Exercise option styling */
+.activity-option {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.activity-option:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+}
+
+.activity-option.selected {
+    border-color: #667eea;
+    background: #f7fafc;
+}
+
+.activity-option img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.activity-option .activity-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4a5568;
 }
 
 /* Exercises selection section */
@@ -1455,5 +1556,282 @@ header h1 {
     
     #current-pose-name {
         margin-top: 20px; /* Reduced spacing for extra small screens */
+    }
+}
+
+/* Settings Screen Styles */
+.settings-content {
+    padding: 10px 0;
+}
+
+.settings-section {
+    margin-bottom: 20px;
+}
+
+.settings-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.settings-section-header h3 {
+    margin: 0;
+    color: #2d3748;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.settings-logout-button {
+    background: #e53e3e;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.settings-logout-button:hover {
+    background: #c53030;
+    transform: translateY(-1px);
+}
+
+.settings-logout-button i {
+    font-size: 0.9rem;
+}
+
+.settings-item {
+    padding: 15px 0;
+}
+
+.settings-item .login-options {
+    padding: 20px 0;
+}
+
+/* Authentication Styles */
+.auth-button {
+    flex: 0 0 auto;
+    background: #4a5568;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    transition: transform 0.2s ease;
+    margin-top: 0;
+    width: auto;
+    height: auto;
+    min-height: 40px;
+}
+
+.auth-button:hover {
+    /* Remove hover animation */
+}
+
+.auth-button i {
+    font-size: 1rem;
+}
+
+.auth-button img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* User Modal Styles */
+.auth-content {
+    text-align: center;
+}
+
+.login-options {
+    padding: 20px 0;
+}
+
+.twitter-login-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 auto;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.twitter-login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+}
+
+.twitter-login-button i {
+    font-size: 1.2rem;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.user-avatar {
+    flex-shrink: 0;
+}
+
+.user-avatar img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e2e8f0;
+}
+
+.user-details {
+    text-align: left;
+    flex: 1;
+}
+
+.user-details h4 {
+    margin: 0 0 4px 0;
+    color: #2d3748;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.user-details p {
+    margin: 0;
+    color: #718096;
+    font-size: 0.9rem;
+}
+
+.user-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.logout-button {
+    background: #e53e3e;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logout-button:hover {
+    background: #c53030;
+    transform: translateY(-1px);
+}
+
+/* User ID Modal Styles */
+.userid-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: #f7fafc;
+    border-radius: 12px;
+}
+
+.userid-avatar {
+    flex-shrink: 0;
+}
+
+.userid-avatar img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e2e8f0;
+}
+
+.userid-details {
+    text-align: left;
+    flex: 1;
+}
+
+.userid-details h4 {
+    margin: 0 0 4px 0;
+    color: #2d3748;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.userid-details p {
+    margin: 0 0 8px 0;
+    color: #718096;
+    font-size: 0.9rem;
+}
+
+.userid-id {
+    margin-top: 8px;
+}
+
+.userid-id strong {
+    color: #4a5568;
+    font-size: 0.9rem;
+}
+
+.userid-id code {
+    display: block;
+    background: #e2e8f0;
+    color: #2d3748;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    margin-top: 4px;
+    word-break: break-all;
+    border: 1px solid #cbd5e0;
+}
+
+/* Responsive adjustments for auth button */
+@media (max-width: 768px) {
+    .user-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .user-details {
+        text-align: center;
+    }
+    
+    .userid-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .userid-details {
+        text-align: center;
     }
 }

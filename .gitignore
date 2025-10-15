@@ -1,0 +1,31 @@
+# Auth0 credentials (bevat gevoelige informatie)
+auth0-config.js
+
+# IDE specifieke bestanden
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS specifieke bestanden
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+
