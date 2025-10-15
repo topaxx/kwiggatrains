@@ -29,10 +29,15 @@ body {
 /* Screen management */
 .screen {
     display: none;
-    min-height: calc(100vh - 155px); /* Account for footer height */
+    min-height: calc(100vh - 80px); /* Account for header only */
     padding-left: 20px;
     padding-right: 20px;
     padding-top:0px;
+}
+
+/* Main screen needs space for footer */
+#main-screen {
+    min-height: calc(100vh - 155px); /* Account for header + footer */
 }
 
 .screen.active {
@@ -148,10 +153,15 @@ header h1 {
     padding: 15px 20px;
     border-top: 1px solid #e2e8f0;
     z-index: 1000;
-    display: flex;
+    display: none; /* Hidden by default */
     flex-direction: row;
     gap: 10px;
     height: 75px;
+}
+
+/* Show footer only when main screen is active */
+body:has(#main-screen.active) .main-footer {
+    display: flex;
 }
 
 .routine-item {
@@ -348,7 +358,7 @@ header h1 {
 }
 
 #routine-execution{
-    min-height: calc(100vh - 175px);
+    min-height: calc(100vh - 80px); /* Account for header only */
 }
 
 .step-buttons {
@@ -1061,11 +1071,18 @@ header h1 {
 /* Routine Uitvoering styling */
 .execution-content {
     text-align: center;
-    padding-bottom: 100px; /* Space for footer */
+    padding-bottom: 120px; /* Space for fixed buttons */
+}
+
+.pose-counter {
+    font-size: 1rem;
+    color: #718096;
+    margin-top: 40px;
+    margin-bottom: 100px; /* Extra space since buttons are now fixed */
 }
 
 .pose-display {
-    margin-bottom: 40px;
+    margin-bottom: 60px;
 }
 
 #current-pose-image {
@@ -1074,19 +1091,19 @@ header h1 {
     object-fit: cover;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
 #current-pose-name {
     color: #2d3748;
     font-size: 1.5rem;
     font-weight: 600;
-    margin-top: 20px; /* Reduced spacing */
+    margin-top: 30px;
     transition: margin-top 0.3s ease;
 }
 
 .timer-section {
-    margin-bottom: 40px;
+    margin-bottom: 80px;
 }
 
 .timer-circle {
@@ -1095,7 +1112,7 @@ header h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 20px;
+    margin: 0 auto 30px;
     position: relative;
 }
 
@@ -1131,6 +1148,12 @@ header h1 {
     color: #2d3748;
     position: absolute;
     z-index: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .progress-bar {
@@ -1153,7 +1176,11 @@ header h1 {
     display: flex;
     gap: 15px;
     justify-content: center;
-    margin-bottom: 20px;
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
 }
 
 .control-button {
@@ -1176,11 +1203,7 @@ header h1 {
     /* Remove hover animation */
 }
 
-.pose-counter {
-    color: #718096;
-    font-size: 1rem;
-    font-weight: 600;
-}
+/* Pose counter styling moved to execution-content section */
 
 /* History styling */
 .history-content {

@@ -1857,10 +1857,10 @@ async function initAuthentication() {
             // Start real-time subscription
             subscribeToTrainings();
             
-            // Show User ID modal after successful login
-            setTimeout(() => {
-                showUseridModal();
-            }, 500); // Small delay to ensure UI is ready
+            // User ID modal disabled for now
+            // setTimeout(() => {
+            //     showUseridModal();
+            // }, 500);
         }
     } catch (error) {
         console.error('Error initializing Auth0:', error);
