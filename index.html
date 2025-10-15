@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div id="app">
@@ -364,6 +365,34 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User ID Display Modal -->
+        <div id="userid-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>🔗 User Profile Connected</h3>
+                    <button id="close-userid-modal" class="close-button">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="userid-info">
+                        <div class="userid-avatar">
+                            <img id="userid-avatar-img" src="" alt="User Avatar">
+                        </div>
+                        <div class="userid-details">
+                            <h4 id="userid-name">User Name</h4>
+                            <p id="userid-email">user@example.com</p>
+                            <div class="userid-id">
+                                <strong>User ID:</strong>
+                                <code id="userid-display">Loading...</code>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-buttons">
+                        <button id="close-userid" class="next-button">Got it!</button>
                     </div>
                 </div>
             </div>

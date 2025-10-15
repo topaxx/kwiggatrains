@@ -20,10 +20,10 @@ const yogaPoses = [
 
 // Activities data - for activities selection
 const activities = [
-    { id: 0, name: "Walking", image: "images/exercise_images/exercise_ghibli_walking.gif" },
-    { id: 1, name: "Cycling", image: "images/exercise_images/exercise_ghibli_cycling.gif" },
-    { id: 2, name: "Running", image: "images/exercise_images/exercise_ghibli_running.gif" },
-    { id: 3, name: "Swimming", image: "images/exercise_images/cartoon_swimming.gif" }
+    { id: 0, name: "Walking", image: "images/activities_images/exercise_ghibli_walking.gif" },
+    { id: 1, name: "Cycling", image: "images/activities_images/exercise_ghibli_cycling.gif" },
+    { id: 2, name: "Running", image: "images/activities_images/exercise_ghibli_running.gif" },
+    { id: 3, name: "Swimming", image: "images/activities_images/cartoon_swimming.gif" }
 ];
 
 // Exercises data - using images from exercise_images folder
@@ -97,6 +97,11 @@ let bowlSound = null; // Audio object for bowl sound
 let currentUser = null;
 let isAuthenticated = false;
 let auth0Client = null;
+
+// Supabase configuration
+const supabaseUrl = 'https://ujbesovzjszhxdncomdo.supabase.co'; // Replace with your Supabase URL
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqYmVzb3Z6anN6aHhkbmNvbWRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MzU2NDYsImV4cCI6MjA3NjExMTY0Nn0.fLCooJ6HpBHJiE_JZArNq-1rjmF_8qJFWpItyk1i-eU'; // Replace with your Supabase anon key
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 // Initialize bell sound
 function initBellSound() {
@@ -622,21 +627,19 @@ function toggleExercisesGrid() {
 
 // Modal functions
 function showTimeModal(item) {
-    // Check if it's a pose or exercise by checking the image path
+    // Check if it's an exercise by checking the image path
     const isExercise = item.image && item.image.includes('exercise_images/');
     
     if (isExercise) {
-        // It's an exercise
+        // It's an exercise - show repetitions section
         selectedExercise = item;
         selectedPose = null;
-        // Show repetitions section for exercises
         repetitionsSection.style.display = 'block';
         modalPoseName.textContent = `Select duration for ${item.name}`;
     } else {
-        // It's a pose
+        // It's a pose or activity - hide repetitions section
         selectedPose = item;
         selectedExercise = null;
-        // Hide repetitions section for poses
         repetitionsSection.style.display = 'none';
         modalPoseName.textContent = `Select time for ${item.name}`;
     }
@@ -649,7 +652,7 @@ function showTimeModal(item) {
     
     // Add event listeners for repetition options
     document.querySelectorAll('.repetition-option').forEach(option => {
-        option.addEventListener('click', () => selectRepetition(parseInt(option.dataset.reps)));
+        option.addEventListener('click', () => selectRepetition(parseInt(option.dataset.reps), option));
     });
 }
 
@@ -810,6 +813,13 @@ function logRoutineCompletion() {
     
     // Save to localStorage
     localStorage.setItem('yogaCompletionLog', JSON.stringify(completionLog));
+    
+    // Log to Supabase database
+    logTrainingToDatabase({
+        name: currentExecutionRoutine.name,
+        duration: currentExecutionRoutine.totalDuration,
+        exercises: currentExecutionRoutine.poses
+    });
     
     console.log('Routine completed and logged:', completionEntry);
     console.log('Current completion log:', completionLog);
@@ -1430,24 +1440,24 @@ function selectExercise(exercise) {
     showTimeModal(exercise);
 }
 
-function selectTime(time) {
+function selectTime(time, element) {
     // Remove previous time selection
     document.querySelectorAll('.time-option').forEach(el => el.classList.remove('selected'));
     
     // Select new time
-    event.target.classList.add('selected');
+    element.classList.add('selected');
     selectedTime = time;
     
     // Add pose to routine
     addPoseToRoutine();
 }
 
-function selectRepetition(reps) {
+function selectRepetition(reps, element) {
     // Remove previous repetition selection
     document.querySelectorAll('.repetition-option').forEach(el => el.classList.remove('selected'));
     
     // Select new repetition
-    event.target.classList.add('selected');
+    element.classList.add('selected');
     selectedTime = reps; // Use selectedTime for consistency
     
     // Add exercise to routine
@@ -1842,8 +1852,10 @@ async function initAuthentication() {
 
         if (isAuthenticated) {
             currentUser = await auth0Client.getUser();
-            updateAuthButton();
             console.log('User authenticated:', currentUser);
+            
+            // Start real-time subscription
+            subscribeToTrainings();
             
             // Show User ID modal after successful login
             setTimeout(() => {
@@ -1860,7 +1872,6 @@ async function initAuthentication() {
             try {
                 currentUser = JSON.parse(savedUser);
                 isAuthenticated = true;
-                updateAuthButton();
             } catch (error) {
                 console.error('Error parsing saved user:', error);
                 localStorage.removeItem('yogaUser');
@@ -1948,6 +1959,61 @@ function hideUseridModal() {
     useridModal.classList.remove('active');
 }
 
+// Supabase database functions
+async function logTrainingToDatabase(routineData) {
+    if (!currentUser) {
+        console.log('No user logged in, skipping database log');
+        return;
+    }
+
+    try {
+        const { data, error } = await supabase
+            .from('trains')
+            .insert([
+                {
+                    user_id: currentUser.sub,
+                    user_name: currentUser.name || currentUser.nickname || 'Unknown',
+                    user_email: currentUser.email || '',
+                    routine_name: routineData.name,
+                    duration: routineData.duration,
+                    exercises: JSON.stringify(routineData.exercises),
+                    completed_at: new Date().toISOString()
+                }
+            ]);
+
+        if (error) {
+            console.error('Error logging training to database:', error);
+        } else {
+            console.log('Training logged to database:', data);
+        }
+    } catch (error) {
+        console.error('Database error:', error);
+    }
+}
+
+// Real-time subscription voor trainings
+function subscribeToTrainings() {
+    if (!currentUser) return;
+
+    const subscription = supabase
+        .channel('trains_changes')
+        .on('postgres_changes', 
+            { 
+                event: 'INSERT', 
+                schema: 'public', 
+                table: 'trains',
+                filter: `user_id=eq.${currentUser.sub}`
+            }, 
+            (payload) => {
+                console.log('New training logged:', payload.new);
+                // Hier kun je de UI updaten als je wilt
+            }
+        )
+        .subscribe();
+
+    return subscription;
+}
+
 async function handleTwitterLogin() {
     try {
         if (auth0Client) {
@@ -1980,7 +2046,6 @@ function simulateTwitterLogin() {
     
     isAuthenticated = true;
     localStorage.setItem('yogaUser', JSON.stringify(currentUser));
-    updateAuthButton();
     hideUserModal();
     
     console.log('Demo Twitter user logged in:', currentUser);
@@ -2004,28 +2069,9 @@ async function handleLogout() {
     currentUser = null;
     isAuthenticated = false;
     localStorage.removeItem('yogaUser');
-    updateAuthButton();
     hideUserModal();
     
     console.log('User logged out');
-}
-
-function updateAuthButton() {
-    if (isAuthenticated && currentUser) {
-        // Show user avatar and name (use nickname for Twitter users)
-        const displayName = currentUser.name || currentUser.nickname || 'User';
-        authButton.innerHTML = `
-            <img src="${currentUser.picture || ''}" alt="${displayName}" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-            <i class="fab fa-x-twitter" style="display: none;"></i>
-            <span>${displayName}</span>
-        `;
-    } else {
-        // Show login button
-        authButton.innerHTML = `
-            <i class="fas fa-user"></i>
-            <span>Login</span>
-        `;
-    }
 }
 
 // Add event listeners for time selection modal
@@ -2034,6 +2080,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Add event listeners for time options in modal
     document.querySelectorAll('.time-option').forEach(option => {
-        option.addEventListener('click', () => selectTime(parseInt(option.dataset.time)));
+        option.addEventListener('click', () => selectTime(parseInt(option.dataset.time), option));
     });
 });
