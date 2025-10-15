@@ -293,7 +293,8 @@ function logRoutineCompletion() {
     
     // Log to database if user is authenticated
     if (isAuthenticated && currentUser) {
-        logTrainingToDatabase(completionEntry);
+        const detailedExercises = currentExecutionRoutine ? currentExecutionRoutine.poses : [];
+        logTrainingToDatabase(completionEntry, detailedExercises);
     }
     
     console.log('Completion logged successfully. Total entries:', completionLog.length);

@@ -1,12 +1,22 @@
 // Database Functions (Supabase Integration)
 
-async function logTrainingToDatabase(routineData) {
+async function logTrainingToDatabase(routineData, detailedExercises = []) {
     if (!currentUser) {
         console.log('No user logged in, skipping database log');
         return;
     }
 
     try {
+        console.log('Logging to database with data:', {
+            routineName: routineData.routineName,
+            totalTime: routineData.totalTime,
+            totalReps: routineData.totalReps,
+            poseCount: routineData.poseCount,
+            hasTimeItems: routineData.hasTimeItems,
+            hasRepsItems: routineData.hasRepsItems,
+            exercisesCount: detailedExercises.length
+        });
+        
         const { data, error } = await supabase
             .from('trains')
             .insert([
@@ -16,7 +26,11 @@ async function logTrainingToDatabase(routineData) {
                     user_email: currentUser.email || '',
                     routine_name: routineData.routineName,
                     duration: routineData.totalTime || routineData.duration,
-                    exercises: JSON.stringify(routineData.poses || routineData.exercises),
+                    total_reps: routineData.totalReps || 0,
+                    pose_count: routineData.poseCount || 0,
+                    has_time_items: routineData.hasTimeItems || false,
+                    has_reps_items: routineData.hasRepsItems || false,
+                    exercises: JSON.stringify(detailedExercises),
                     completed_at: routineData.completedAt || new Date().toISOString()
                 }
             ]);
