@@ -419,10 +419,20 @@ function saveRoutine() {
         const timeElement = document.getElementById('save-completion-time');
         
         if (repsElement) {
-            repsElement.textContent = `${totalReps} Choo's`;
+            if (totalReps > 0) {
+                repsElement.innerHTML = `${totalReps} Choo's <i class="fas fa-check-circle"></i>`;
+                repsElement.style.display = 'block';
+            } else {
+                repsElement.style.display = 'none';
+            }
         }
         if (timeElement) {
-            timeElement.textContent = formatTime(totalTimeSeconds);
+            if (totalTimeSeconds > 0) {
+                timeElement.innerHTML = `${formatTime(totalTimeSeconds)} <i class="fas fa-check-circle"></i>`;
+                timeElement.style.display = 'block';
+            } else {
+                timeElement.style.display = 'none';
+            }
         }
         
         saveCompletionModal.classList.add('active');

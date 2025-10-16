@@ -265,8 +265,18 @@ function handleFileAreaClick(event) {
         console.log('New file input change event:', event);
         handleFileSelect(event);
         // Clean up the temporary input
-        document.body.removeChild(newFileInput);
+        if (document.body.contains(newFileInput)) {
+            document.body.removeChild(newFileInput);
+        }
     });
+    
+    // Add a timeout to clean up the input if no file is selected
+    setTimeout(() => {
+        if (document.body.contains(newFileInput)) {
+            console.log('Cleaning up unused file input');
+            document.body.removeChild(newFileInput);
+        }
+    }, 1000);
     
     // Add to DOM and trigger click
     document.body.appendChild(newFileInput);
@@ -292,6 +302,10 @@ function handleFileSelect(event) {
     console.log('handleFileSelect called with event:', event);
     const file = event.target.files[0];
     console.log('Selected file:', file);
+    
+    // Reset the file input value to prevent it from reopening
+    event.target.value = '';
+    
     if (file) {
         console.log('Processing file:', file.name, 'Type:', file.type, 'Size:', file.size);
         processFile(file);

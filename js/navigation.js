@@ -48,9 +48,10 @@ function showRoutineBuilder() {
     setTimeout(() => {
         const input = document.getElementById('routine-name-input');
         if (input) {
+            // Ensure input is empty before focusing
+            input.value = "";
             input.focus();
-            input.select(); // Also select any existing text
-            console.log('Routine name input focused and selected automatically');
+            console.log('Routine name input cleared and focused automatically');
         }
         
         // Setup direct event listener on the input element
@@ -66,6 +67,8 @@ function setupRoutineNameInputListener() {
         
         // Remove any existing listeners by cloning
         const newInput = input.cloneNode(true);
+        // Ensure the cloned input is empty
+        newInput.value = "";
         input.parentNode.replaceChild(newInput, input);
         
         // Restore focus if it was focused before
@@ -114,9 +117,10 @@ function showStep(step) {
         setTimeout(() => {
             const input = document.getElementById('routine-name-input');
             if (input) {
+                // Clear input when name step is shown
+                input.value = "";
                 input.focus();
-                input.select(); // Also select any existing text
-                console.log('Input focused and selected when name step shown');
+                console.log('Input cleared and focused when name step shown');
             }
         }, 100);
     } else if (step === 'poses') {
@@ -145,9 +149,10 @@ function goToNameStep() {
     setTimeout(() => {
         const input = document.getElementById('routine-name-input');
         if (input) {
+            // Clear input when returning to name step
+            input.value = "";
             input.focus();
-            input.select(); // Also select any existing text
-            console.log('Routine name input focused and selected when returning to name step');
+            console.log('Routine name input cleared and focused when returning to name step');
         }
         setupRoutineNameInputListener(); // Re-setup listeners
     }, 200);

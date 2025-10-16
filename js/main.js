@@ -290,35 +290,14 @@ function setupEventListeners() {
             console.log('File input style display:', importFileInput.style.display);
         }, 1000);
         
-        fileInputArea.addEventListener('click', (event) => {
-            console.log('File input area clicked!', event);
-            console.log('Event target:', event.target);
-            console.log('Event currentTarget:', event.currentTarget);
-            event.preventDefault();
-            event.stopPropagation();
-            console.log('About to trigger file input click');
-            
-            // Make sure the file input is visible and enabled
-            importFileInput.style.display = 'block';
-            importFileInput.disabled = false;
-            
-            try {
-                importFileInput.click();
-                console.log('File input click triggered successfully');
-            } catch (error) {
-                console.error('Error triggering file input click:', error);
-            }
-        });
+        // File input area click is now handled by history.js showImportHistoryModal
+        // No need to add duplicate event listener here
         
-        importFileInput.addEventListener('change', (event) => {
-            console.log('File input change event:', event);
-            handleFileSelect(event);
-        });
+        // File input change event is now handled by history.js
+        // No need to add duplicate event listener here
         
-        // Also try adding mousedown event as backup
-        fileInputArea.addEventListener('mousedown', (event) => {
-            console.log('File input area mousedown event:', event);
-        });
+        // File input events are now handled by history.js
+        // No need to add duplicate event listeners here
         
     } else {
         console.error('File input elements not found:', { fileInputArea, importFileInput });

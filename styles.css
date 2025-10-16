@@ -241,7 +241,7 @@ body:has(#main-screen.active) .main-footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 2px rgba(0,0,0,0.15);
     padding: 0;
     margin: 0;
     line-height: 1;
@@ -1096,7 +1096,7 @@ body:has(#main-screen.active) .main-footer {
 
 /* FontAwesome icons styling */
 .routine-rename-btn i {
-    color: #44518d;
+    color: #dee0e9;
     font-size: 1rem;
     display: flex;
     align-items: center;
