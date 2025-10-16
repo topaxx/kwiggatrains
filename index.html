@@ -194,6 +194,23 @@
             </div>
             
             <div class="history-content">
+                <!-- Data Source Toggle -->
+                <div class="history-source-toggle">
+                    <button id="toggle-database" class="source-toggle-btn active" data-source="database">
+                        <i class="fas fa-cloud"></i>
+                        <span>Cloud</span>
+                    </button>
+                    <button id="toggle-local" class="source-toggle-btn" data-source="local">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>Local</span>
+                    </button>
+                </div>
+
+                <div id="history-loading" class="history-loading" style="display: none;">
+                    <div class="loading-spinner"></div>
+                    <p>Bezig met laden van cloud data...</p>
+                </div>
+
                 <div id="history-stats" class="history-stats">
                     <!-- Stats worden hier dynamisch toegevoegd -->
                 </div>
@@ -453,16 +470,16 @@
     </div>
 
     <!-- Modular JavaScript files -->
-    <script src="js/data.js"></script>
-    <script src="js/state.js"></script>
-    <script src="js/dom.js"></script>
-    <script src="js/audio.js"></script>
-    <script src="js/navigation.js"></script>
-    <script src="js/routine-builder.js"></script>
-    <script src="js/routine-execution.js"></script>
-    <script src="js/history.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/database.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/data.js?v=2.0"></script>
+    <script src="js/state.js?v=2.0"></script>
+    <script src="js/dom.js?v=2.0"></script>
+    <script src="js/audio.js?v=2.0"></script>
+    <script src="js/navigation.js?v=2.0"></script>
+    <script src="js/routine-builder.js?v=2.0"></script>
+    <script src="js/routine-execution.js?v=2.0"></script>
+    <script src="js/history.js?v=2.0"></script>
+    <script src="js/auth.js?v=2.0"></script>
+    <script src="js/database.js?v=2.0"></script>
+    <script src="js/main.js?v=2.0"></script>
 </body>
 </html>

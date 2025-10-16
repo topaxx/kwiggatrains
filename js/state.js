@@ -4,7 +4,7 @@ let currentRoutineName = "";
 let selectedPose = null;
 let selectedExercise = null;
 let selectedTime = null;
-let routines = JSON.parse(localStorage.getItem('yogaRoutines') || '[]');
+let routines = JSON.parse(localStorage.getItem('kwiggaTrains') || '[]');
 let currentExecutionRoutine = null;
 let currentPoseIndex = 0;
 let timer = null;
@@ -24,5 +24,7 @@ let auth0Client = null;
 
 // Supabase configuration
 const supabaseUrl = 'https://ujbesovzjszhxdncomdo.supabase.co'; // Replace with your Supabase URL
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqYmVzb3Z6anN6aHhkbmNvbWRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MzU2NDYsImV4cCI6MjA3NjExMTY0Nn0.fLCooJ6HpBHJiE_JZArNq-1rjmF_8qJFWpItyk1i-eU'; // Replace with your Supabase anon key
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqYmVzb3Z6anN6aHhkbmNvbWRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MzU2NDYsImV4cCI6MjA3NjExMTY0Nn0.fLCooJ6HpBHJiE_JZArNq-1rjmF_8qJFWpItyk1i-eU'; // Replace with your Supabase anon key
+
+// Create client for database operations
+const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);

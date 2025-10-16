@@ -20,16 +20,6 @@ function showSettingsScreen() {
     window.scrollTo(0, 0);
 }
 
-function showHistoryScreen() {
-    hideAllScreens();
-    historyScreen.classList.add('active');
-    // Stop routine execution and all sounds when viewing history
-    stopRoutineExecution();
-    // Refresh completion log from localStorage before rendering
-    completionLog = JSON.parse(localStorage.getItem('yogaCompletionLog') || '[]');
-    console.log('Loading history screen, found', completionLog.length, 'entries');
-    renderHistory();
-}
 
 function showRoutineBuilder() {
     hideAllScreens();

@@ -311,7 +311,7 @@ function saveRoutine() {
     };
     
     routines.push(routine);
-    localStorage.setItem('yogaRoutines', JSON.stringify(routines));
+    localStorage.setItem('kwiggaTrains', JSON.stringify(routines));
     
     // Show completion modal
     showCompletionModal();
@@ -329,7 +329,7 @@ function confirmDeleteRoutine() {
         routines = routines.filter(r => r.id !== routineToDelete.id);
         
         // Update localStorage
-        localStorage.setItem('yogaRoutines', JSON.stringify(routines));
+        localStorage.setItem('kwiggaTrains', JSON.stringify(routines));
         
         // Re-render routines
         renderRoutines();
@@ -359,7 +359,7 @@ function confirmRenameRoutine() {
     routineToRename.name = newName;
     
     // Update localStorage
-    localStorage.setItem('yogaRoutines', JSON.stringify(routines));
+    localStorage.setItem('kwiggaTrains', JSON.stringify(routines));
     
     // Re-render routines
     renderRoutines();

@@ -34,24 +34,34 @@ async function logTrainingToDatabase(routineData, detailedExercises = []) {
                     completed_at: routineData.completedAt || new Date().toISOString()
                 }
             ]);
+            // Removed .select() to avoid RLS issues with reading inserted data
 
         if (error) {
-            console.error('Error logging training to database:', error);
+            console.error('❌ Error logging training to database:', error);
+            return null;
         } else {
-            console.log('Training logged to database:', data);
+            console.log('✅ Training logged to database successfully');
+            return { success: true, inserted: true };
         }
     } catch (error) {
-        console.error('Database error:', error);
+        console.error('❌ Database error:', error);
+        return null;
     }
 }
 
 async function getUserTrainings() {
+    console.log('🔍 Querying Supabase for user:', currentUser?.sub);
+    
     if (!currentUser) {
-        console.log('No user logged in, cannot fetch trainings');
+        console.warn('⚠️ No user logged in, cannot fetch trainings');
         return [];
     }
 
     try {
+        // Since we're using Auth0, not Supabase Auth, we need to bypass RLS
+        // by using a direct query with the user_id filter
+        console.log('🔍 Fetching user training records...');
+        
         const { data, error } = await supabase
             .from('trains')
             .select('*')
@@ -59,14 +69,16 @@ async function getUserTrainings() {
             .order('completed_at', { ascending: false });
 
         if (error) {
-            console.error('Error fetching user trainings:', error);
+            console.error('❌ Error fetching trainings:', error);
+            console.error('❌ Error details:', error.message, error.details, error.hint);
             return [];
         }
 
-        console.log('Fetched user trainings:', data);
+        console.log('✅ Found trainings:', data?.length || 0, 'records');
         return data || [];
+        
     } catch (error) {
-        console.error('Database error:', error);
+        console.error('❌ Database connection error:', error);
         return [];
     }
 }
