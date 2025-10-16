@@ -1,10 +1,16 @@
 // Main Application Bootstrap
 
 // Initialize app
-function init() {
+async function init() {
     initBellSound();
     initBowlSound();
-    initAuthentication();
+    
+    // Start Auth0 initialization in background (non-blocking)
+    initAuthentication().catch(error => {
+        console.log('Auth0 initialization failed, continuing with demo mode');
+    });
+    
+    // Load the rest of the app immediately
     renderRoutines();
     renderPoses();
     renderActivities();
@@ -12,16 +18,54 @@ function init() {
     setupEventListeners();
 }
 
+// Function to check if any modals are active and blocking interactions
+function checkForActiveModals() {
+    const modals = document.querySelectorAll('.modal.active');
+    if (modals.length > 0) {
+        console.log('Active modals found:', modals.length);
+        modals.forEach(modal => {
+            console.log('Active modal:', modal.id || modal.className);
+        });
+        return true;
+    }
+    return false;
+}
+
 // Event listeners
 function setupEventListeners() {
     
+    // Debug: Check if DOM elements exist
+    console.log('DOM elements check:');
+    console.log('- addRoutineBtn:', addRoutineBtn);
+    console.log('- settingsBtn:', settingsBtn);
+    console.log('- showHistoryBtn:', showHistoryBtn);
+    
+    // Debug: Check if functions are available
+    console.log('Function availability check:');
+    console.log('- showRoutineBuilder:', typeof showRoutineBuilder);
+    console.log('- showSettingsScreen:', typeof showSettingsScreen);
+    console.log('- showHistoryScreen:', typeof showHistoryScreen);
+    
     addRoutineBtn.addEventListener('click', () => {
+        console.log('Add Train button clicked');
         window.scrollTo(0, 0);
         showRoutineBuilder();
     });
     backFromBuilder.addEventListener('click', showMainScreen);
     backFromExecution.addEventListener('click', showMainScreen);
-    saveRoutineBtn.addEventListener('click', saveRoutine);
+    // Use event delegation for Save Train button to ensure it works
+    document.addEventListener('click', (event) => {
+        if (event.target && event.target.id === 'save-routine-btn') {
+            console.log('Save Train button clicked via delegation');
+            if (checkForActiveModals()) {
+                console.log('Modal is active, ignoring Save Train click');
+                return;
+            }
+            event.preventDefault();
+            event.stopPropagation();
+            saveRoutine();
+        }
+    });
     pauseResumeBtn.addEventListener('click', togglePause);
     nextPoseBtn.addEventListener('click', nextPose);
     previousPoseBtn.addEventListener('click', previousPose);
@@ -37,56 +81,202 @@ function setupEventListeners() {
     closeDeleteModalBtn.addEventListener('click', hideDeleteModal);
     cancelDeleteBtn.addEventListener('click', hideDeleteModal);
     confirmDeleteBtn.addEventListener('click', confirmDeleteRoutine);
-    closeCompletionModalBtn.addEventListener('click', hideCompletionModal);
-    closeCompletionBtn.addEventListener('click', hideCompletionModal);
     
-    // Routine name input listener
-    routineNameInput.addEventListener('input', updateNextButton);
-    
-    // Settings and History screen listeners
-    settingsBtn.addEventListener('click', () => {
-        window.scrollTo(0, 0);
-        showSettingsScreen();
+    // Safely add event listener for completion modal close button
+    if (closeCompletionModalBtn) {
+        closeCompletionModalBtn.addEventListener('click', hideCompletionModal);
+    } else {
+        console.warn('closeCompletionModalBtn not found in DOM');
+    }
+    // Use event delegation for completion modal back buttons
+    document.addEventListener('click', (event) => {
+        if (event.target && event.target.id === 'close-completion') {
+            console.log('Completion modal back button clicked via delegation');
+            event.preventDefault();
+            event.stopPropagation();
+            hideCompletionModal();
+        }
+        
+        if (event.target && event.target.id === 'close-save-completion') {
+            console.log('Save completion modal back button clicked via delegation');
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // Use the proper function to hide the modal
+            if (typeof hideSaveCompletionModal === 'function') {
+                hideSaveCompletionModal();
+                console.log('Save completion modal hidden via hideSaveCompletionModal function');
+            } else {
+                console.error('hideSaveCompletionModal function not found');
+            }
+        }
     });
-    if (showHistoryBtn) {
-        showHistoryBtn.addEventListener('click', () => {
+    
+    // Input listeners are now handled directly in navigation.js to avoid conflicts
+    
+    // Settings and History screen listeners - use event delegation
+    document.addEventListener('click', (event) => {
+        console.log('Footer button click detected:', event.target.id, event.target);
+        // Check if clicked element is the button or its child (icon)
+        const settingsButton = event.target.closest('#settings-btn');
+        if (settingsButton) {
+            console.log('Settings button clicked via delegation');
+            console.log('showSettingsScreen function available:', typeof showSettingsScreen);
+            if (checkForActiveModals()) {
+                console.log('Modal is active, ignoring Settings click');
+                return;
+            }
+            event.preventDefault();
+            event.stopPropagation();
             window.scrollTo(0, 0);
-            showHistoryScreen();
+            try {
+                showSettingsScreen();
+                console.log('showSettingsScreen called successfully');
+            } catch (error) {
+                console.error('Error calling showSettingsScreen:', error);
+            }
+        }
+    });
+    
+    document.addEventListener('click', (event) => {
+        console.log('Footer button click detected:', event.target.id, event.target);
+        // Check if clicked element is the button or its child (icon)
+        const historyButton = event.target.closest('#show-history-btn');
+        if (historyButton) {
+            console.log('History button clicked via delegation');
+            console.log('showHistoryScreen function available:', typeof showHistoryScreen);
+            if (checkForActiveModals()) {
+                console.log('Modal is active, ignoring History click');
+                return;
+            }
+            event.preventDefault();
+            event.stopPropagation();
+            window.scrollTo(0, 0);
+            try {
+                showHistoryScreen();
+                console.log('showHistoryScreen called successfully');
+            } catch (error) {
+                console.error('Error calling showHistoryScreen:', error);
+            }
+        }
+    });
+    
+    // Backup: Direct event listeners for footer buttons
+    if (showHistoryBtn) {
+        showHistoryBtn.addEventListener('click', (event) => {
+            console.log('History button clicked via direct listener');
+            event.preventDefault();
+            event.stopPropagation();
+            window.scrollTo(0, 0);
+            try {
+                showHistoryScreen();
+                console.log('showHistoryScreen called successfully via direct listener');
+            } catch (error) {
+                console.error('Error calling showHistoryScreen via direct listener:', error);
+            }
         });
     }
-    backFromHistory.addEventListener('click', showMainScreen);
-    backFromSettings.addEventListener('click', showMainScreen);
+    
+    if (settingsBtn) {
+        settingsBtn.addEventListener('click', (event) => {
+            console.log('Settings button clicked via direct listener');
+            event.preventDefault();
+            event.stopPropagation();
+            window.scrollTo(0, 0);
+            try {
+                showSettingsScreen();
+                console.log('showSettingsScreen called successfully via direct listener');
+            } catch (error) {
+                console.error('Error calling showSettingsScreen via direct listener:', error);
+            }
+        });
+    }
+    
+    // Safely add event listeners for back buttons
+    if (backFromHistory) {
+        backFromHistory.addEventListener('click', showMainScreen);
+    } else {
+        console.warn('backFromHistory not found in DOM');
+    }
+    
+    if (backFromSettings) {
+        backFromSettings.addEventListener('click', showMainScreen);
+    } else {
+        console.warn('backFromSettings not found in DOM');
+    }
     
     // History source toggle listeners will be set up when history screen is shown
     
-    exportHistoryBtn.addEventListener('click', exportHistory);
-    importHistoryBtn.addEventListener('click', showImportHistoryModal);
-    clearHistoryBtn.addEventListener('click', showClearHistoryConfirmation);
-    closeClearHistoryModalBtn.addEventListener('click', hideClearHistoryModal);
-    cancelClearHistoryBtn.addEventListener('click', hideClearHistoryModal);
-    confirmClearHistoryBtn.addEventListener('click', confirmClearHistory);
-    closeImportHistoryModalBtn.addEventListener('click', hideImportHistoryModal);
-    cancelImportHistoryBtn.addEventListener('click', hideImportHistoryModal);
-    confirmImportHistoryBtn.addEventListener('click', confirmImportHistory);
-    closeImportSuccessModalBtn.addEventListener('click', hideImportSuccessModal);
-    closeImportSuccessBtn.addEventListener('click', hideImportSuccessModal);
-    closeImportErrorModalBtn.addEventListener('click', hideImportErrorModal);
-    closeImportErrorBtn.addEventListener('click', hideImportErrorModal);
+    // Safely add event listeners for history buttons
+    if (exportHistoryBtn) {
+        exportHistoryBtn.addEventListener('click', exportHistory);
+    } else {
+        console.warn('exportHistoryBtn not found in DOM');
+    }
     
-    // Settings screen login listeners
-    settingsTwitterLoginBtn.addEventListener('click', handleTwitterLogin);
-    settingsLogoutBtn.addEventListener('click', handleLogout);
+    if (importHistoryBtn) {
+        importHistoryBtn.addEventListener('click', showImportHistoryModal);
+    } else {
+        console.warn('importHistoryBtn not found in DOM');
+    }
     
-    // Rename modal listeners
-    closeRenameModalBtn.addEventListener('click', hideRenameModal);
-    cancelRenameBtn.addEventListener('click', hideRenameModal);
-    confirmRenameBtn.addEventListener('click', confirmRenameRoutine);
-    renameInput.addEventListener('input', updateRenameButton);
-    renameInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            confirmRenameRoutine();
+    if (clearHistoryBtn) {
+        clearHistoryBtn.addEventListener('click', showClearHistoryConfirmation);
+    } else {
+        console.warn('clearHistoryBtn not found in DOM');
+    }
+    // Safely add remaining event listeners
+    const modalButtons = [
+        { element: closeClearHistoryModalBtn, name: 'closeClearHistoryModalBtn' },
+        { element: cancelClearHistoryBtn, name: 'cancelClearHistoryBtn' },
+        { element: confirmClearHistoryBtn, name: 'confirmClearHistoryBtn' },
+        { element: closeImportHistoryModalBtn, name: 'closeImportHistoryModalBtn' },
+        { element: cancelImportHistoryBtn, name: 'cancelImportHistoryBtn' },
+        { element: confirmImportHistoryBtn, name: 'confirmImportHistoryBtn' },
+        { element: closeImportSuccessModalBtn, name: 'closeImportSuccessModalBtn' },
+        { element: closeImportSuccessBtn, name: 'closeImportSuccessBtn' }
+        // Removed closeImportErrorModalBtn and closeImportErrorBtn as they don't exist in DOM
+    ];
+    
+    modalButtons.forEach(({ element, name }) => {
+        if (element) {
+            // Add appropriate event listener based on button name
+            if (name.includes('ClearHistory')) {
+                element.addEventListener('click', hideClearHistoryModal);
+            } else if (name.includes('ImportHistory')) {
+                element.addEventListener('click', hideImportHistoryModal);
+            } else if (name.includes('ImportSuccess')) {
+                element.addEventListener('click', hideImportSuccessModal);
+            } else if (name.includes('ImportError')) {
+                element.addEventListener('click', hideImportErrorModal);
+            }
+        } else {
+            console.warn(`${name} not found in DOM`);
         }
     });
+    
+    // Special case for confirm buttons
+    if (confirmClearHistoryBtn) {
+        confirmClearHistoryBtn.addEventListener('click', confirmClearHistory);
+    }
+    if (confirmImportHistoryBtn) {
+        confirmImportHistoryBtn.addEventListener('click', confirmImportHistory);
+    }
+    
+    // Settings screen login listeners
+    if (settingsTwitterLoginBtn) {
+        settingsTwitterLoginBtn.addEventListener('click', handleTwitterLogin);
+    } else {
+        console.warn('settingsTwitterLoginBtn not found in DOM');
+    }
+    
+    if (settingsLogoutBtn) {
+        settingsLogoutBtn.addEventListener('click', handleLogout);
+    } else {
+        console.warn('settingsLogoutBtn not found in DOM');
+    }
+    
+    // Rename modal listeners will be set up when modal is shown
     
     // File input listeners
     if (fileInputArea && importFileInput) {
@@ -155,13 +345,51 @@ function setupEventListeners() {
 document.addEventListener('DOMContentLoaded', () => {
     init();
     
-    // Add event listeners for time options in modal
-    document.querySelectorAll('.time-option').forEach(option => {
-        option.addEventListener('click', () => selectTime(parseInt(option.dataset.time), option));
+    // Add click handlers directly to time and repetition options after DOM loads
+    // This is more reliable than event delegation for modal elements
+    setupTimeAndRepClickHandlers();
+});
+
+// Setup click handlers for time and repetition options
+function setupTimeAndRepClickHandlers() {
+    // Get all time options
+    const timeOptions = document.querySelectorAll('.time-option');
+    
+    timeOptions.forEach(option => {
+        // Remove any existing listeners by cloning
+        const newOption = option.cloneNode(true);
+        option.parentNode.replaceChild(newOption, option);
+        
+        // Add new listener
+        newOption.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const time = parseInt(this.dataset.time);
+            if (!isNaN(time)) {
+                selectTime(time, this);
+            }
+        });
     });
     
-    // Add event listeners for repetition options in modal
-    document.querySelectorAll('.repetition-option').forEach(option => {
-        option.addEventListener('click', () => selectRepetition(parseInt(option.dataset.reps), option));
+    // Get all repetition options
+    const repOptions = document.querySelectorAll('.repetition-option');
+    
+    repOptions.forEach(option => {
+        // Remove any existing listeners by cloning
+        const newOption = option.cloneNode(true);
+        option.parentNode.replaceChild(newOption, option);
+        
+        // Add new listener
+        newOption.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const reps = parseInt(this.dataset.reps);
+            if (!isNaN(reps)) {
+                selectRepetition(reps, this);
+            }
+        });
     });
-});
+}
+
+// Re-setup handlers when modal is shown
+function reinitializeModalHandlers() {
+    setupTimeAndRepClickHandlers();
+}

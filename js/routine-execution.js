@@ -79,7 +79,7 @@ function showCurrentPose() {
             timerCircle.parentNode.insertBefore(repsDisplay, timerCircle.nextSibling);
         }
         
-        repsDisplay.textContent = `${pose.duration} reps`;
+        repsDisplay.textContent = `${pose.duration} Choo's`;
         repsDisplay.style.display = 'block';
         
         // Enable/disable previous button
@@ -229,6 +229,46 @@ function previousPose() {
 function showCompletionModal() {
     // Log routine completion
     logRoutineCompletion();
+    
+    // Update completion modal with stats
+    if (currentExecutionRoutine && currentExecutionRoutine.poses) {
+        // Calculate stats
+        let totalReps = 0;
+        let totalTimeSeconds = 0;
+        
+        currentExecutionRoutine.poses.forEach(pose => {
+            if (pose.unit === 'reps') {
+                totalReps += pose.duration;
+            } else {
+                totalTimeSeconds += pose.duration;
+            }
+        });
+        
+        // Format time function
+        const formatTime = (seconds) => {
+            if (seconds < 60) return `${seconds}s`;
+            if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
+        };
+        
+        // Update DOM elements
+        const repsElement = document.getElementById('completion-reps');
+        const timeElement = document.getElementById('completion-time');
+        
+        if (repsElement) {
+            repsElement.textContent = `${totalReps} Choo's`;
+        }
+        if (timeElement) {
+            timeElement.textContent = formatTime(totalTimeSeconds);
+        }
+        
+        console.log('Completion modal updated with stats:');
+        console.log('- Total reps:', totalReps);
+        console.log('- Total time:', formatTime(totalTimeSeconds));
+    }
+    
     completionModal.classList.add('active');
 }
 

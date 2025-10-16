@@ -23,7 +23,9 @@ const activities = [
     { id: 0, name: "Walking", image: "images/activities_images/exercise_ghibli_walking.gif" },
     { id: 1, name: "Cycling", image: "images/activities_images/exercise_ghibli_cycling.gif" },
     { id: 2, name: "Running", image: "images/activities_images/exercise_ghibli_running.gif" },
-    { id: 3, name: "Swimming", image: "images/activities_images/cartoon_swimming.gif" }
+    { id: 3, name: "Swimming", image: "images/activities_images/cartoon_swimming.gif" },
+    { id: 4, name: "Mix", image: "images/activities_images/dj.gif" },
+    { id: 5, name: "Produce", image: "images/activities_images/bigbeat.gif" }
 ];
 
 // Exercises data - using images from exercise_images folder

@@ -17,24 +17,28 @@
             <h1>🏋️‍♂️ &nbsp;  KwiggaTrains &nbsp;&nbsp; シ</h1>
         </header>
         
-        <!-- Hoofdscherm - Routine Lijst -->
+        <!-- Hoofdscherm - Train Lijst -->
         <div id="main-screen" class="screen active">
+            <div id="routines-loading" class="routines-loading" style="display: none;">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                <p>Bezig met laden van routines...</p>
+            </div>
             <div id="routines-list" class="routines-container">
-                <!-- Routines worden hier dynamisch toegevoegd -->
+                <!-- Trains worden hier dynamisch toegevoegd -->
             </div>
         </div>
 
-        <!-- Routine Builder Scherm -->
+        <!-- Train Builder Scherm -->
         <div id="routine-builder" class="screen">
             <div class="screen-header">
                 <button id="back-from-builder" class="back-button"><i class="fas fa-arrow-left"></i></button>
-                <h1>Add Train </h1>
+                <h1 id="routine-builder-title">Add Train</h1>
             </div>
             
-            <!-- Stap 1: Routine naam -->
+            <!-- Stap 1: Train naam -->
             <div id="name-step" class="builder-step active">
                 <div class="step-content">
-                    <input type="text" id="routine-name-input" placeholder="Routine name..." maxlength="30">
+                    <input type="text" id="routine-name-input" placeholder="Give your Choo Choo a name..." maxlength="30">
                     <div class="step-buttons">
                         <button id="cancel-routine" class="cancel-button">Cancel</button>
                         <button id="next-to-poses" class="next-button" disabled>Next</button>
@@ -49,10 +53,10 @@
                     <!-- Routine poses lijst -->
                     <div class="routine-poses-section">
                         <div class="routine-poses-header">
-                            <h4>My Routine</h4>
+                            <h4>🚂 Your Train</h4>
                         </div>
                         <div id="routine-poses-list" class="routine-poses-list">
-                            <p class="empty-message">Add poses to your routine</p>
+                            <p class="empty-message">Add poses</p>
                         </div>
                     </div>
 
@@ -102,8 +106,8 @@
                     </div>
 
                     <div class="step-buttons">
-                        <button id="back-to-name" class="back-step-button">← Back</button>
-                        <button id="save-routine-btn" class="save-button" disabled>Save Routine</button>
+                        <button id="back-to-name" class="back-step-button">Back</button>
+                        <button id="save-routine-btn" class="save-button" disabled>Save Train</button>
                     </div>
                 </div>
             </div>
@@ -158,11 +162,11 @@
         <div id="delete-confirmation-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>Delete Routine</h3>
+                    <h3>Retire Train</h3>
                     <button id="close-delete-modal" class="close-button">×</button>
                 </div>
                 <div class="modal-body">
-                    <p id="delete-confirmation-text">Are you sure you want to delete this routine?</p>
+                    <p id="delete-confirmation-text">Are you sure you want to delete this train?</p>
                     <div class="modal-buttons">
                         <button id="cancel-delete" class="cancel-button">Cancel</button>
                         <button id="confirm-delete" class="delete-button">Delete</button>
@@ -171,16 +175,40 @@
             </div>
         </div>
 
-        <!-- Routine voltooid popup -->
+        <!-- Train saved popup -->
+        <div id="save-completion-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>🚂 Choo Choo MF'er!!!</h3>
+                </div>
+                <div class="modal-body">
+                    <div id="save-completion-stats" class="completion-stats">
+                        <div class="stats-highlight">
+                            <span id="save-completion-reps">0 Choo's</span> + <span id="save-completion-time">0m</span>
+                        </div>
+                    </div>
+                    <div class="modal-buttons">
+                        <button id="close-save-completion" class="next-button">Back</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Train completed popup -->
         <div id="completion-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>🎉 Routine Complete!</h3>
-                    <button id="close-completion-modal" class="close-button">×</button>
+                    <h3>🚂 Choo Choo MF'er!!!</h3>
                 </div>
                 <div class="modal-body">
+                    <div id="completion-stats" class="completion-stats">
+                        <div class="stats-highlight">
+                            <span id="completion-reps">0 Choo's</span> + <span id="completion-time">0m</span>
+                            <span id="completion-time">0m</span>
+                        </div>
+                    </div>
                     <div class="modal-buttons">
-                        <button id="close-completion" class="next-button">Back to Overview</button>
+                        <button id="close-completion" class="next-button">Back</button>
                     </div>
                 </div>
             </div>
@@ -207,7 +235,7 @@
                 </div>
 
                 <div id="history-loading" class="history-loading" style="display: none;">
-                    <div class="loading-spinner"></div>
+                    <i class="fa-solid fa-spinner fa-spin"></i>
                     <p>Bezig met laden van cloud data...</p>
                 </div>
 
@@ -285,15 +313,15 @@
             </div>
         </div>
 
-        <!-- Rename Routine Modal -->
+        <!-- Rename Train Modal -->
         <div id="rename-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>Rename Routine</h3>
+                    <h3>Rename Train</h3>
                     <button id="close-rename-modal" class="close-button">×</button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" id="rename-input" placeholder="New routine name..." maxlength="30">
+                    <input type="text" id="rename-input" placeholder="New train name..." maxlength="30">
                     <div class="modal-buttons">
                         <button id="cancel-rename" class="cancel-button">Cancel</button>
                         <button id="confirm-rename" class="next-button">Save</button>
@@ -370,6 +398,10 @@
                                 <i class="fas fa-sign-in-alt"></i>
                                 Login
                             </button>
+                            <div id="settings-login-loading" class="settings-login-loading" style="display: none;">
+                                <i class="fa-solid fa-spinner fa-spin"></i>
+                                <p>Bezig met inloggen...</p>
+                            </div>
                         </div>
                         <div id="settings-user-content" class="auth-content" style="display: none;">
                             <div class="user-info">

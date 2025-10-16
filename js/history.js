@@ -36,16 +36,36 @@ function showHistoryScreen() {
     
     // Load data based on current source
     if (currentHistorySource === 'database') {
+        // Show loading indicator for initial cloud data load
+        const loadingIndicator = document.getElementById('history-loading');
+        const statsSection = document.getElementById('history-stats');
+        const listSection = document.getElementById('history-list');
+        
+        if (loadingIndicator) loadingIndicator.style.display = 'block';
+        if (statsSection) statsSection.style.display = 'none';
+        if (listSection) listSection.style.display = 'none';
+        
         fetchDatabaseHistory().then(() => {
+            // Hide loading, show content
+            if (loadingIndicator) loadingIndicator.style.display = 'none';
+            if (statsSection) statsSection.style.display = 'block';
+            if (listSection) listSection.style.display = 'block';
             renderHistory();
         }).catch((error) => {
             console.error('Error loading cloud data:', error);
+            // Hide loading even on error
+            if (loadingIndicator) loadingIndicator.style.display = 'none';
+            if (statsSection) statsSection.style.display = 'block';
+            if (listSection) listSection.style.display = 'block';
             renderHistory(); // Still render with empty data
         });
     } else {
         renderHistory();
     }
 }
+
+// Make showHistoryScreen globally available
+window.showHistoryScreen = showHistoryScreen;
 
 function setupEventDelegation() {
     // Check for toggle elements with different selectors

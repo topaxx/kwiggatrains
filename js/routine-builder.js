@@ -2,12 +2,27 @@
 
 // Rendering functions
 function renderRoutines() {
-    routinesList.innerHTML = '';
+    const loadingIndicator = document.getElementById('routines-loading');
+    const routinesContainer = document.getElementById('routines-list');
     
-    if (routines.length === 0) {
-        routinesList.innerHTML = '<p style="text-align: center; color: #a0aec0; font-style: italic; padding: 40px;">No routines created yet</p>';
-        return;
-    }
+    // Show loading indicator
+    if (loadingIndicator) loadingIndicator.style.display = 'block';
+    if (routinesContainer) routinesContainer.style.display = 'none';
+    
+    // Simulate loading delay for better UX (only if routines exist)
+    const loadingDelay = routines.length > 0 ? 300 : 0;
+    
+    setTimeout(() => {
+        // Hide loading, show content
+        if (loadingIndicator) loadingIndicator.style.display = 'none';
+        if (routinesContainer) routinesContainer.style.display = 'block';
+        
+        routinesList.innerHTML = '';
+        
+        if (routines.length === 0) {
+            routinesList.innerHTML = '<p style="text-align: center; color: #a0aec0; font-style: italic; padding: 40px;">No routines created yet</p>';
+            return;
+        }
     
     routines.forEach((routine, index) => {
         // Calculate stats for the routine
@@ -28,17 +43,24 @@ function renderRoutines() {
             });
         }
         
-        // Create display text
+        // Create display text with emphasized numbers
         let displayText = '';
         if (hasRepsItems && hasTimeItems) {
             // Both reps and time
-            displayText = `${totalReps} reps + ${formatDuration(totalTime)}`;
+            displayText = `<span class="duration-number">${totalReps}</span> Choo's + <span class="duration-number">${formatDuration(totalTime)}</span>`;
         } else if (hasRepsItems) {
             // Only reps
-            displayText = `${totalReps} reps`;
+            displayText = `<span class="duration-number">${totalReps}</span> Choo's`;
         } else {
             // Only time (or fallback to totalDuration for backwards compatibility)
-            displayText = formatDuration(totalTime || routine.totalDuration || 0);
+            const timeText = formatDuration(totalTime || routine.totalDuration || 0);
+            // Extract number from time text (e.g., "30s" -> "30", "2m 30s" -> "2")
+            const timeMatch = timeText.match(/^(\d+)/);
+            if (timeMatch) {
+                displayText = `<span class="duration-number">${timeMatch[1]}</span>${timeText.substring(timeMatch[1].length)}`;
+            } else {
+                displayText = timeText;
+            }
         }
         
         const routineElement = document.createElement('div');
@@ -76,6 +98,7 @@ function renderRoutines() {
         
         routinesList.appendChild(routineElement);
     });
+    }, loadingDelay);
 }
 
 function renderPoses() {
@@ -225,7 +248,7 @@ function renderRoutinePoses() {
                     <div class="pose-info">
                         <img src="${item.image}" alt="${item.name}" class="pose-image">
                         <div class="pose-name">${item.name}</div>
-                        <div class="pose-duration">${item.unit === 'reps' ? `${item.duration} reps` : formatDuration(item.duration)}</div>
+                        <div class="pose-duration">${item.unit === 'reps' ? `${item.duration} Choo's` : formatDuration(item.duration)}</div>
                     </div>
                     <button class="delete-pose" onclick="removePoseFromRoutine(${index})"><i class="fas fa-trash"></i></button>
                 </div>
@@ -290,15 +313,64 @@ function removePoseFromRoutine(index) {
 }
 
 function updateSaveButton() {
-    const hasName = routineNameInput.value.trim().length > 0;
+    // Get fresh references to elements
+    const input = document.getElementById('routine-name-input');
+    const saveBtn = document.getElementById('save-routine-btn');
+    
+    const hasName = input && input.value.trim().length > 0;
     const hasPoses = currentRoutine.length > 0;
-    saveRoutineBtn.disabled = !(hasName && hasPoses);
+    const canSave = hasName && hasPoses;
+    
+    console.log('updateSaveButton called:');
+    console.log('- Input element found:', !!input);
+    console.log('- Input value:', input ? input.value : 'N/A');
+    console.log('- Input value trimmed:', input ? input.value.trim() : 'N/A');
+    console.log('- Has name:', hasName);
+    console.log('- Has poses:', hasPoses, '(count:', currentRoutine.length, ')');
+    console.log('- Can save:', canSave);
+    console.log('- Save button found:', !!saveBtn);
+    
+    if (saveBtn) {
+        saveBtn.disabled = !canSave;
+        
+        // Update visual state
+        if (canSave) {
+            saveBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            saveBtn.style.color = 'white';
+            saveBtn.style.cursor = 'pointer';
+            console.log('- Save button enabled: purple background applied');
+        } else {
+            saveBtn.style.background = '#e2e8f0';
+            saveBtn.style.color = '#a0aec0';
+            saveBtn.style.cursor = 'not-allowed';
+            console.log('- Save button disabled: gray background applied');
+        }
+    } else {
+        console.error('Save button element not found');
+    }
 }
 
 // Save routine
 function saveRoutine() {
-    const name = currentRoutineName || routineNameInput.value.trim();
-    if (!name || currentRoutine.length === 0) return;
+    console.log('saveRoutine() called');
+    console.log('- currentRoutineName:', currentRoutineName);
+    
+    // Get fresh DOM reference to input
+    const inputElement = document.getElementById('routine-name-input');
+    console.log('- inputElement:', inputElement);
+    console.log('- inputElement.value:', inputElement ? inputElement.value : 'N/A');
+    console.log('- currentRoutine.length:', currentRoutine.length);
+    
+    const name = currentRoutineName || (inputElement ? inputElement.value.trim() : '');
+    console.log('- Final name:', name);
+    console.log('- Final name length:', name.length);
+    
+    if (!name || currentRoutine.length === 0) {
+        console.log('Save aborted - missing name or poses');
+        console.log('- Has name:', !!name);
+        console.log('- Has poses:', currentRoutine.length > 0);
+        return;
+    }
     
     const totalDuration = currentRoutine.reduce((sum, pose) => sum + pose.duration, 0);
     
@@ -310,17 +382,70 @@ function saveRoutine() {
         createdAt: new Date().toISOString()
     };
     
+    console.log('Saving routine:', routine);
+    
     routines.push(routine);
     localStorage.setItem('kwiggaTrains', JSON.stringify(routines));
+    console.log('Routine saved to localStorage');
     
-    // Show completion modal
-    showCompletionModal();
+    // Calculate stats before clearing currentRoutine
+    const totalReps = currentRoutine.reduce((sum, item) => {
+        return sum + (item.unit === 'reps' ? item.duration : 0);
+    }, 0);
     
-    // Return to main screen
-    setTimeout(() => {
-        showMainScreen();
-    }, 2000);
+    const totalTimeSeconds = currentRoutine.reduce((sum, item) => {
+        return sum + (item.unit === 'seconds' ? item.duration : 0);
+    }, 0);
+    
+    // Clear the current routine and routine poses list
+    currentRoutine = [];
+    renderRoutinePoses();
+    console.log('Current routine cleared and rendered');
+    
+    // Format time function
+    const formatTime = (seconds) => {
+        if (seconds < 60) return `${seconds}s`;
+        if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
+    };
+    
+    // Show save completion modal with stats
+    const saveCompletionModal = document.getElementById('save-completion-modal');
+    if (saveCompletionModal) {
+        // Update save completion stats
+        const repsElement = document.getElementById('save-completion-reps');
+        const timeElement = document.getElementById('save-completion-time');
+        
+        if (repsElement) {
+            repsElement.textContent = `${totalReps} Choo's`;
+        }
+        if (timeElement) {
+            timeElement.textContent = formatTime(totalTimeSeconds);
+        }
+        
+        saveCompletionModal.classList.add('active');
+        console.log('Save completion modal shown with stats');
+        console.log('- Total reps:', totalReps);
+        console.log('- Total time:', formatTime(totalTimeSeconds));
+    } else {
+        console.error('Save completion modal element not found');
+    }
 }
+
+// Hide save completion modal
+function hideSaveCompletionModal() {
+    const saveCompletionModal = document.getElementById('save-completion-modal');
+    if (saveCompletionModal) {
+        saveCompletionModal.classList.remove('active');
+        console.log('Save completion modal hidden');
+    }
+    showMainScreen();
+}
+
+// Make hideSaveCompletionModal globally available
+window.hideSaveCompletionModal = hideSaveCompletionModal;
 
 // Delete and rename functions
 function confirmDeleteRoutine() {
@@ -340,10 +465,21 @@ function confirmDeleteRoutine() {
 }
 
 function confirmRenameRoutine() {
-    if (!routineToRename) return;
+    console.log('confirmRenameRoutine called');
+    if (!routineToRename) {
+        console.log('No routine to rename');
+        return;
+    }
     
-    const newName = renameInput.value.trim();
+    // Get the current input value (fresh reference)
+    const input = document.getElementById('rename-input');
+    const newName = input ? input.value.trim() : '';
+    
+    console.log('New name:', newName);
+    console.log('Current name:', routineToRename.name);
+    
     if (!newName || newName === routineToRename.name) {
+        console.log('Name unchanged or empty, closing modal');
         hideRenameModal();
         return;
     }
@@ -351,12 +487,13 @@ function confirmRenameRoutine() {
     // Check if name already exists
     const nameExists = routines.some(r => r.name === newName && r.id !== routineToRename.id);
     if (nameExists) {
-        alert('A routine with this name already exists. Please choose a different name.');
+        alert('A train with this name already exists. Please choose a different name.');
         return;
     }
     
     // Update routine name
     routineToRename.name = newName;
+    console.log('Updated routine name to:', routineToRename.name);
     
     // Update localStorage
     localStorage.setItem('kwiggaTrains', JSON.stringify(routines));
@@ -366,4 +503,5 @@ function confirmRenameRoutine() {
     
     // Hide modal
     hideRenameModal();
+    console.log('Rename completed successfully');
 }
