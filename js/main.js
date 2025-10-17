@@ -11,7 +11,7 @@ async function init() {
     });
     
     // Load the rest of the app immediately
-    renderRoutines();
+    renderTrains();
     renderPoses();
     renderActivities();
     renderExercises();
@@ -36,26 +36,26 @@ function setupEventListeners() {
     
     // Debug: Check if DOM elements exist
     console.log('DOM elements check:');
-    console.log('- addRoutineBtn:', addRoutineBtn);
+    console.log('- addTrainBtn:', addTrainBtn);
     console.log('- settingsBtn:', settingsBtn);
     console.log('- showHistoryBtn:', showHistoryBtn);
     
     // Debug: Check if functions are available
     console.log('Function availability check:');
-    console.log('- showRoutineBuilder:', typeof showRoutineBuilder);
+    console.log('- showTrainBuilder:', typeof showTrainBuilder);
     console.log('- showSettingsScreen:', typeof showSettingsScreen);
     console.log('- showHistoryScreen:', typeof showHistoryScreen);
     
-    addRoutineBtn.addEventListener('click', () => {
+    addTrainBtn.addEventListener('click', () => {
         console.log('Add Train button clicked');
         window.scrollTo(0, 0);
-        showRoutineBuilder();
+        showTrainBuilder();
     });
     backFromBuilder.addEventListener('click', showMainScreen);
     backFromExecution.addEventListener('click', showMainScreen);
     // Use event delegation for Save Train button to ensure it works
     document.addEventListener('click', (event) => {
-        if (event.target && event.target.id === 'save-routine-btn') {
+        if (event.target && event.target.id === 'save-train-btn') {
             console.log('Save Train button clicked via delegation');
             if (checkForActiveModals()) {
                 console.log('Modal is active, ignoring Save Train click');
@@ -63,7 +63,7 @@ function setupEventListeners() {
             }
             event.preventDefault();
             event.stopPropagation();
-            saveRoutine();
+            saveTrain();
         }
     });
     pauseResumeBtn.addEventListener('click', togglePause);
@@ -72,7 +72,7 @@ function setupEventListeners() {
     
     // New event listeners for step-by-step flow
     nextToPosesBtn.addEventListener('click', goToPosesStep);
-    cancelRoutineBtn.addEventListener('click', showMainScreen);
+    cancelTrainBtn.addEventListener('click', showMainScreen);
     backToNameBtn.addEventListener('click', goToNameStep);
     document.getElementById('poses-selection-header').addEventListener('click', togglePosesGrid);
     document.getElementById('activities-selection-header').addEventListener('click', toggleActivitiesGrid);
@@ -80,7 +80,7 @@ function setupEventListeners() {
     closeModalBtn.addEventListener('click', hideTimeModal);
     closeDeleteModalBtn.addEventListener('click', hideDeleteModal);
     cancelDeleteBtn.addEventListener('click', hideDeleteModal);
-    confirmDeleteBtn.addEventListener('click', confirmDeleteRoutine);
+    confirmDeleteBtn.addEventListener('click', confirmDeleteTrain);
     
     // Safely add event listener for completion modal close button
     if (closeCompletionModalBtn) {
@@ -234,8 +234,12 @@ function setupEventListeners() {
         { element: cancelImportHistoryBtn, name: 'cancelImportHistoryBtn' },
         { element: confirmImportHistoryBtn, name: 'confirmImportHistoryBtn' },
         { element: closeImportSuccessModalBtn, name: 'closeImportSuccessModalBtn' },
-        { element: closeImportSuccessBtn, name: 'closeImportSuccessBtn' }
-        // Removed closeImportErrorModalBtn and closeImportErrorBtn as they don't exist in DOM
+        { element: closeImportSuccessBtn, name: 'closeImportSuccessBtn' },
+        { element: closeLogoutSuccessBtn, name: 'closeLogoutSuccessBtn' },
+        { element: closeDeleteErrorBtn, name: 'closeDeleteErrorBtn' },
+        { element: okDeleteErrorBtn, name: 'okDeleteErrorBtn' },
+        { element: closeImportErrorBtn, name: 'closeImportErrorBtn' },
+        { element: okImportErrorBtn, name: 'okImportErrorBtn' }
     ];
     
     modalButtons.forEach(({ element, name }) => {
@@ -247,6 +251,12 @@ function setupEventListeners() {
                 element.addEventListener('click', hideImportHistoryModal);
             } else if (name.includes('ImportSuccess')) {
                 element.addEventListener('click', hideImportSuccessModal);
+            } else if (name.includes('ImportError')) {
+                element.addEventListener('click', hideImportErrorModal);
+            } else if (name.includes('LogoutSuccess')) {
+                element.addEventListener('click', hideLogoutSuccessModal);
+            } else if (name.includes('DeleteError')) {
+                element.addEventListener('click', hideDeleteErrorModal);
             } else if (name.includes('ImportError')) {
                 element.addEventListener('click', hideImportErrorModal);
             }

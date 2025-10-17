@@ -208,6 +208,9 @@ async function handleLogout() {
     hideUserModal();
     
     console.log('User logged out');
+    
+    // Show logout success modal
+    showLogoutSuccessModal();
 }
 
 // User modal functions
@@ -288,4 +291,15 @@ function showUseridModal() {
 
 function hideUseridModal() {
     useridModal.classList.remove('active');
+}
+
+// Logout success modal functions
+function showLogoutSuccessModal() {
+    logoutSuccessModal.classList.add('active');
+}
+
+function hideLogoutSuccessModal() {
+    logoutSuccessModal.classList.remove('active');
+    // Navigate to main screen after modal is closed
+    showMainScreen();
 }

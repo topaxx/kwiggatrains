@@ -1,9 +1,9 @@
-// Routine Execution Functions
+// Train Execution Functions
 
-function showRoutineExecution(routine) {
+function showTrainExecution(train) {
     hideAllScreens();
-    routineExecution.classList.add('active');
-    currentExecutionRoutine = routine;
+    trainExecution.classList.add('active');
+    currentExecutionTrain = train;
     currentPoseIndex = 0;
     isPaused = false;
     
@@ -29,12 +29,12 @@ function showRoutineExecution(routine) {
     // Enable/disable previous button
     previousPoseBtn.disabled = currentPoseIndex === 0;
     
-    // Start the routine
-    startRoutineExecution();
+    // Start the train
+    startTrainExecution();
 }
 
-function startRoutineExecution() {
-    if (!currentExecutionRoutine || currentExecutionRoutine.poses.length === 0) return;
+function startTrainExecution() {
+    if (!currentExecutionTrain || currentExecutionTrain.poses.length === 0) return;
     
     // Ensure we start from the beginning
     currentPoseIndex = 0;
@@ -48,17 +48,18 @@ function startRoutineExecution() {
 }
 
 function showCurrentPose() {
-    const pose = currentExecutionRoutine.poses[currentPoseIndex];
+    const pose = currentExecutionTrain.poses[currentPoseIndex];
     currentPoseImage.src = pose.image;
     currentPoseName.textContent = pose.name;
-    poseCounter.textContent = `${currentPoseIndex + 1} / ${currentExecutionRoutine.poses.length}`;
+    poseCounter.textContent = `${currentPoseIndex + 1} / ${currentExecutionTrain.poses.length}`;
     
     // Check if this is a reps-based item
     console.log('Pose unit:', pose.unit, 'Duration:', pose.duration);
     if (pose.unit === 'reps') {
         // For reps-based items, show reps count and disable timer
         timerCircle.style.display = 'none'; // Hide the circle for reps
-        pauseResumeBtn.style.display = 'none'; // Hide pause button for reps
+        pauseResumeBtn.disabled = true; // Disable pause button for reps
+        pauseResumeBtn.style.opacity = '0.5'; // Make it visually disabled
         
         // Create or show reps display element
         let repsDisplay = document.getElementById('reps-display');
@@ -75,6 +76,10 @@ function showCurrentPose() {
                 background: rgba(102, 126, 234, 0.1);
                 border-radius: 10px;
                 border: 2px solid #667eea;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                white-space: nowrap;
             `;
             timerCircle.parentNode.insertBefore(repsDisplay, timerCircle.nextSibling);
         }
@@ -88,9 +93,10 @@ function showCurrentPose() {
         // For reps, we don't start a timer - user manually clicks next
         return;
     } else {
-        // For time-based items, show timer and hide reps display
+        // For time-based items, show timer and enable pause button
         timerCircle.style.display = 'block';
-        pauseResumeBtn.style.display = 'block';
+        pauseResumeBtn.disabled = false; // Enable pause button for time-based items
+        pauseResumeBtn.style.opacity = '1'; // Make it fully visible
         
         const repsDisplay = document.getElementById('reps-display');
         if (repsDisplay) {
@@ -110,7 +116,7 @@ function startTimer() {
     clearTimeout(timer);
     timer = null;
     
-    const pose = currentExecutionRoutine.poses[currentPoseIndex];
+    const pose = currentExecutionTrain.poses[currentPoseIndex];
     currentTimeLeft = pose.duration; // Initialize time left
     
     // Reset progress bar
@@ -130,7 +136,7 @@ function resumeTimer() {
     clearTimeout(timer);
     timer = null;
     
-    const pose = currentExecutionRoutine.poses[currentPoseIndex];
+    const pose = currentExecutionTrain.poses[currentPoseIndex];
     
     const updateTimer = () => {
         if (isPaused) return;
@@ -185,12 +191,12 @@ function nextPose() {
     clearTimeout(timer);
     timer = null;
     
-    if (currentPoseIndex < currentExecutionRoutine.poses.length - 1) {
+    if (currentPoseIndex < currentExecutionTrain.poses.length - 1) {
         // Don't play sound when user manually clicks next button
         currentPoseIndex++;
         showCurrentPose(); // showCurrentPose will handle timer start for time-based items
     } else {
-        // Routine completed - play bowl sound instead of bell
+        // Train completed - play bowl sound instead of bell
         playBowlSound();
         showCompletionModal();
     }
@@ -200,13 +206,13 @@ function autoNextPose() {
     clearTimeout(timer);
     timer = null;
     
-    if (currentPoseIndex < currentExecutionRoutine.poses.length - 1) {
+    if (currentPoseIndex < currentExecutionTrain.poses.length - 1) {
         // Play bell sound when timer automatically ends (not the last pose)
         playBellSound();
         currentPoseIndex++;
         showCurrentPose(); // showCurrentPose will handle timer start for time-based items
     } else {
-        // Routine completed - play bowl sound instead of bell
+        // Train completed - play bowl sound instead of bell
         playBowlSound();
         showCompletionModal();
     }
@@ -227,79 +233,30 @@ function previousPose() {
 
 // Completion modal functions
 function showCompletionModal() {
-    // Log routine completion
-    logRoutineCompletion();
-    
-    // Update completion modal with stats
-    if (currentExecutionRoutine && currentExecutionRoutine.poses) {
-        // Calculate stats
-        let totalReps = 0;
-        let totalTimeSeconds = 0;
-        
-        currentExecutionRoutine.poses.forEach(pose => {
-            if (pose.unit === 'reps') {
-                totalReps += pose.duration;
-            } else {
-                totalTimeSeconds += pose.duration;
-            }
-        });
-        
-        // Format time function
-        const formatTime = (seconds) => {
-            if (seconds < 60) return `${seconds}s`;
-            if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
-            const hours = Math.floor(seconds / 3600);
-            const minutes = Math.floor((seconds % 3600) / 60);
-            return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
-        };
-        
-        // Update DOM elements
-        const repsElement = document.getElementById('completion-reps');
-        const timeElement = document.getElementById('completion-time');
-        
-        if (repsElement) {
-            if (totalReps > 0) {
-                repsElement.innerHTML = `${totalReps} Choo's <i class="fas fa-check-circle"></i>`;
-                repsElement.style.display = 'block';
-            } else {
-                repsElement.style.display = 'none';
-            }
-        }
-        if (timeElement) {
-            if (totalTimeSeconds > 0) {
-                timeElement.innerHTML = `${formatTime(totalTimeSeconds)} <i class="fas fa-check-circle"></i>`;
-                timeElement.style.display = 'block';
-            } else {
-                timeElement.style.display = 'none';
-            }
-        }
-        
-        console.log('Completion modal updated with stats:');
-        console.log('- Total reps:', totalReps);
-        console.log('- Total time:', formatTime(totalTimeSeconds));
-    }
+    // Log train completion
+    logTrainCompletion();
     
     completionModal.classList.add('active');
 }
 
 function hideCompletionModal() {
     completionModal.classList.remove('active');
-    // Stop routine execution and all sounds
-    stopRoutineExecution();
+    // Stop train execution and all sounds
+    stopTrainExecution();
     showMainScreen();
     // Refresh completion log from localStorage in case it was updated
     completionLog = JSON.parse(localStorage.getItem('yogaCompletionLog') || '[]');
 }
 
 // Log functionality
-function logRoutineCompletion() {
-    // Debug: Check if currentExecutionRoutine exists
-    if (!currentExecutionRoutine) {
-        console.error('currentExecutionRoutine is null or undefined');
+function logTrainCompletion() {
+    // Debug: Check if currentExecutionTrain exists
+    if (!currentExecutionTrain) {
+        console.error('currentExecutionTrain is null or undefined');
         return;
     }
     
-    console.log('Logging routine completion for:', currentExecutionRoutine);
+    console.log('Logging train completion for:', currentExecutionTrain);
     
     // Calculate reps and time stats
     let totalTime = 0;
@@ -307,8 +264,8 @@ function logRoutineCompletion() {
     let hasTimeItems = false;
     let hasRepsItems = false;
     
-    if (currentExecutionRoutine.poses) {
-        currentExecutionRoutine.poses.forEach(pose => {
+    if (currentExecutionTrain.poses) {
+        currentExecutionTrain.poses.forEach(pose => {
             if (pose.unit === 'reps') {
                 totalReps += pose.duration;
                 hasRepsItems = true;
@@ -321,14 +278,14 @@ function logRoutineCompletion() {
     
     const completionEntry = {
         id: Date.now(),
-        routineId: currentExecutionRoutine.id,
-        routineName: currentExecutionRoutine.name,
+        trainId: currentExecutionTrain.id,
+        trainName: currentExecutionTrain.name,
         completedAt: new Date().toISOString(),
         totalTime: totalTime,
         totalReps: totalReps,
         hasTimeItems: hasTimeItems,
         hasRepsItems: hasRepsItems,
-        poseCount: currentExecutionRoutine.poses ? currentExecutionRoutine.poses.length : 0,
+        poseCount: currentExecutionTrain.poses ? currentExecutionTrain.poses.length : 0,
         userId: currentUser ? currentUser.sub : null,
         userEmail: currentUser ? currentUser.email : null
     };
@@ -343,7 +300,7 @@ function logRoutineCompletion() {
     
     // Log to database if user is authenticated
     if (isAuthenticated && currentUser) {
-        const detailedExercises = currentExecutionRoutine ? currentExecutionRoutine.poses : [];
+        const detailedExercises = currentExecutionTrain ? currentExecutionTrain.poses : [];
         logTrainingToDatabase(completionEntry, detailedExercises);
     }
     

@@ -156,6 +156,6 @@ Bekijk de volledige documentatie in `AUTHENTICATION_SETUP.md` voor:
 - Security best practices
 - Deployment tips
 
-**Veel plezier met je yoga routine app! 🏋️‍♂️🧘‍♀️**
+**Veel plezier met je yoga train app! 🏋️‍♂️🧘‍♀️**
 
 

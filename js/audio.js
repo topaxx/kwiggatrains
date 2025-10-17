@@ -51,8 +51,8 @@ function stopAllSounds() {
     }
 }
 
-// Stop routine execution completely
-function stopRoutineExecution() {
+// Stop train execution completely
+function stopTrainExecution() {
     // Clear timer
     clearTimeout(timer);
     timer = null;

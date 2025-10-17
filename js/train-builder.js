@@ -1,38 +1,35 @@
-// Routine Builder Functions
+// Train Builder Functions
 
 // Rendering functions
-function renderRoutines() {
-    const loadingIndicator = document.getElementById('routines-loading');
-    const routinesContainer = document.getElementById('routines-list');
+function renderTrains() {
+    const loadingIndicator = document.getElementById('trains-loading');
+    const trainsContainer = document.getElementById('trains-list');
     
-    // Show loading indicator
-    if (loadingIndicator) loadingIndicator.style.display = 'block';
-    if (routinesContainer) routinesContainer.style.display = 'none';
+    // Don't show spinner - keep cached info visible
+    if (loadingIndicator) loadingIndicator.style.display = 'none';
+    if (trainsContainer) trainsContainer.style.display = 'block';
     
-    // Simulate loading delay for better UX (only if routines exist)
-    const loadingDelay = routines.length > 0 ? 300 : 0;
+    if (!trainsContainer) {
+        console.error('trains-list element not found');
+        return;
+    }
     
-    setTimeout(() => {
-        // Hide loading, show content
-        if (loadingIndicator) loadingIndicator.style.display = 'none';
-        if (routinesContainer) routinesContainer.style.display = 'block';
-        
-        routinesList.innerHTML = '';
-        
-        if (routines.length === 0) {
-            routinesList.innerHTML = '<p style="text-align: center; color: #a0aec0; font-style: italic; padding: 40px;">No routines created yet</p>';
-            return;
-        }
+    trainsContainer.innerHTML = '';
     
-    routines.forEach((routine, index) => {
-        // Calculate stats for the routine
+    if (trains.length === 0) {
+        trainsContainer.innerHTML = '<p style="text-align: center; color: #a0aec0; font-style: italic; padding: 40px;">No trains created yet</p>';
+        return;
+    }
+    
+    trains.forEach((train, index) => {
+        // Calculate stats for the train
         let totalTime = 0;
         let totalReps = 0;
         let hasTimeItems = false;
         let hasRepsItems = false;
         
-        if (routine.poses) {
-            routine.poses.forEach(pose => {
+        if (train.poses) {
+            train.poses.forEach(pose => {
                 if (pose.unit === 'reps') {
                     totalReps += pose.duration;
                     hasRepsItems = true;
@@ -53,7 +50,7 @@ function renderRoutines() {
             displayText = `<span class="duration-number">${totalReps}</span> Choo's`;
         } else {
             // Only time (or fallback to totalDuration for backwards compatibility)
-            const timeText = formatDuration(totalTime || routine.totalDuration || 0);
+            const timeText = formatDuration(totalTime || train.totalDuration || 0);
             // Extract number from time text (e.g., "30s" -> "30", "2m 30s" -> "2")
             const timeMatch = timeText.match(/^(\d+)/);
             if (timeMatch) {
@@ -63,30 +60,30 @@ function renderRoutines() {
             }
         }
         
-        const routineElement = document.createElement('div');
-        routineElement.className = 'routine-item';
-        routineElement.innerHTML = `
-            <div class="routine-content">
-                <div class="routine-name">${routine.name}</div>
-                <div class="routine-duration">${displayText}</div>
+        const trainElement = document.createElement('div');
+        trainElement.className = 'train-item';
+        trainElement.innerHTML = `
+            <div class="train-content">
+                <div class="train-name">${train.name}</div>
+                <div class="train-duration">${displayText}</div>
             </div>
-            <div class="routine-actions">
-                <button class="routine-rename-btn" onclick="showRenameModal(${routine.id})" title="Rename routine"><i class="fas fa-edit"></i></button>
-                <button class="routine-delete-btn" onclick="showDeleteConfirmation(${routine.id})" title="Delete routine"><i class="fas fa-trash"></i></button>
+            <div class="train-actions">
+                <button class="train-rename-btn" onclick="showRenameModal(${train.id})" title="Rename train"><i class="fas fa-edit"></i></button>
+                <button class="train-delete-btn" onclick="showDeleteConfirmation(${train.id})" title="Delete train"><i class="fas fa-trash"></i></button>
             </div>
         `;
         
-        // Add click listener to routine element (not the action buttons)
-        routineElement.addEventListener('click', (e) => {
+        // Add click listener to train element (not the action buttons)
+        trainElement.addEventListener('click', (e) => {
             // Only trigger if not clicking on action buttons
-            if (!e.target.closest('.routine-actions')) {
-                showRoutineExecution(routine);
+            if (!e.target.closest('.train-actions')) {
+                showTrainExecution(train);
             }
         });
         
         // Add click listeners to action buttons to prevent event propagation
-        const renameBtn = routineElement.querySelector('.routine-rename-btn');
-        const deleteBtn = routineElement.querySelector('.routine-delete-btn');
+        const renameBtn = trainElement.querySelector('.train-rename-btn');
+        const deleteBtn = trainElement.querySelector('.train-delete-btn');
         
         renameBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -96,9 +93,8 @@ function renderRoutines() {
             e.stopPropagation();
         });
         
-        routinesList.appendChild(routineElement);
+        trainsContainer.appendChild(trainElement);
     });
-    }, loadingDelay);
 }
 
 function renderPoses() {
@@ -189,8 +185,8 @@ function selectTime(time, element) {
     element.classList.add('selected');
     selectedTime = time;
     
-    // Add pose to routine
-    addPoseToRoutine();
+    // Add pose to train
+    addPoseToTrain();
 }
 
 function selectRepetition(reps, element) {
@@ -201,14 +197,14 @@ function selectRepetition(reps, element) {
     element.classList.add('selected');
     selectedTime = reps; // Use selectedTime for consistency
     
-    // Add exercise to routine
-    addPoseToRoutine();
+    // Add exercise to train
+    addPoseToTrain();
 }
 
-// Routine management functions
-function addPoseToRoutine() {
+// Train management functions
+function addPoseToTrain() {
     if ((selectedPose || selectedExercise) && selectedTime) {
-        const routineItem = selectedPose ? {
+        const trainItem = selectedPose ? {
             ...selectedPose,
             duration: selectedTime,
             type: 'pose',
@@ -220,8 +216,8 @@ function addPoseToRoutine() {
             unit: document.querySelector('.repetition-option.selected') ? 'reps' : 'seconds'
         };
         
-        currentRoutine.push(routineItem);
-        renderRoutinePoses();
+        currentTrain.push(trainItem);
+        renderTrainPoses();
         updateSaveButton();
         hideTimeModal();
         
@@ -235,43 +231,52 @@ function addPoseToRoutine() {
     }
 }
 
-function renderRoutinePoses() {
-    if (currentRoutine.length === 0) {
-        routinePosesList.innerHTML = '<p class="empty-message">Add poses and exercises to your routine</p>';
+function renderTrainPoses() {
+    if (currentTrain.length === 0) {
+        trainPosesList.innerHTML = '<p class="empty-message">Add poses and exercises to your train</p>';
         return;
     }
     
-    routinePosesList.innerHTML = currentRoutine.map((item, index) => {
+    // Create grouped container if there are 2 or more items
+    const hasGrouping = currentTrain.length >= 2;
+    const groupClass = hasGrouping ? 'train-items-grouped' : '';
+    
+    const itemsHTML = currentTrain.map((item, index) => {
         if (item.type === 'exercise') {
             return `
-                <div class="routine-pose-item" data-index="${index}">
+                <div class="train-pose-item" data-index="${index}">
                     <div class="pose-info">
                         <img src="${item.image}" alt="${item.name}" class="pose-image">
                         <div class="pose-name">${item.name}</div>
                         <div class="pose-duration">${item.unit === 'reps' ? `${item.duration} Choo's` : formatDuration(item.duration)}</div>
                     </div>
-                    <button class="delete-pose" onclick="removePoseFromRoutine(${index})"><i class="fas fa-trash"></i></button>
+                    <button class="delete-pose" onclick="removePoseFromTrain(${index})"><i class="fas fa-trash"></i></button>
                 </div>
             `;
         } else {
             return `
-                <div class="routine-pose-item" data-index="${index}">
+                <div class="train-pose-item" data-index="${index}">
                     <div class="pose-info">
                         <img src="${item.image}" alt="${item.name}" class="pose-image">
                         <div class="pose-name">${item.name}</div>
                         <div class="pose-duration">${formatDuration(item.duration)}</div>
                     </div>
-                    <button class="delete-pose" onclick="removePoseFromRoutine(${index})"><i class="fas fa-trash"></i></button>
+                    <button class="delete-pose" onclick="removePoseFromTrain(${index})"><i class="fas fa-trash"></i></button>
                 </div>
             `;
         }
     }).join('');
     
+    // Wrap items in grouped container if there are 2+ items
+    trainPosesList.innerHTML = hasGrouping 
+        ? `<div class="train-items-grouped">${itemsHTML}</div>`
+        : itemsHTML;
+    
     makeSortable();
 }
 
 function makeSortable() {
-    const poseItems = document.querySelectorAll('.routine-pose-item');
+    const poseItems = document.querySelectorAll('.train-pose-item');
     poseItems.forEach(item => {
         item.draggable = true;
         
@@ -301,24 +306,24 @@ function makeSortable() {
 }
 
 function reorderPoses(fromIndex, toIndex) {
-    const pose = currentRoutine.splice(fromIndex, 1)[0];
-    currentRoutine.splice(toIndex, 0, pose);
-    renderRoutinePoses();
+    const pose = currentTrain.splice(fromIndex, 1)[0];
+    currentTrain.splice(toIndex, 0, pose);
+    renderTrainPoses();
 }
 
-function removePoseFromRoutine(index) {
-    currentRoutine.splice(index, 1);
-    renderRoutinePoses();
+function removePoseFromTrain(index) {
+    currentTrain.splice(index, 1);
+    renderTrainPoses();
     updateSaveButton();
 }
 
 function updateSaveButton() {
     // Get fresh references to elements
-    const input = document.getElementById('routine-name-input');
-    const saveBtn = document.getElementById('save-routine-btn');
+    const input = document.getElementById('train-name-input');
+    const saveBtn = document.getElementById('save-train-btn');
     
     const hasName = input && input.value.trim().length > 0;
-    const hasPoses = currentRoutine.length > 0;
+    const hasPoses = currentTrain.length > 0;
     const canSave = hasName && hasPoses;
     
     console.log('updateSaveButton called:');
@@ -326,7 +331,7 @@ function updateSaveButton() {
     console.log('- Input value:', input ? input.value : 'N/A');
     console.log('- Input value trimmed:', input ? input.value.trim() : 'N/A');
     console.log('- Has name:', hasName);
-    console.log('- Has poses:', hasPoses, '(count:', currentRoutine.length, ')');
+    console.log('- Has poses:', hasPoses, '(count:', currentTrain.length, ')');
     console.log('- Can save:', canSave);
     console.log('- Save button found:', !!saveBtn);
     
@@ -350,95 +355,54 @@ function updateSaveButton() {
     }
 }
 
-// Save routine
-function saveRoutine() {
-    console.log('saveRoutine() called');
-    console.log('- currentRoutineName:', currentRoutineName);
+// Save train
+function saveTrain() {
+    console.log('saveTrain() called');
+    console.log('- currentTrainName:', currentTrainName);
     
     // Get fresh DOM reference to input
-    const inputElement = document.getElementById('routine-name-input');
+    const inputElement = document.getElementById('train-name-input');
     console.log('- inputElement:', inputElement);
     console.log('- inputElement.value:', inputElement ? inputElement.value : 'N/A');
-    console.log('- currentRoutine.length:', currentRoutine.length);
+    console.log('- currentTrain.length:', currentTrain.length);
     
-    const name = currentRoutineName || (inputElement ? inputElement.value.trim() : '');
+    const name = currentTrainName || (inputElement ? inputElement.value.trim() : '');
     console.log('- Final name:', name);
     console.log('- Final name length:', name.length);
     
-    if (!name || currentRoutine.length === 0) {
+    if (!name || currentTrain.length === 0) {
         console.log('Save aborted - missing name or poses');
         console.log('- Has name:', !!name);
-        console.log('- Has poses:', currentRoutine.length > 0);
+        console.log('- Has poses:', currentTrain.length > 0);
         return;
     }
     
-    const totalDuration = currentRoutine.reduce((sum, pose) => sum + pose.duration, 0);
+    const totalDuration = currentTrain.reduce((sum, pose) => sum + pose.duration, 0);
     
-    const routine = {
+    const train = {
         id: Date.now(),
         name: name,
-        poses: currentRoutine,
+        poses: currentTrain,
         totalDuration: totalDuration,
         createdAt: new Date().toISOString()
     };
     
-    console.log('Saving routine:', routine);
+    console.log('Saving train:', train);
     
-    routines.push(routine);
-    localStorage.setItem('kwiggaTrains', JSON.stringify(routines));
-    console.log('Routine saved to localStorage');
+    trains.push(train);
+    localStorage.setItem('kwiggaTrains', JSON.stringify(trains));
+    console.log('Train saved to localStorage');
     
-    // Calculate stats before clearing currentRoutine
-    const totalReps = currentRoutine.reduce((sum, item) => {
-        return sum + (item.unit === 'reps' ? item.duration : 0);
-    }, 0);
+    // Clear the current train and train poses list
+    currentTrain = [];
+    renderTrainPoses();
+    console.log('Current train cleared and rendered');
     
-    const totalTimeSeconds = currentRoutine.reduce((sum, item) => {
-        return sum + (item.unit === 'seconds' ? item.duration : 0);
-    }, 0);
-    
-    // Clear the current routine and routine poses list
-    currentRoutine = [];
-    renderRoutinePoses();
-    console.log('Current routine cleared and rendered');
-    
-    // Format time function
-    const formatTime = (seconds) => {
-        if (seconds < 60) return `${seconds}s`;
-        if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-        return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
-    };
-    
-    // Show save completion modal with stats
+    // Show save completion modal
     const saveCompletionModal = document.getElementById('save-completion-modal');
     if (saveCompletionModal) {
-        // Update save completion stats
-        const repsElement = document.getElementById('save-completion-reps');
-        const timeElement = document.getElementById('save-completion-time');
-        
-        if (repsElement) {
-            if (totalReps > 0) {
-                repsElement.innerHTML = `${totalReps} Choo's <i class="fas fa-check-circle"></i>`;
-                repsElement.style.display = 'block';
-            } else {
-                repsElement.style.display = 'none';
-            }
-        }
-        if (timeElement) {
-            if (totalTimeSeconds > 0) {
-                timeElement.innerHTML = `${formatTime(totalTimeSeconds)} <i class="fas fa-check-circle"></i>`;
-                timeElement.style.display = 'block';
-            } else {
-                timeElement.style.display = 'none';
-            }
-        }
-        
         saveCompletionModal.classList.add('active');
-        console.log('Save completion modal shown with stats');
-        console.log('- Total reps:', totalReps);
-        console.log('- Total time:', formatTime(totalTimeSeconds));
+        console.log('Save completion modal shown');
     } else {
         console.error('Save completion modal element not found');
     }
@@ -457,27 +421,52 @@ function hideSaveCompletionModal() {
 // Make hideSaveCompletionModal globally available
 window.hideSaveCompletionModal = hideSaveCompletionModal;
 
-// Delete and rename functions
-function confirmDeleteRoutine() {
-    if (routineToDelete) {
-        // Remove routine from array
-        routines = routines.filter(r => r.id !== routineToDelete.id);
-        
-        // Update localStorage
-        localStorage.setItem('kwiggaTrains', JSON.stringify(routines));
-        
-        // Re-render routines
-        renderRoutines();
-        
-        // Hide modal
-        hideDeleteModal();
+// Delete error modal functions
+function showDeleteErrorModal() {
+    const deleteErrorModal = document.getElementById('delete-error-modal');
+    if (deleteErrorModal) {
+        deleteErrorModal.classList.add('active');
     }
 }
 
-function confirmRenameRoutine() {
-    console.log('confirmRenameRoutine called');
-    if (!routineToRename) {
-        console.log('No routine to rename');
+function hideDeleteErrorModal() {
+    const deleteErrorModal = document.getElementById('delete-error-modal');
+    if (deleteErrorModal) {
+        deleteErrorModal.classList.remove('active');
+    }
+}
+
+// Make delete error modal functions globally available
+window.showDeleteErrorModal = showDeleteErrorModal;
+window.hideDeleteErrorModal = hideDeleteErrorModal;
+
+// Delete and rename functions
+function confirmDeleteTrain() {
+    if (trainToDelete) {
+        try {
+            // Remove train from array
+            trains = trains.filter(r => r.id !== trainToDelete.id);
+            
+            // Update localStorage
+            localStorage.setItem('kwiggaTrains', JSON.stringify(trains));
+            
+            // Re-render trains
+            renderTrains();
+            
+            // Hide modal
+            hideDeleteModal();
+        } catch (error) {
+            console.error('Error deleting train:', error);
+            // Show error popup
+            showDeleteErrorModal();
+        }
+    }
+}
+
+function confirmRenameTrain() {
+    console.log('confirmRenameTrain called');
+    if (!trainToRename) {
+        console.log('No train to rename');
         return;
     }
     
@@ -486,30 +475,30 @@ function confirmRenameRoutine() {
     const newName = input ? input.value.trim() : '';
     
     console.log('New name:', newName);
-    console.log('Current name:', routineToRename.name);
+    console.log('Current name:', trainToRename.name);
     
-    if (!newName || newName === routineToRename.name) {
+    if (!newName || newName === trainToRename.name) {
         console.log('Name unchanged or empty, closing modal');
         hideRenameModal();
         return;
     }
     
     // Check if name already exists
-    const nameExists = routines.some(r => r.name === newName && r.id !== routineToRename.id);
+    const nameExists = trains.some(r => r.name === newName && r.id !== trainToRename.id);
     if (nameExists) {
         alert('A train with this name already exists. Please choose a different name.');
         return;
     }
     
-    // Update routine name
-    routineToRename.name = newName;
-    console.log('Updated routine name to:', routineToRename.name);
+    // Update train name
+    trainToRename.name = newName;
+    console.log('Updated train name to:', trainToRename.name);
     
     // Update localStorage
-    localStorage.setItem('kwiggaTrains', JSON.stringify(routines));
+    localStorage.setItem('kwiggaTrains', JSON.stringify(trains));
     
-    // Re-render routines
-    renderRoutines();
+    // Re-render trains
+    renderTrains();
     
     // Hide modal
     hideRenameModal();

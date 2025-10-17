@@ -17,45 +17,44 @@
             <h1>🏋️‍♂️ &nbsp;  KwiggaTrains &nbsp;&nbsp; シ</h1>
         </header>
         
-        <!-- Hoofdscherm - Train Lijst -->
+        <!-- Main Screen - Train List -->
         <div id="main-screen" class="screen active">
-            <div id="routines-loading" class="routines-loading" style="display: none;">
+            <div id="trains-loading" class="trains-loading" style="display: none;">
                 <i class="fa-solid fa-spinner fa-spin"></i>
-                <p>Bezig met laden van routines...</p>
+                <p>Loading trains...</p>
             </div>
-            <div id="routines-list" class="routines-container">
-                <!-- Trains worden hier dynamisch toegevoegd -->
+            <div id="trains-list" class="trains-container">
+                <!-- Trains will be added here dynamically -->
             </div>
         </div>
 
-        <!-- Train Builder Scherm -->
-        <div id="routine-builder" class="screen">
+        <!-- Train Builder Screen -->
+        <div id="train-builder" class="screen">
             <div class="screen-header">
                 <button id="back-from-builder" class="back-button"><i class="fas fa-arrow-left"></i></button>
-                <h1 id="routine-builder-title">Add Train</h1>
+                <h1 id="train-builder-title">Add Train</h1>
             </div>
             
-            <!-- Stap 1: Train naam -->
+            <!-- Step 1: Train name -->
             <div id="name-step" class="builder-step active">
                 <div class="step-content">
-                    <input type="text" id="routine-name-input" placeholder="Give your Choo Choo a name..." maxlength="30">
+                    <input type="text" id="train-name-input" placeholder="Give your Choo Choo a name..." maxlength="30">
                     <div class="step-buttons">
-                        <button id="cancel-routine" class="cancel-button">Cancel</button>
+                        <button id="cancel-train" class="cancel-button">Cancel</button>
                         <button id="next-to-poses" class="next-button" disabled>Next</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Stap 2: Poses selecteren -->
+            <!-- Step 2: Select poses -->
             <div id="poses-step" class="builder-step">
                 <div class="step-content">
                     
-                    <!-- Routine poses lijst -->
-                    <div class="routine-poses-section">
-                        <div class="routine-poses-header">
-                            <h4>🚂 Your Train</h4>
+                    <!-- Train poses list -->
+                    <div class="train-poses-section">
+                        <div class="train-poses-header">
                         </div>
-                        <div id="routine-poses-list" class="routine-poses-list">
+                        <div id="train-poses-list" class="train-poses-list">
                             <p class="empty-message">Empty Train</p>
                         </div>
                     </div>
@@ -107,13 +106,13 @@
 
                     <div class="step-buttons">
                         <button id="back-to-name" class="back-step-button">Back</button>
-                        <button id="save-routine-btn" class="save-button" disabled>Save Train</button>
+                        <button id="save-train-btn" class="save-button" disabled>Save Train</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Tijd selectie popup -->
+        <!-- Time selection popup -->
         <div id="time-selection-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -158,7 +157,23 @@
             </div>
         </div>
 
-        <!-- Verwijder bevestiging popup -->
+        <!-- Delete Error Modal -->
+        <div id="delete-error-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Error</h3>
+                    <button id="close-delete-error-modal" class="close-button">×</button>
+                </div>
+                <div class="modal-body">
+                    <p id="delete-error-text">An error occurred while deleting the train. Please try again.</p>
+                    <div class="modal-buttons">
+                        <button id="ok-delete-error" class="ok-button">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete confirmation popup -->
         <div id="delete-confirmation-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -179,15 +194,9 @@
         <div id="save-completion-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>🚂 Choo Choo MF'er!!!</h3>
+                    <h3>🚂 Choo Choo Saved</h3>
                 </div>
                 <div class="modal-body">
-                    <div id="save-completion-stats" class="completion-stats">
-                        <div class="stats-highlight">
-                            <span id="save-completion-reps">0 Choo's <i class="fas fa-check-circle"></i></span><br>
-                            <span id="save-completion-time">0m <i class="fas fa-check-circle"></i></span>
-                        </div>
-                    </div>
                     <div class="modal-buttons">
                         <button id="close-save-completion" class="next-button">Back</button>
                     </div>
@@ -199,15 +208,9 @@
         <div id="completion-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>🚂 Choo Choo MF'er!!!</h3>
+                    <h3>🚂 Choo Choo 🚂</h3>
                 </div>
                 <div class="modal-body">
-                    <div id="completion-stats" class="completion-stats">
-                        <div class="stats-highlight">
-                            <span id="completion-reps">0 Choo's <i class="fas fa-check-circle"></i></span><br>
-                            <span id="completion-time">0m <i class="fas fa-check-circle"></i></span>
-                        </div>
-                    </div>
                     <div class="modal-buttons">
                         <button id="close-completion" class="next-button">Back</button>
                     </div>
@@ -219,7 +222,6 @@
         <div id="history-screen" class="screen">
             <div class="screen-header">
                 <button id="back-from-history" class="back-button"><i class="fas fa-arrow-left"></i></button>
-                <h1>History</h1>
             </div>
             
             <div class="history-content">
@@ -237,15 +239,17 @@
 
                 <div id="history-loading" class="history-loading" style="display: none;">
                     <i class="fa-solid fa-spinner fa-spin"></i>
-                    <p>Bezig met laden van cloud data...</p>
+                    <p>Loading cloud data...</p>
                 </div>
 
                 <div id="history-stats" class="history-stats">
-                    <!-- Stats worden hier dynamisch toegevoegd -->
+                    <!-- Stats will be added here dynamically -->
                 </div>
+
+                <h1>Wall of Trains</h1>
                 
                 <div id="history-list" class="history-list">
-                    <!-- History entries worden hier dynamisch toegevoegd -->
+                    <!-- History entries will be added here dynamically -->
                 </div>
                 
                 <div class="history-actions">
@@ -298,6 +302,22 @@
             </div>
         </div>
 
+        <!-- Import Error Modal -->
+        <div id="import-error-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Import Error</h3>
+                    <button id="close-import-error-modal" class="close-button">×</button>
+                </div>
+                <div class="modal-body">
+                    <p id="import-error-text">An error occurred while importing the file. Please try again.</p>
+                    <div class="modal-buttons">
+                        <button id="ok-import-error" class="ok-button">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Import Success Modal -->
         <div id="import-success-modal" class="modal">
             <div class="modal-content">
@@ -309,6 +329,21 @@
                     <p id="import-success-text">History imported successfully!</p>
                     <div class="modal-buttons">
                         <button id="close-import-success" class="next-button">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logout Success Modal -->
+        <div id="logout-success-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>👋 Logged Out Successfully</h3>
+                </div>
+                <div class="modal-body">
+                    <p id="logout-success-text">You have been successfully logged out.</p>
+                    <div class="modal-buttons">
+                        <button id="close-logout-success" class="next-button">OK</button>
                     </div>
                 </div>
             </div>
@@ -331,14 +366,14 @@
             </div>
         </div>
 
-        <!-- Routine Uitvoering Scherm -->
-        <div id="routine-execution" class="screen">
+        <!-- Train Execution Screen -->
+        <div id="train-execution" class="screen">
             <button id="back-from-execution" class="back-button"><i class="fas fa-arrow-left"></i></button>
             
             <div class="execution-content">
                 <div class="pose-display">
-                    <h2 id="current-pose-name">Pose Naam</h2>
-                    <img id="current-pose-image" src="" alt="Huidige pose">
+                    <h2 id="current-pose-name">Pose Name</h2>
+                    <img id="current-pose-image" src="" alt="Current pose">
                 </div>
                 
                 <div class="timer-section">
@@ -378,7 +413,6 @@
         <div id="settings-screen" class="screen">
             <div class="screen-header">
                 <button id="back-from-settings" class="back-button"><i class="fas fa-arrow-left"></i></button>
-                <h1>Settings</h1>
             </div>
             
             <div class="settings-content">
@@ -393,7 +427,7 @@
                     <div class="settings-item">
                         <div id="settings-login-content" class="login-options">
                             <p style="text-align: center; margin-bottom: 20px; color: #4a5568;">
-                                Login om je routines op te slaan in de cloud
+                                Login to save your trains in the cloud
                             </p>
                             <button id="settings-twitter-login-btn" class="twitter-login-button">
                                 <i class="fas fa-sign-in-alt"></i>
@@ -401,7 +435,7 @@
                             </button>
                             <div id="settings-login-loading" class="settings-login-loading" style="display: none;">
                                 <i class="fa-solid fa-spinner fa-spin"></i>
-                                <p>Bezig met inloggen...</p>
+                                <p>Logging in...</p>
                             </div>
                         </div>
                         <div id="settings-user-content" class="auth-content" style="display: none;">
@@ -459,7 +493,7 @@
                     <div id="login-content" class="auth-content">
                         <div class="login-options">
                             <p style="text-align: center; margin-bottom: 20px; color: #4a5568;">
-                                Login om je routines op te slaan in de cloud
+                                Login to save your trains in the cloud
                             </p>
                             <button id="twitter-login-btn" class="twitter-login-button">
                                 <i class="fas fa-sign-in-alt"></i>
@@ -490,7 +524,7 @@
 
         <!-- Global Footer -->
         <footer class="main-footer">
-            <button id="add-routine-btn" class="add-button">
+            <button id="add-train-btn" class="add-button">
                 シ Add Train
             </button>
             <button id="show-history-btn" class="history-button">
@@ -508,8 +542,8 @@
     <script src="js/dom.js?v=2.0"></script>
     <script src="js/audio.js?v=2.0"></script>
     <script src="js/navigation.js?v=2.0"></script>
-    <script src="js/routine-builder.js?v=2.0"></script>
-    <script src="js/routine-execution.js?v=2.0"></script>
+    <script src="js/train-builder.js?v=2.0"></script>
+    <script src="js/train-execution.js?v=2.0"></script>
     <script src="js/history.js?v=2.0"></script>
     <script src="js/auth.js?v=2.0"></script>
     <script src="js/database.js?v=2.0"></script>

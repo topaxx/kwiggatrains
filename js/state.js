@@ -1,17 +1,17 @@
 // App state variables
-let currentRoutine = [];
-let currentRoutineName = "";
+let currentTrain = [];
+let currentTrainName = "";
 let selectedPose = null;
 let selectedExercise = null;
 let selectedTime = null;
-let routines = JSON.parse(localStorage.getItem('kwiggaTrains') || '[]');
-let currentExecutionRoutine = null;
+let trains = JSON.parse(localStorage.getItem('kwiggaTrains') || '[]');
+let currentExecutionTrain = null;
 let currentPoseIndex = 0;
 let timer = null;
 let isPaused = false;
 let currentStep = 'name'; // 'name' or 'poses'
-let routineToDelete = null;
-let routineToRename = null;
+let trainToDelete = null;
+let trainToRename = null;
 let currentTimeLeft = 0; // Track remaining time for pause/resume
 let completionLog = JSON.parse(localStorage.getItem('yogaCompletionLog') || '[]');
 let bellSound = null; // Audio object for bell sound

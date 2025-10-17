@@ -1,10 +1,10 @@
 // DOM elements - Main screens
 const mainScreen = document.getElementById('main-screen');
-const routineBuilder = document.getElementById('routine-builder');
-const routineExecution = document.getElementById('routine-execution');
+const trainBuilder = document.getElementById('train-builder');
+const trainExecution = document.getElementById('train-execution');
 const historyScreen = document.getElementById('history-screen');
-const routinesList = document.getElementById('routines-list');
-const addRoutineBtn = document.getElementById('add-routine-btn');
+const trainsList = document.getElementById('trains-list');
+const addTrainBtn = document.getElementById('add-train-btn');
 const settingsBtn = document.getElementById('settings-btn');
 const showHistoryBtn = document.getElementById('show-history-btn');
 const backFromBuilder = document.getElementById('back-from-builder');
@@ -13,11 +13,11 @@ const backFromHistory = document.getElementById('back-from-history');
 const backFromSettings = document.getElementById('back-from-settings');
 const settingsScreen = document.getElementById('settings-screen');
 const clearHistoryBtn = document.getElementById('clear-history-btn');
-const routineNameInput = document.getElementById('routine-name-input');
+const trainNameInput = document.getElementById('train-name-input');
 const posesGrid = document.getElementById('poses-grid');
 const exercisesGrid = document.getElementById('exercises-grid');
-const routinePosesList = document.getElementById('routine-poses-list');
-const saveRoutineBtn = document.getElementById('save-routine-btn');
+const trainPosesList = document.getElementById('train-poses-list');
+const saveTrainBtn = document.getElementById('save-train-btn');
 const currentPoseImage = document.getElementById('current-pose-image');
 const currentPoseName = document.getElementById('current-pose-name');
 const timerDisplay = document.getElementById('timer-display');
@@ -32,7 +32,7 @@ const poseCounter = document.getElementById('pose-counter');
 const nameStep = document.getElementById('name-step');
 const posesStep = document.getElementById('poses-step');
 const nextToPosesBtn = document.getElementById('next-to-poses');
-const cancelRoutineBtn = document.getElementById('cancel-routine');
+const cancelTrainBtn = document.getElementById('cancel-train');
 const backToNameBtn = document.getElementById('back-to-name');
 const posesGridContainer = document.getElementById('poses-grid-container');
 const exercisesGridContainer = document.getElementById('exercises-grid-container');
@@ -51,6 +51,13 @@ const closeDeleteModalBtn = document.getElementById('close-delete-modal');
 const cancelDeleteBtn = document.getElementById('cancel-delete');
 const confirmDeleteBtn = document.getElementById('confirm-delete');
 const deleteConfirmationText = document.getElementById('delete-confirmation-text');
+
+// Delete error modal elements
+const deleteErrorModal = document.getElementById('delete-error-modal');
+const deleteErrorText = document.getElementById('delete-error-text');
+const closeDeleteErrorBtn = document.getElementById('close-delete-error-modal');
+const okDeleteErrorBtn = document.getElementById('ok-delete-error');
+
 const completionModal = document.getElementById('completion-modal');
 const closeCompletionModalBtn = document.getElementById('close-completion-modal');
 const closeCompletionBtn = document.getElementById('close-completion');
@@ -76,6 +83,13 @@ const importSuccessModal = document.getElementById('import-success-modal');
 const closeImportSuccessModalBtn = document.getElementById('close-import-success-modal');
 const closeImportSuccessBtn = document.getElementById('close-import-success');
 const importSuccessText = document.getElementById('import-success-text');
+
+// Import error modal elements
+const importErrorModal = document.getElementById('import-error-modal');
+const importErrorText = document.getElementById('import-error-text');
+const closeImportErrorBtn = document.getElementById('close-import-error-modal');
+const okImportErrorBtn = document.getElementById('ok-import-error');
+
 const renameModal = document.getElementById('rename-modal');
 const closeRenameModalBtn = document.getElementById('close-rename-modal');
 const cancelRenameBtn = document.getElementById('cancel-rename');
@@ -111,3 +125,8 @@ const settingsUserAvatarImg = document.getElementById('settings-user-avatar-img'
 const settingsUserName = document.getElementById('settings-user-name');
 const settingsUserEmail = document.getElementById('settings-user-email');
 const settingsLogoutBtn = document.getElementById('settings-logout-btn');
+
+// Logout success modal elements
+const logoutSuccessModal = document.getElementById('logout-success-modal');
+const closeLogoutSuccessBtn = document.getElementById('close-logout-success');
+const logoutSuccessText = document.getElementById('logout-success-text');

@@ -9,8 +9,8 @@ let isFetchingDatabase = false; // Prevent multiple simultaneous fetches
 function showHistoryScreen() {
     hideAllScreens();
     historyScreen.classList.add('active');
-    // Stop routine execution and all sounds when viewing history
-    stopRoutineExecution();
+    // Stop train execution and all sounds when viewing history
+    stopTrainExecution();
     // Refresh completion log from localStorage before rendering
     completionLog = JSON.parse(localStorage.getItem('yogaCompletionLog') || '[]');
     
@@ -104,6 +104,20 @@ function setupEventDelegation() {
 function handleHistoryScreenClick(event) {
     // Check if clicked on toggle button or its children
     const clickedElement = event.target;
+    
+    // Check for "Go to Settings" button
+    if (clickedElement.id === 'go-to-settings-btn' || clickedElement.closest('#go-to-settings-btn')) {
+        event.preventDefault();
+        event.stopPropagation();
+        console.log('Go to Settings button clicked');
+        try {
+            showSettingsScreen();
+            console.log('showSettingsScreen called successfully from history');
+        } catch (error) {
+            console.error('Error calling showSettingsScreen from history:', error);
+        }
+        return;
+    }
     
     // Check if the clicked element or its parent has the toggle button ID
     let toggleButton = null;
@@ -227,6 +241,28 @@ function exportHistory() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+
+// Import error modal functions
+function showImportErrorModal(message) {
+    const importErrorModal = document.getElementById('import-error-modal');
+    const importErrorText = document.getElementById('import-error-text');
+    
+    if (importErrorModal && importErrorText) {
+        importErrorText.textContent = message;
+        importErrorModal.classList.add('active');
+    }
+}
+
+function hideImportErrorModal() {
+    const importErrorModal = document.getElementById('import-error-modal');
+    if (importErrorModal) {
+        importErrorModal.classList.remove('active');
+    }
+}
+
+// Make import error modal functions globally available
+window.showImportErrorModal = showImportErrorModal;
+window.hideImportErrorModal = hideImportErrorModal;
 
 // Import history functions
 function showImportHistoryModal() {
@@ -374,7 +410,7 @@ function validateImportData(data) {
     // Validate history entries - check for both totalTime and duration
     const validEntries = data.history.filter(entry => {
         const hasRequiredFields = entry.id && 
-                                 entry.routineName && 
+                                 entry.trainName && 
                                  entry.completedAt && 
                                  (entry.totalTime !== undefined || entry.duration !== undefined) && 
                                  entry.poseCount !== undefined;
@@ -471,7 +507,15 @@ function confirmImportHistory() {
 }
 
 function showImportSuccessModal(message) {
-    importSuccessText.textContent = message;
+    // Extract number from message and highlight it
+    const numberMatch = message.match(/(\d+)/);
+    if (numberMatch) {
+        const number = numberMatch[1];
+        const highlightedMessage = message.replace(number, `<strong class="number-highlight">${number}</strong>`);
+        importSuccessText.innerHTML = highlightedMessage;
+    } else {
+        importSuccessText.textContent = message;
+    }
     importSuccessModal.classList.add('active');
 }
 
@@ -550,17 +594,24 @@ async function fetchDatabaseHistory() {
             console.log('📊 Cloud data received:', trainings?.length || 0, 'records');
             
             // Transform database format to match localStorage format
-            databaseHistory = trainings.map(training => ({
-                id: training.id,
-                routineName: training.routine_name,
-                completedAt: training.completed_at,
-                duration: training.duration || 0,
-                totalTime: training.duration || 0,
-                totalReps: training.total_reps || 0,
-                poseCount: training.pose_count || 0,
-                hasTimeItems: training.has_time_items || false,
-                hasRepsItems: training.has_reps_items || false
-            }));
+            databaseHistory = trainings.map(training => {
+                // Debug log for undefined train names
+                if (!training.train_name) {
+                    console.warn('⚠️ Training with undefined train_name:', training);
+                }
+                
+                return {
+                    id: training.id,
+                    trainName: training.train_name || training.trainName || `Train #${training.id}`,
+                    completedAt: training.completed_at,
+                    duration: training.duration || 0,
+                    totalTime: training.duration || 0,
+                    totalReps: training.total_reps || 0,
+                    poseCount: training.pose_count || 0,
+                    hasTimeItems: training.has_time_items || false,
+                    hasRepsItems: training.has_reps_items || false
+                };
+            });
             
             console.log('✅ Cloud data processed:', databaseHistory.length, 'entries');
         } catch (error) {
@@ -594,16 +645,20 @@ function renderHistoryStats() {
     const totalPoses = historyData.reduce((sum, entry) => sum + entry.poseCount, 0);
     const totalReps = historyData.reduce((sum, entry) => sum + (entry.totalReps || 0), 0);
     
-    // Calculate average routines per week
-    const averageRoutinesPerWeek = calculateAverageRoutinesPerWeek();
+    // Calculate average trains per week
+    const averageTrainsPerWeek = calculateAverageTrainsPerWeek();
     
-    // Calculate favorite routine
-    const routineCounts = {};
+    // Calculate favorite train
+    const trainCounts = {};
     historyData.forEach(entry => {
-        routineCounts[entry.routineName] = (routineCounts[entry.routineName] || 0) + 1;
+        const trainName = entry.trainName || entry.train_name || 'Unnamed Train';
+        if (trainName && trainName !== 'undefined' && trainName.trim() !== '') {
+            trainCounts[trainName] = (trainCounts[trainName] || 0) + 1;
+        }
     });
-    const favoriteRoutine = Object.keys(routineCounts).reduce((a, b) => 
-        routineCounts[a] > routineCounts[b] ? a : b, 'None');
+    const favoriteTrain = Object.keys(trainCounts).length > 0 
+        ? Object.keys(trainCounts).reduce((a, b) => trainCounts[a] > trainCounts[b] ? a : b)
+        : 'None';
     
     // Calculate longest daily streak
     const longestStreak = calculateLongestStreak();
@@ -612,7 +667,7 @@ function renderHistoryStats() {
         <div class="stats-grid">
             <div class="stat-item">
                 <div class="stat-number">${totalCompletions}</div>
-                <div class="stat-label">Completed Routines</div>
+                <div class="stat-label">Completed Trains</div>
             </div>
             <div class="stat-item">
                 <div class="stat-number">${formatDuration(totalTime)}</div>
@@ -623,7 +678,7 @@ function renderHistoryStats() {
                 <div class="stat-label">Total Reps</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">${averageRoutinesPerWeek}</div>
+                <div class="stat-number">${averageTrainsPerWeek}</div>
                 <div class="stat-label">Avg/Week</div>
             </div>
             <div class="stat-item">
@@ -631,14 +686,14 @@ function renderHistoryStats() {
                 <div class="stat-label">Longest Daily Streak</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">${favoriteRoutine}</div>
-                <div class="stat-label">Favorite Routine</div>
+                <div class="stat-number">${favoriteTrain}</div>
+                <div class="stat-label">Favorite Train</div>
             </div>
         </div>
     `;
 }
 
-function calculateAverageRoutinesPerWeek() {
+function calculateAverageTrainsPerWeek() {
     const historyData = getCurrentHistoryData();
     
     if (historyData.length === 0) return 0;
@@ -652,7 +707,7 @@ function calculateAverageRoutinesPerWeek() {
     const timeDiff = latestDate.getTime() - earliestDate.getTime();
     const weeksDiff = Math.max(1, Math.ceil(timeDiff / (1000 * 60 * 60 * 24 * 7)));
     
-    // Calculate average routines per week
+    // Calculate average trains per week
     const averagePerWeek = historyData.length / weeksDiff;
     
     return Math.round(averagePerWeek * 10) / 10; // Round to 1 decimal place
@@ -725,18 +780,34 @@ function renderHistoryList() {
             // Check if user is logged in
             const isLoggedIn = typeof currentUser !== 'undefined' && currentUser;
             emptyMessage = isLoggedIn 
-                ? 'No cloud history found. Complete routines to save your progress to the cloud!'
+                ? 'No cloud history found. Complete trains to save your progress to the cloud!'
                 : 'Log in to view your cloud history. Go to Settings to log in.';
         } else {
-            emptyMessage = 'No local history yet. Complete routines to see your progress here!';
+            emptyMessage = 'No local history yet. Complete trains to see your progress here!';
         }
         
-        historyList.innerHTML = `
+        // Create empty history HTML with optional settings button
+        let emptyHistoryHTML = `
             <div class="empty-history">
                 <h3>No History</h3>
                 <p>${emptyMessage}</p>
-            </div>
         `;
+        
+        // Add settings button if user is not logged in and viewing cloud data
+        if (currentHistorySource === 'database') {
+            const isLoggedIn = typeof currentUser !== 'undefined' && currentUser;
+            if (!isLoggedIn) {
+                emptyHistoryHTML += `
+                    <button id="go-to-settings-btn" class="go-to-settings-button">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Log In
+                    </button>
+                `;
+            }
+        }
+        
+        emptyHistoryHTML += `</div>`;
+        historyList.innerHTML = emptyHistoryHTML;
         return;
     }
     
@@ -811,7 +882,7 @@ function renderHistoryList() {
             html += `
                 <div class="history-item">
                     <div class="history-item-header">
-                        <div class="history-routine-name">${entry.routineName}</div>
+                        <div class="history-train-name">${entry.trainName || entry.train_name || `Train #${entry.id}`}</div>
                         <div class="history-date">${formattedDate}</div>
                     </div>
                     <div class="history-details">

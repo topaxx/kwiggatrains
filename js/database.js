@@ -1,6 +1,6 @@
 // Database Functions (Supabase Integration)
 
-async function logTrainingToDatabase(routineData, detailedExercises = []) {
+async function logTrainingToDatabase(trainData, detailedExercises = []) {
     if (!currentUser) {
         console.log('No user logged in, skipping database log');
         return;
@@ -8,12 +8,12 @@ async function logTrainingToDatabase(routineData, detailedExercises = []) {
 
     try {
         console.log('Logging to database with data:', {
-            routineName: routineData.routineName,
-            totalTime: routineData.totalTime,
-            totalReps: routineData.totalReps,
-            poseCount: routineData.poseCount,
-            hasTimeItems: routineData.hasTimeItems,
-            hasRepsItems: routineData.hasRepsItems,
+            trainName: trainData.trainName,
+            totalTime: trainData.totalTime,
+            totalReps: trainData.totalReps,
+            poseCount: trainData.poseCount,
+            hasTimeItems: trainData.hasTimeItems,
+            hasRepsItems: trainData.hasRepsItems,
             exercisesCount: detailedExercises.length
         });
         
@@ -24,14 +24,14 @@ async function logTrainingToDatabase(routineData, detailedExercises = []) {
                     user_id: currentUser.sub,
                     user_name: currentUser.name || currentUser.nickname || 'Unknown',
                     user_email: currentUser.email || '',
-                    routine_name: routineData.routineName,
-                    duration: routineData.totalTime || routineData.duration,
-                    total_reps: routineData.totalReps || 0,
-                    pose_count: routineData.poseCount || 0,
-                    has_time_items: routineData.hasTimeItems || false,
-                    has_reps_items: routineData.hasRepsItems || false,
+                    train_name: trainData.trainName || 'Unnamed Train',
+                    duration: trainData.totalTime || trainData.duration,
+                    total_reps: trainData.totalReps || 0,
+                    pose_count: trainData.poseCount || 0,
+                    has_time_items: trainData.hasTimeItems || false,
+                    has_reps_items: trainData.hasRepsItems || false,
                     exercises: JSON.stringify(detailedExercises),
-                    completed_at: routineData.completedAt || new Date().toISOString()
+                    completed_at: trainData.completedAt || new Date().toISOString()
                 }
             ]);
             // Removed .select() to avoid RLS issues with reading inserted data

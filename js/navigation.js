@@ -4,9 +4,9 @@
 function showMainScreen() {
     hideAllScreens();
     mainScreen.classList.add('active');
-    // Stop routine execution and all sounds when returning to main screen
-    stopRoutineExecution();
-    renderRoutines();
+    // Stop train execution and all sounds when returning to main screen
+    stopTrainExecution();
+    renderTrains();
     // Scroll to top when loading main screen
     window.scrollTo(0, 0);
 }
@@ -27,40 +27,41 @@ function showSettingsScreen() {
 window.showSettingsScreen = showSettingsScreen;
 
 
-function showRoutineBuilder() {
+function showTrainBuilder() {
     hideAllScreens();
-    routineBuilder.classList.add('active');
-    // Stop routine execution and all sounds when creating new routine
-    stopRoutineExecution();
-    currentRoutine = [];
-    currentRoutineName = "";
+    trainBuilder.classList.add('active');
+    // Stop train execution and all sounds when creating new train
+    stopTrainExecution();
+    currentTrain = [];
+    currentTrainName = "";
     selectedPose = null;
     selectedExercise = null;
     selectedTime = null;
     currentStep = 'name';
-    routineNameInput.value = "";
+    trainNameInput.value = "";
     showStep('name');
     updateNextButton();
-    // Scroll to top when loading routine builder
+    updateSaveButton();
+    // Scroll to top when loading train builder
     window.scrollTo(0, 0);
     
-    // Auto-focus on the routine name input with longer delay
+    // Auto-focus on the train name input with longer delay
     setTimeout(() => {
-        const input = document.getElementById('routine-name-input');
+        const input = document.getElementById('train-name-input');
         if (input) {
             // Ensure input is empty before focusing
             input.value = "";
             input.focus();
-            console.log('Routine name input cleared and focused automatically');
+            console.log('Train name input cleared and focused automatically');
         }
         
         // Setup direct event listener on the input element
-        setupRoutineNameInputListener();
+        setupTrainNameInputListener();
     }, 200);
 }
 
-function setupRoutineNameInputListener() {
-    const input = document.getElementById('routine-name-input');
+function setupTrainNameInputListener() {
+    const input = document.getElementById('train-name-input');
     if (input) {
         // Store current focus state
         const wasFocused = document.activeElement === input;
@@ -83,16 +84,18 @@ function setupRoutineNameInputListener() {
         newInput.addEventListener('input', (e) => {
             console.log('Direct input event - value:', e.target.value);
             updateNextButton();
+            updateSaveButton();
         });
         
         newInput.addEventListener('keyup', (e) => {
             console.log('Direct keyup event - value:', e.target.value);
             updateNextButton();
+            updateSaveButton();
         });
         
-        console.log('Routine name input listener setup complete');
+        console.log('Train name input listener setup complete');
     } else {
-        console.error('Could not find routine-name-input element');
+        console.error('Could not find train-name-input element');
     }
 }
 
@@ -115,7 +118,7 @@ function showStep(step) {
         
         // Auto-focus on input when name step becomes visible
         setTimeout(() => {
-            const input = document.getElementById('routine-name-input');
+            const input = document.getElementById('train-name-input');
             if (input) {
                 // Clear input when name step is shown
                 input.value = "";
@@ -130,7 +133,7 @@ function showStep(step) {
 }
 
 function goToPosesStep() {
-    currentRoutineName = routineNameInput.value.trim();
+    currentTrainName = trainNameInput.value.trim();
     showStep('poses');
     // Start with poses grid collapsed
     posesGridContainer.classList.remove('expanded');
@@ -140,29 +143,31 @@ function goToPosesStep() {
     exercisesGridContainer.classList.remove('expanded');
     exercisesGridContainer.classList.add('collapsed');
     toggleExercisesGridBtn.classList.remove('rotated');
+    // Update save button state
+    updateSaveButton();
 }
 
 function goToNameStep() {
     showStep('name');
     
-    // Auto-focus on the routine name input when returning to name step
+    // Auto-focus on the train name input when returning to name step
     setTimeout(() => {
-        const input = document.getElementById('routine-name-input');
+        const input = document.getElementById('train-name-input');
         if (input) {
             // Clear input when returning to name step
             input.value = "";
             input.focus();
-            console.log('Routine name input cleared and focused when returning to name step');
+            console.log('Train name input cleared and focused when returning to name step');
         }
-        setupRoutineNameInputListener(); // Re-setup listeners
+        setupTrainNameInputListener(); // Re-setup listeners
     }, 200);
 }
 
 function updateNextButton() {
     // Get fresh reference to both elements
-    const input = document.getElementById('routine-name-input');
+    const input = document.getElementById('train-name-input');
     const nextBtn = document.getElementById('next-to-poses');
-    const titleElement = document.getElementById('routine-builder-title');
+    const titleElement = document.getElementById('train-builder-title');
     
     const hasName = input && input.value.trim().length > 0;
     const trainName = input ? input.value.trim() : '';
@@ -177,13 +182,15 @@ function updateNextButton() {
     if (titleElement) {
         if (hasName && trainName) {
             titleElement.textContent = trainName;
-            titleElement.style.fontSize = '1.8rem';
-            titleElement.style.fontWeight = '700';
+            titleElement.style.fontSize = '2.2rem';
+            titleElement.style.fontWeight = '900';
+            titleElement.style.textShadow = '0 3px 6px rgba(0,0,0,0.15)';
             console.log('- Title updated to:', trainName);
         } else {
             titleElement.textContent = 'Add Train';
-            titleElement.style.fontSize = '1.5rem';
-            titleElement.style.fontWeight = '600';
+            titleElement.style.fontSize = '2.2rem';
+            titleElement.style.fontWeight = '900';
+            titleElement.style.textShadow = '0 3px 6px rgba(0,0,0,0.15)';
         }
     }
     
@@ -320,26 +327,39 @@ function hideTimeModal() {
 }
 
 // Delete confirmation functions
-function showDeleteConfirmation(routineId) {
-    routineToDelete = routines.find(r => r.id === routineId);
-    if (routineToDelete) {
-        deleteConfirmationText.innerHTML = `Are you sure you want to delete<br><br><strong>${routineToDelete.name}</strong><br><br>`;
+function showDeleteConfirmation(trainId) {
+    trainToDelete = trains.find(r => r.id === trainId);
+    if (trainToDelete) {
+        deleteConfirmationText.innerHTML = `Are you sure you want to delete<br><br><strong>${trainToDelete.name}</strong><br><br>`;
         deleteConfirmationModal.classList.add('active');
     }
 }
 
 function hideDeleteModal() {
     deleteConfirmationModal.classList.remove('active');
-    routineToDelete = null;
+    trainToDelete = null;
 }
 
 // Rename modal functions
-function showRenameModal(routineId) {
-    routineToRename = routines.find(r => r.id === routineId);
-    if (routineToRename) {
-        renameInput.value = routineToRename.name;
+function showRenameModal(trainId) {
+    trainToRename = trains.find(r => r.id === trainId);
+    if (trainToRename) {
+        // Clear any existing value and set the correct train name
+        renameInput.value = '';
+        setTimeout(() => {
+            renameInput.value = trainToRename.name;
+            renameInput.select(); // Select all text for easy editing
+            // Update button state after setting the value
+            updateRenameButton();
+        }, 10);
+        
         renameModal.classList.add('active');
-        updateRenameButton();
+        
+        // Initially disable the save button since no changes have been made yet
+        confirmRenameBtn.disabled = true;
+        confirmRenameBtn.style.background = '#e2e8f0';
+        confirmRenameBtn.style.color = '#a0aec0';
+        confirmRenameBtn.style.cursor = 'not-allowed';
         
         // Re-setup event listeners when modal is shown
         setupRenameModalListeners();
@@ -391,25 +411,26 @@ function setupRenameModalListeners() {
             console.log('Save rename clicked (fresh listener)');
             e.preventDefault();
             e.stopPropagation();
-            confirmRenameRoutine();
+            confirmRenameTrain();
         });
     }
     
     if (input) {
-        // Store current focus state
+        // Store current focus state and value
         const wasFocused = document.activeElement === input;
-        const currentValue = input.value;
+        const currentValue = trainToRename ? trainToRename.name : '';
         
         // Remove existing listeners by cloning
         const newInput = input.cloneNode(true);
         input.parentNode.replaceChild(newInput, input);
         
-        // Restore focus and value if needed
+        // Set the correct value and restore focus
+        newInput.value = currentValue;
         if (wasFocused) {
             setTimeout(() => {
                 newInput.focus();
-                newInput.select(); // Select existing text
-                console.log('Focus restored after cloning rename input element');
+                newInput.select(); // Select all text for easy editing
+                console.log('Focus restored after cloning rename input element with value:', currentValue);
             }, 10);
         }
         
@@ -417,9 +438,12 @@ function setupRenameModalListeners() {
         newInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 console.log('Enter pressed in rename input');
-                confirmRenameRoutine();
+                confirmRenameTrain();
             }
         });
+        
+        // Update button state after setting up the input
+        updateRenameButton();
     }
     
     console.log('Rename modal listeners setup complete');
@@ -427,12 +451,26 @@ function setupRenameModalListeners() {
 
 function hideRenameModal() {
     renameModal.classList.remove('active');
-    routineToRename = null;
+    trainToRename = null;
 }
 
 function updateRenameButton() {
-    const hasName = renameInput.value.trim().length > 0;
-    confirmRenameBtn.disabled = !hasName;
+    const currentValue = renameInput.value.trim();
+    const originalValue = trainToRename ? trainToRename.name.trim() : '';
+    const hasChanged = currentValue !== originalValue && currentValue.length > 0;
+    
+    confirmRenameBtn.disabled = !hasChanged;
+    
+    // Update visual state
+    if (hasChanged) {
+        confirmRenameBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        confirmRenameBtn.style.color = 'white';
+        confirmRenameBtn.style.cursor = 'pointer';
+    } else {
+        confirmRenameBtn.style.background = '#e2e8f0';
+        confirmRenameBtn.style.color = '#a0aec0';
+        confirmRenameBtn.style.cursor = 'not-allowed';
+    }
 }
 
 // Utility functions
