@@ -755,6 +755,7 @@ function calculateLongestStreak() {
 
 function renderHistoryList() {
     const historyData = getCurrentHistoryData();
+    const isLocalSource = currentHistorySource === 'local';
     
     // Show/hide action buttons based on data source
     const exportBtn = document.getElementById('export-history-btn');
@@ -883,7 +884,14 @@ function renderHistoryList() {
                 <div class="history-item">
                     <div class="history-item-header">
                         <div class="history-train-name">${entry.trainName || entry.train_name || `Train #${entry.id}`}</div>
-                        <div class="history-date">${formattedDate}</div>
+                        <div class="history-item-actions">
+                            <div class="history-date">${formattedDate}</div>
+                            ${isLocalSource ? `
+                                <button class="history-delete-btn train-delete-btn" data-entry-id="${entry.id}" title="Verwijder log">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            ` : ''}
+                        </div>
                     </div>
                     <div class="history-details">
                         <div class="history-detail-item">
@@ -918,4 +926,175 @@ function renderHistoryList() {
             }
         });
     });
+    
+    if (isLocalSource) {
+        document.querySelectorAll('.history-delete-btn').forEach(button => {
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                const entryId = event.currentTarget.dataset.entryId;
+                if (entryId) {
+                    deleteHistoryEntry(entryId);
+                }
+            });
+        });
+    }
 }
+
+function deleteHistoryEntry(entryId) {
+    const numericId = Number(entryId);
+    const originalLength = completionLog.length;
+    
+    completionLog = completionLog.filter(entry => entry.id !== numericId);
+    
+    if (completionLog.length === originalLength) {
+        console.warn('Geen log gevonden om te verwijderen voor id:', entryId);
+        return;
+    }
+    
+    localStorage.setItem('yogaCompletionLog', JSON.stringify(completionLog));
+    renderHistory();
+}
+
+// Add train to history modal functions
+function showAddTrainHistoryModal() {
+    // Load trains into dropdown
+    loadTrainsIntoDropdown();
+    
+    // Set default date to now
+    const now = new Date();
+    // Format for datetime-local input (YYYY-MM-DDTHH:mm)
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    completionDateInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+    
+    // Reset dropdown selection
+    selectTrainDropdown.value = '';
+    confirmAddTrainHistoryBtn.disabled = true;
+    
+    // Show modal
+    if (addTrainHistoryModal) {
+        addTrainHistoryModal.classList.add('active');
+    }
+}
+
+function hideAddTrainHistoryModal() {
+    if (addTrainHistoryModal) {
+        addTrainHistoryModal.classList.remove('active');
+    }
+}
+
+function loadTrainsIntoDropdown() {
+    if (!selectTrainDropdown) return;
+    
+    // Clear existing options except the first one
+    selectTrainDropdown.innerHTML = '<option value="">-- Select a train --</option>';
+    
+    // Load trains from localStorage
+    const savedTrains = JSON.parse(localStorage.getItem('kwiggaTrains') || '[]');
+    
+    if (savedTrains.length === 0) {
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = 'No trains available';
+        option.disabled = true;
+        selectTrainDropdown.appendChild(option);
+        return;
+    }
+    
+    // Add each train as an option
+    savedTrains.forEach(train => {
+        const option = document.createElement('option');
+        option.value = train.id;
+        option.textContent = train.name || `Train #${train.id}`;
+        selectTrainDropdown.appendChild(option);
+    });
+}
+
+function confirmAddTrainToHistory() {
+    const selectedTrainId = selectTrainDropdown.value;
+    const selectedDate = completionDateInput.value;
+    
+    if (!selectedTrainId || !selectedDate) {
+        alert('Please select a train and date');
+        return;
+    }
+    
+    // Find the selected train
+    const savedTrains = JSON.parse(localStorage.getItem('kwiggaTrains') || '[]');
+    const selectedTrain = savedTrains.find(train => train.id === Number(selectedTrainId));
+    
+    if (!selectedTrain) {
+        alert('Selected train not found');
+        return;
+    }
+    
+    // Calculate stats from train poses
+    let totalTime = 0;
+    let totalReps = 0;
+    let hasTimeItems = false;
+    let hasRepsItems = false;
+    
+    if (selectedTrain.poses) {
+        selectedTrain.poses.forEach(pose => {
+            if (pose.unit === 'reps') {
+                totalReps += pose.duration;
+                hasRepsItems = true;
+            } else {
+                totalTime += pose.duration;
+                hasTimeItems = true;
+            }
+        });
+    }
+    
+    // Convert datetime-local value to ISO string
+    const dateObj = new Date(selectedDate);
+    const completedAtISO = dateObj.toISOString();
+    
+    // Create completion entry
+    const completionEntry = {
+        id: Date.now(),
+        trainId: selectedTrain.id,
+        trainName: selectedTrain.name,
+        completedAt: completedAtISO,
+        totalTime: totalTime,
+        totalReps: totalReps,
+        hasTimeItems: hasTimeItems,
+        hasRepsItems: hasRepsItems,
+        poseCount: selectedTrain.poses ? selectedTrain.poses.length : 0,
+        userId: currentUser ? currentUser.sub : null,
+        userEmail: currentUser ? currentUser.email : null,
+        manuallyAdded: true, // Flag to indicate this was added manually from history
+        addedFromHistory: true // Alternative flag name for clarity
+    };
+    
+    console.log('Adding manual completion entry:', completionEntry);
+    
+    // Add to completion log
+    completionLog.push(completionEntry);
+    
+    // Save to localStorage
+    localStorage.setItem('yogaCompletionLog', JSON.stringify(completionLog));
+    
+    // Log to database if user is authenticated
+    if (isAuthenticated && currentUser) {
+        const detailedExercises = selectedTrain.poses || [];
+        logTrainingToDatabase(completionEntry, detailedExercises);
+    }
+    
+    // Refresh history display
+    renderHistory();
+    
+    // Hide modal
+    hideAddTrainHistoryModal();
+    
+    console.log('Manual completion entry added successfully');
+}
+
+// Make functions globally available
+window.showAddTrainHistoryModal = showAddTrainHistoryModal;
+window.hideAddTrainHistoryModal = hideAddTrainHistoryModal;
+window.confirmAddTrainToHistory = confirmAddTrainToHistory;

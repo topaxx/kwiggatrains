@@ -130,3 +130,12 @@ const settingsLogoutBtn = document.getElementById('settings-logout-btn');
 const logoutSuccessModal = document.getElementById('logout-success-modal');
 const closeLogoutSuccessBtn = document.getElementById('close-logout-success');
 const logoutSuccessText = document.getElementById('logout-success-text');
+
+// Add train to history modal elements
+const addTrainHistoryModal = document.getElementById('add-train-history-modal');
+const addTrainHistoryBtn = document.getElementById('add-train-history-btn');
+const closeAddTrainHistoryModalBtn = document.getElementById('close-add-train-history-modal');
+const cancelAddTrainHistoryBtn = document.getElementById('cancel-add-train-history');
+const confirmAddTrainHistoryBtn = document.getElementById('confirm-add-train-history');
+const selectTrainDropdown = document.getElementById('select-train-dropdown');
+const completionDateInput = document.getElementById('completion-date-input');

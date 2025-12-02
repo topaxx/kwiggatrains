@@ -253,6 +253,9 @@
                 </div>
                 
                 <div class="history-actions">
+                    <button id="add-train-history-btn" class="add-train-history-button">
+                        <i class="fas fa-plus"></i> Add Train to History
+                    </button>
                     <button id="export-history-btn" class="export-history-button"><i class="fas fa-upload"></i> Export History</button>
                     <button id="import-history-btn" class="import-history-button"><i class="fas fa-download"></i> Import History</button>
                     <button id="clear-history-btn" class="clear-history-button"><i class="fas fa-trash"></i> Clear History</button>
@@ -329,6 +332,32 @@
                     <p id="import-success-text">History imported successfully!</p>
                     <div class="modal-buttons">
                         <button id="close-import-success" class="next-button">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Train to History Modal -->
+        <div id="add-train-history-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Add Train to History</h3>
+                    <button id="close-add-train-history-modal" class="close-button">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="select-train-dropdown">Select Train:</label>
+                        <select id="select-train-dropdown" class="train-select-dropdown">
+                            <option value="">-- Select a train --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="completion-date-input">Completion Date:</label>
+                        <input type="datetime-local" id="completion-date-input" class="date-input">
+                    </div>
+                    <div class="modal-buttons">
+                        <button id="cancel-add-train-history" class="cancel-button">Cancel</button>
+                        <button id="confirm-add-train-history" class="next-button" disabled>Add to History</button>
                     </div>
                 </div>
             </div>

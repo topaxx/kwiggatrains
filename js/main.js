@@ -328,6 +328,51 @@ function setupEventListeners() {
     // User ID Modal event listeners
     closeUseridModalBtn.addEventListener('click', hideUseridModal);
     closeUseridBtn.addEventListener('click', hideUseridModal);
+    
+    // Add train to history modal event listeners
+    if (addTrainHistoryBtn) {
+        addTrainHistoryBtn.addEventListener('click', showAddTrainHistoryModal);
+    } else {
+        console.warn('addTrainHistoryBtn not found in DOM');
+    }
+    
+    if (closeAddTrainHistoryModalBtn) {
+        closeAddTrainHistoryModalBtn.addEventListener('click', hideAddTrainHistoryModal);
+    } else {
+        console.warn('closeAddTrainHistoryModalBtn not found in DOM');
+    }
+    
+    if (cancelAddTrainHistoryBtn) {
+        cancelAddTrainHistoryBtn.addEventListener('click', hideAddTrainHistoryModal);
+    } else {
+        console.warn('cancelAddTrainHistoryBtn not found in DOM');
+    }
+    
+    if (confirmAddTrainHistoryBtn) {
+        confirmAddTrainHistoryBtn.addEventListener('click', confirmAddTrainToHistory);
+    } else {
+        console.warn('confirmAddTrainHistoryBtn not found in DOM');
+    }
+    
+    // Enable/disable confirm button based on selection
+    if (selectTrainDropdown && completionDateInput) {
+        selectTrainDropdown.addEventListener('change', () => {
+            updateAddTrainHistoryButtonState();
+        });
+        
+        completionDateInput.addEventListener('change', () => {
+            updateAddTrainHistoryButtonState();
+        });
+    }
+}
+
+// Helper function to update button state
+function updateAddTrainHistoryButtonState() {
+    if (selectTrainDropdown && completionDateInput && confirmAddTrainHistoryBtn) {
+        const hasTrain = selectTrainDropdown.value !== '';
+        const hasDate = completionDateInput.value !== '';
+        confirmAddTrainHistoryBtn.disabled = !(hasTrain && hasDate);
+    }
 }
 
 // Initialize app when DOM is loaded

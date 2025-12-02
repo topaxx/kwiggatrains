@@ -15,6 +15,11 @@ function showTrainExecution(train) {
     timerDisplay.textContent = "00:00";
     progressFill.style.width = "0%";
     
+    // Ensure timer circle is visible by default when starting
+    if (timerCircle) {
+        timerCircle.style.display = 'block';
+    }
+    
     // Reset circle progress
     const circleProgress = document.querySelector('.progress-ring-fill');
     if (circleProgress) {
@@ -25,6 +30,13 @@ function showTrainExecution(train) {
     pauseResumeBtn.innerHTML = '<i class="fas fa-pause"></i>';
     pauseResumeBtn.setAttribute('data-state', 'running');
     pauseResumeBtn.disabled = false;
+    
+    // Hide any lingering reps display from previous trains
+    const existingRepsDisplay = document.getElementById('reps-display');
+    if (existingRepsDisplay) {
+        existingRepsDisplay.style.display = 'none';
+        existingRepsDisplay.textContent = '';
+    }
     
     // Enable/disable previous button
     previousPoseBtn.disabled = currentPoseIndex === 0;
