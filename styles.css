@@ -140,6 +140,178 @@ body:has(.modal.active) .control-button {
     overflow-x: hidden;
 }
 
+.create-group-button {
+    flex: 0 0 auto;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    transition: transform 0.2s ease;
+    margin-top: 0;
+    width: auto;
+    height: auto;
+    aspect-ratio: 1 / 1;
+}
+
+.create-group-button:hover {
+    /* Remove hover animation */
+}
+
+.create-group-button i {
+    font-size: 1.2rem;
+}
+
+/* Train group styling */
+.train-group {
+    margin-bottom: 15px;
+    background: #f7fafc;
+    border-radius: 8px;
+    border: 2px solid #e2e8f0;
+    overflow: hidden;
+}
+
+.train-group-header {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    color: white;
+    padding: 18px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.2s ease;
+    user-select: none;
+}
+
+.train-group-header:hover {
+    background: linear-gradient(135deg, #8a5fb8 0%, #7a8ffa 100%);
+}
+
+.group-header-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.group-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    flex: 1;
+}
+
+.group-train-count {
+    font-size: 1.1rem;
+    opacity: 0.8;
+    font-weight: 500;
+    margin-left: 4px;
+}
+
+.group-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.group-manage-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: white;
+    font-size: 0.9rem;
+}
+
+.group-manage-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.group-toggle-icon {
+    font-size: 0.9rem;
+    transition: transform 0.3s ease;
+}
+
+.group-toggle-icon.rotated {
+    transform: rotate(180deg);
+}
+
+.train-group-content {
+    padding: 10px;
+    background: #ffffff;
+}
+
+.train-group-content .train-item {
+    margin-bottom: 10px;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.train-group-content .train-item:last-child {
+    margin-bottom: 0;
+}
+
+/* Group management modal styling */
+.group-trains-list {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.group-train-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background: white;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.group-train-item:last-child {
+    margin-bottom: 0;
+}
+
+.group-train-name {
+    font-weight: 600;
+    color: #2d3748;
+    flex: 1;
+}
+
+.remove-train-from-group-btn {
+    background: #fed7d7;
+    color: #c53030;
+    border: none;
+    border-radius: 6px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.85rem;
+}
+
+.remove-train-from-group-btn:hover {
+    background: #feb2b2;
+    transform: scale(1.1);
+}
+
 /* Screen header styling */
 .screen-header {
     display: flex;
@@ -385,7 +557,7 @@ body:has(#main-screen.active) .main-footer {
     text-align: center;
 }
 
-#train-name-input, #rename-train-input {
+#train-name-input, #rename-train-input, #group-name-input, #manage-group-name-input {
     width: 100%;
     padding: 15px;
     border: 2px solid #e2e8f0;
@@ -396,7 +568,7 @@ body:has(#main-screen.active) .main-footer {
     margin-bottom: 30px;
 }
 
-#train-name-input:focus, #rename-train-input:focus {
+#train-name-input:focus, #rename-train-input:focus, #group-name-input:focus, #manage-group-name-input:focus {
     border-color: #667eea;
 }
 
@@ -1894,38 +2066,36 @@ body:has(#main-screen.active) .main-footer {
 
 .train-select-dropdown {
     width: 100%;
-    padding: 12px;
+    padding: 15px;
     border: 2px solid #e2e8f0;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 1.1rem;
     background: white;
     color: #2d3748;
     cursor: pointer;
     transition: border-color 0.2s ease;
+    outline: none;
 }
 
 .train-select-dropdown:focus {
-    outline: none;
     border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .date-input {
     width: 100%;
-    padding: 12px;
+    padding: 15px;
     border: 2px solid #e2e8f0;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 1.1rem;
     background: white;
     color: #2d3748;
     cursor: pointer;
     transition: border-color 0.2s ease;
+    outline: none;
 }
 
 .date-input:focus {
-    outline: none;
     border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 /* Collapsible month styling */

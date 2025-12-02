@@ -5,6 +5,7 @@ let selectedPose = null;
 let selectedExercise = null;
 let selectedTime = null;
 let trains = JSON.parse(localStorage.getItem('kwiggaTrains') || '[]');
+let trainGroups = JSON.parse(localStorage.getItem('kwiggaTrainGroups') || '[]');
 let currentExecutionTrain = null;
 let currentPoseIndex = 0;
 let timer = null;

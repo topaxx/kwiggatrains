@@ -336,6 +336,77 @@ function setupEventListeners() {
         console.warn('addTrainHistoryBtn not found in DOM');
     }
     
+    // Group management event listeners
+    if (createGroupBtn) {
+        createGroupBtn.addEventListener('click', showCreateGroupModal);
+    } else {
+        console.warn('createGroupBtn not found in DOM');
+    }
+    
+    if (closeCreateGroupModalBtn) {
+        closeCreateGroupModalBtn.addEventListener('click', hideCreateGroupModal);
+    }
+    
+    if (cancelCreateGroupBtn) {
+        cancelCreateGroupBtn.addEventListener('click', hideCreateGroupModal);
+    }
+    
+    if (confirmCreateGroupBtn) {
+        confirmCreateGroupBtn.addEventListener('click', createGroup);
+    }
+    
+    if (closeManageGroupModalBtn) {
+        closeManageGroupModalBtn.addEventListener('click', hideManageGroupModal);
+    }
+    
+    if (cancelManageGroupBtn) {
+        cancelManageGroupBtn.addEventListener('click', hideManageGroupModal);
+    }
+    
+    if (saveManageGroupBtn) {
+        saveManageGroupBtn.addEventListener('click', saveManageGroup);
+    }
+    
+    if (deleteGroupBtn) {
+        deleteGroupBtn.addEventListener('click', showDeleteGroupConfirmation);
+    }
+    
+    // Delete group confirmation modal event listeners
+    const closeDeleteGroupModalBtn = document.getElementById('close-delete-group-modal');
+    const cancelDeleteGroupBtn = document.getElementById('cancel-delete-group');
+    const confirmDeleteGroupBtn = document.getElementById('confirm-delete-group');
+    
+    if (closeDeleteGroupModalBtn) {
+        closeDeleteGroupModalBtn.addEventListener('click', hideDeleteGroupConfirmation);
+    }
+    
+    if (cancelDeleteGroupBtn) {
+        cancelDeleteGroupBtn.addEventListener('click', hideDeleteGroupConfirmation);
+    }
+    
+    if (confirmDeleteGroupBtn) {
+        confirmDeleteGroupBtn.addEventListener('click', deleteGroup);
+    }
+    
+    // Enable/disable create group button based on input
+    if (groupNameInput) {
+        groupNameInput.addEventListener('input', () => {
+            if (confirmCreateGroupBtn) {
+                confirmCreateGroupBtn.disabled = !groupNameInput.value.trim();
+            }
+        });
+    }
+    
+    // Add train to group dropdown change
+    if (addTrainToGroupDropdown) {
+        addTrainToGroupDropdown.addEventListener('change', () => {
+            if (addTrainToGroupDropdown.value) {
+                addTrainToGroup();
+                addTrainToGroupDropdown.value = ''; // Reset selection
+            }
+        });
+    }
+    
     if (closeAddTrainHistoryModalBtn) {
         closeAddTrainHistoryModalBtn.addEventListener('click', hideAddTrainHistoryModal);
     } else {

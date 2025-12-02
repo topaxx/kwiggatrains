@@ -139,3 +139,19 @@ const cancelAddTrainHistoryBtn = document.getElementById('cancel-add-train-histo
 const confirmAddTrainHistoryBtn = document.getElementById('confirm-add-train-history');
 const selectTrainDropdown = document.getElementById('select-train-dropdown');
 const completionDateInput = document.getElementById('completion-date-input');
+
+// Group management elements
+const createGroupBtn = document.getElementById('create-group-btn');
+const createGroupModal = document.getElementById('create-group-modal');
+const closeCreateGroupModalBtn = document.getElementById('close-create-group-modal');
+const cancelCreateGroupBtn = document.getElementById('cancel-create-group');
+const confirmCreateGroupBtn = document.getElementById('confirm-create-group');
+const groupNameInput = document.getElementById('group-name-input');
+const manageGroupModal = document.getElementById('manage-group-modal');
+const closeManageGroupModalBtn = document.getElementById('close-manage-group-modal');
+const cancelManageGroupBtn = document.getElementById('cancel-manage-group');
+const saveManageGroupBtn = document.getElementById('save-manage-group');
+const manageGroupNameInput = document.getElementById('manage-group-name-input');
+const groupTrainsList = document.getElementById('group-trains-list');
+const addTrainToGroupDropdown = document.getElementById('add-train-to-group-dropdown');
+const deleteGroupBtn = document.getElementById('delete-group-btn');
