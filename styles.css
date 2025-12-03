@@ -138,6 +138,47 @@ body:has(.modal.active) .control-button {
 .trains-container {
     margin-bottom: 30px;
     overflow-x: hidden;
+    position: relative;
+}
+
+/* Drop zone for removing trains from groups */
+.train-drop-zone {
+    margin: 20px 0;
+    padding: 30px;
+    border: 3px dashed #cbd5e0;
+    border-radius: 8px;
+    background: #f7fafc;
+    text-align: center;
+    transition: all 0.2s ease;
+    display: none;
+}
+
+.train-drop-zone.drag-over {
+    border-color: #667eea;
+    background: #f0f4ff;
+    border-width: 3px;
+}
+
+.drop-zone-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: #718096;
+    font-size: 0.95rem;
+}
+
+.drop-zone-content i {
+    font-size: 2rem;
+    color: #a0aec0;
+}
+
+.train-drop-zone.drag-over .drop-zone-content {
+    color: #667eea;
+}
+
+.train-drop-zone.drag-over .drop-zone-content i {
+    color: #667eea;
 }
 
 .create-group-button {
@@ -176,6 +217,13 @@ body:has(.modal.active) .control-button {
     border-radius: 8px;
     border: 2px solid #e2e8f0;
     overflow: hidden;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.train-group.drag-over {
+    border-color: #667eea;
+    background-color: #f0f4ff;
+    border-width: 3px;
 }
 
 .train-group-header {
@@ -362,13 +410,22 @@ body:has(#main-screen.active) .main-footer {
     margin-bottom: 15px;
     box-shadow: 0 2px 10px rgba(240, 147, 251, 0.3);
     border: none;
-    cursor: pointer;
+    cursor: grab;
     transition: none;
     position: relative;
     min-height: 80px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.train-item:active {
+    cursor: grabbing;
+}
+
+.train-item.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
 }
 
 .train-content {

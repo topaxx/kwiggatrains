@@ -14,13 +14,71 @@ function renderTrains() {
         return;
     }
     
+    // Load groups from localStorage first
+    trainGroups = JSON.parse(localStorage.getItem('kwiggaTrainGroups') || '[]');
+    
+    // Get or create drop zone for removing trains from groups (before clearing)
+    let dropZone = document.getElementById('train-drop-zone');
+    if (!dropZone) {
+        dropZone = document.createElement('div');
+        dropZone.className = 'train-drop-zone';
+        dropZone.id = 'train-drop-zone';
+        dropZone.innerHTML = '<div class="drop-zone-content"><i class="fas fa-folder-open"></i><span>Drop here to remove from group</span></div>';
+        dropZone.style.display = 'none';
+        
+        // Add drag and drop handlers to drop zone (only once)
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            e.dataTransfer.dropEffect = 'move';
+            dropZone.classList.add('drag-over');
+        });
+        
+        dropZone.addEventListener('dragleave', (e) => {
+            if (!dropZone.contains(e.relatedTarget)) {
+                dropZone.classList.remove('drag-over');
+            }
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.remove('drag-over');
+            dropZone.style.display = 'none';
+            
+            const trainId = parseInt(e.dataTransfer.getData('text/plain'));
+            if (trainId && !isNaN(trainId)) {
+                // Remove train from all groups
+                let removed = false;
+                trainGroups.forEach(group => {
+                    if (group.trainIds) {
+                        const index = group.trainIds.indexOf(trainId);
+                        if (index !== -1) {
+                            group.trainIds.splice(index, 1);
+                            removed = true;
+                        }
+                    }
+                });
+                
+                if (removed) {
+                    localStorage.setItem('kwiggaTrainGroups', JSON.stringify(trainGroups));
+                    renderTrains();
+                }
+            }
+        });
+    } else {
+        dropZone.style.display = 'none';
+    }
+    
+    // Now clear the container
     trainsContainer.innerHTML = '';
     
-    // Load groups from localStorage
-    trainGroups = JSON.parse(localStorage.getItem('kwiggaTrainGroups') || '[]');
+    // Re-add drop zone
+    trainsContainer.appendChild(dropZone);
     
     if (trains.length === 0 && trainGroups.length === 0) {
         trainsContainer.innerHTML = '<p style="text-align: center; color: #a0aec0; font-style: italic; padding: 40px;">No trains created yet</p>';
+        trainsContainer.appendChild(dropZone);
         return;
     }
     
@@ -79,10 +137,55 @@ function renderTrains() {
             icon.classList.toggle('rotated', !isExpanded);
         });
         
+        // Make group a drop zone for drag and drop
+        groupElement.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            groupElement.classList.add('drag-over');
+        });
+        
+        groupElement.addEventListener('dragleave', (e) => {
+            // Only remove drag-over if we're actually leaving the group element
+            if (!groupElement.contains(e.relatedTarget)) {
+                groupElement.classList.remove('drag-over');
+            }
+        });
+        
+        groupElement.addEventListener('drop', (e) => {
+            e.preventDefault();
+            groupElement.classList.remove('drag-over');
+            
+            const trainId = parseInt(e.dataTransfer.getData('text/plain'));
+            if (trainId && !isNaN(trainId)) {
+                // Check if train is already in this group
+                if (!group.trainIds) {
+                    group.trainIds = [];
+                }
+                
+                if (!group.trainIds.includes(trainId)) {
+                    // Remove train from other groups first
+                    trainGroups.forEach(g => {
+                        if (g.id !== group.id && g.trainIds) {
+                            g.trainIds = g.trainIds.filter(id => id !== trainId);
+                        }
+                    });
+                    
+                    // Add train to this group
+                    group.trainIds.push(trainId);
+                    localStorage.setItem('kwiggaTrainGroups', JSON.stringify(trainGroups));
+                    
+                    // Re-render trains to reflect the change
+                    renderTrains();
+                }
+            }
+        });
+        
         groupElement.appendChild(groupHeader);
         groupElement.appendChild(groupContent);
         trainsContainer.appendChild(groupElement);
     });
+    
+    // Drop zone is already in container from earlier, no need to do anything
     
     // Render standalone trains (not in any group)
     const trainsInGroups = new Set();
@@ -98,6 +201,45 @@ function renderTrains() {
         const trainElement = createTrainElement(train);
         trainsContainer.appendChild(trainElement);
     });
+    
+    // Setup drag start/end listeners for showing/hiding drop zone (only once)
+    if (!trainsContainer.dataset.dropZoneListenersAdded) {
+        trainsContainer.dataset.dropZoneListenersAdded = 'true';
+        
+        trainsContainer.addEventListener('dragstart', (e) => {
+            const trainItem = e.target.closest('.train-item');
+            if (trainItem) {
+                const trainId = parseInt(trainItem.dataset.trainId);
+                if (trainId && !isNaN(trainId)) {
+                    // Check if train is in any group
+                    const isInGroup = trainGroups.some(group => 
+                        group.trainIds && group.trainIds.includes(trainId)
+                    );
+                    if (isInGroup) {
+                        const dz = document.getElementById('train-drop-zone');
+                        if (dz) {
+                            dz.style.display = 'block';
+                            // Move drop zone to after groups
+                            const firstStandalone = trainsContainer.querySelector('.train-item:not(.train-group-content .train-item)');
+                            if (firstStandalone) {
+                                trainsContainer.insertBefore(dz, firstStandalone);
+                            }
+                        }
+                    }
+                }
+            }
+        }, true);
+        
+        trainsContainer.addEventListener('dragend', (e) => {
+            if (e.target.classList.contains('train-item') || e.target.closest('.train-item')) {
+                const dz = document.getElementById('train-drop-zone');
+                if (dz) {
+                    dz.style.display = 'none';
+                    dz.classList.remove('drag-over');
+                }
+            }
+        }, true);
+    }
 }
 
 // Helper function to create a train element
@@ -142,6 +284,8 @@ function createTrainElement(train) {
     
     const trainElement = document.createElement('div');
     trainElement.className = 'train-item';
+    trainElement.draggable = true;
+    trainElement.dataset.trainId = train.id;
     trainElement.innerHTML = `
         <div class="train-content">
             <div class="train-name">${train.name}</div>
@@ -153,10 +297,25 @@ function createTrainElement(train) {
         </div>
     `;
     
+    // Add drag event listeners
+    trainElement.addEventListener('dragstart', (e) => {
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', train.id.toString());
+        trainElement.classList.add('dragging');
+    });
+    
+    trainElement.addEventListener('dragend', (e) => {
+        trainElement.classList.remove('dragging');
+        // Remove drag-over class from all groups
+        document.querySelectorAll('.train-group').forEach(group => {
+            group.classList.remove('drag-over');
+        });
+    });
+    
     // Add click listener to train element (not the action buttons)
     trainElement.addEventListener('click', (e) => {
-        // Only trigger if not clicking on action buttons
-        if (!e.target.closest('.train-actions')) {
+        // Only trigger if not clicking on action buttons and not dragging
+        if (!e.target.closest('.train-actions') && !trainElement.classList.contains('dragging')) {
             showTrainExecution(train);
         }
     });
@@ -841,6 +1000,9 @@ function deleteGroup() {
     hideDeleteGroupConfirmation();
     hideManageGroupModal();
 }
+
+// Make renderTrains globally available
+window.renderTrains = renderTrains;
 
 // Make group functions globally available
 window.showCreateGroupModal = showCreateGroupModal;
