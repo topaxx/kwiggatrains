@@ -473,21 +473,30 @@ function hideRenameModal() {
 }
 
 function updateRenameButton() {
-    const currentValue = renameInput.value.trim();
+    // Get fresh references to elements (they might have been cloned)
+    const input = document.getElementById('rename-input');
+    const saveBtn = document.getElementById('confirm-rename');
+    
+    if (!input || !saveBtn) {
+        console.warn('Rename input or save button not found');
+        return;
+    }
+    
+    const currentValue = input.value.trim();
     const originalValue = trainToRename ? trainToRename.name.trim() : '';
     const hasChanged = currentValue !== originalValue && currentValue.length > 0;
     
-    confirmRenameBtn.disabled = !hasChanged;
+    saveBtn.disabled = !hasChanged;
     
     // Update visual state
     if (hasChanged) {
-        confirmRenameBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-        confirmRenameBtn.style.color = 'white';
-        confirmRenameBtn.style.cursor = 'pointer';
+        saveBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        saveBtn.style.color = 'white';
+        saveBtn.style.cursor = 'pointer';
     } else {
-        confirmRenameBtn.style.background = '#e2e8f0';
-        confirmRenameBtn.style.color = '#a0aec0';
-        confirmRenameBtn.style.cursor = 'not-allowed';
+        saveBtn.style.background = '#e2e8f0';
+        saveBtn.style.color = '#a0aec0';
+        saveBtn.style.cursor = 'not-allowed';
     }
 }
 
