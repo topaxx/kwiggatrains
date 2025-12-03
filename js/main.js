@@ -4,6 +4,7 @@
 async function init() {
     initBellSound();
     initBowlSound();
+    initCompletionSound();
     
     // Start Auth0 initialization in background (non-blocking)
     initAuthentication().catch(error => {
@@ -16,6 +17,7 @@ async function init() {
     renderActivities();
     renderExercises();
     setupEventListeners();
+    setupSettingsListeners();
 }
 
 // Function to check if any modals are active and blocking interactions
@@ -433,6 +435,60 @@ function setupEventListeners() {
         
         completionDateInput.addEventListener('change', () => {
             updateAddTrainHistoryButtonState();
+        });
+    }
+}
+
+// Setup settings listeners
+function setupSettingsListeners() {
+    // Remove existing listeners by cloning elements
+    const completionSoundSelect = document.getElementById('completion-sound-select');
+    if (completionSoundSelect) {
+        // Clone to remove existing listeners
+        const newSelect = completionSoundSelect.cloneNode(true);
+        newSelect.value = completionSoundSelect.value;
+        completionSoundSelect.parentNode.replaceChild(newSelect, completionSoundSelect);
+        
+        newSelect.addEventListener('change', (e) => {
+            const selectedSound = e.target.value;
+            console.log('Completion sound changed to:', selectedSound);
+            // Play preview of the selected sound
+            if (typeof previewCompletionSound === 'function') {
+                previewCompletionSound(selectedSound);
+            } else {
+                console.error('previewCompletionSound function not found');
+            }
+            // Update and save the selection
+            if (typeof updateCompletionSound === 'function') {
+                updateCompletionSound(selectedSound);
+            } else {
+                console.error('updateCompletionSound function not found');
+            }
+        });
+    }
+    
+    const bellSoundSelect = document.getElementById('bell-sound-select');
+    if (bellSoundSelect) {
+        // Clone to remove existing listeners
+        const newSelect = bellSoundSelect.cloneNode(true);
+        newSelect.value = bellSoundSelect.value;
+        bellSoundSelect.parentNode.replaceChild(newSelect, bellSoundSelect);
+        
+        newSelect.addEventListener('change', (e) => {
+            const selectedSound = e.target.value;
+            console.log('Bell sound changed to:', selectedSound);
+            // Play preview of the selected sound
+            if (typeof previewBellSound === 'function') {
+                previewBellSound(selectedSound);
+            } else {
+                console.error('previewBellSound function not found');
+            }
+            // Update and save the selection
+            if (typeof updateBellSound === 'function') {
+                updateBellSound(selectedSound);
+            } else {
+                console.error('updateBellSound function not found');
+            }
         });
     }
 }

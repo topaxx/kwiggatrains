@@ -17,6 +17,18 @@ let currentTimeLeft = 0; // Track remaining time for pause/resume
 let completionLog = JSON.parse(localStorage.getItem('yogaCompletionLog') || '[]');
 let bellSound = null; // Audio object for bell sound
 let bowlSound = null; // Audio object for bowl sound
+let completionSound = null; // Audio object for completion sound
+// Get sound preferences from localStorage or use defaults
+let selectedCompletionSound = localStorage.getItem('completionSound') || 'bowlsound'; // Default to bowlsound
+let selectedBellSound = localStorage.getItem('bellSound') || 'bellsound'; // Default to bellsound
+
+// Save defaults to localStorage if they don't exist (first time user)
+if (!localStorage.getItem('completionSound')) {
+    localStorage.setItem('completionSound', selectedCompletionSound);
+}
+if (!localStorage.getItem('bellSound')) {
+    localStorage.setItem('bellSound', selectedBellSound);
+}
 
 // Authentication state
 let currentUser = null;

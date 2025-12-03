@@ -19,8 +19,26 @@ function showSettingsScreen() {
     settingsScreen.classList.add('active');
     // Update settings screen with current auth state
     updateSettingsAuthUI();
+    // Initialize settings values
+    initializeSettings();
+    // Setup settings listeners (in case they weren't set up yet or need to be refreshed)
+    setupSettingsListeners();
     // Scroll to top when loading settings screen
     window.scrollTo(0, 0);
+}
+
+function initializeSettings() {
+    // Set completion sound dropdown to saved value
+    const completionSoundSelect = document.getElementById('completion-sound-select');
+    if (completionSoundSelect) {
+        completionSoundSelect.value = selectedCompletionSound;
+    }
+    
+    // Set bell sound dropdown to saved value
+    const bellSoundSelect = document.getElementById('bell-sound-select');
+    if (bellSoundSelect) {
+        bellSoundSelect.value = selectedBellSound;
+    }
 }
 
 // Make showSettingsScreen globally available

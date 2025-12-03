@@ -208,8 +208,8 @@ function nextPose() {
         currentPoseIndex++;
         showCurrentPose(); // showCurrentPose will handle timer start for time-based items
     } else {
-        // Train completed - play bowl sound instead of bell
-        playBowlSound();
+        // Train completed - play completion sound
+        playCompletionSound();
         showCompletionModal();
     }
 }
@@ -220,12 +220,22 @@ function autoNextPose() {
     
     if (currentPoseIndex < currentExecutionTrain.poses.length - 1) {
         // Play bell sound when timer automatically ends (not the last pose)
-        playBellSound();
+        if (typeof playBellSound === 'function') {
+            playBellSound();
+        } else if (bellSound) {
+            // Fallback: play bell sound directly if function not available
+            bellSound.currentTime = 0;
+            bellSound.play().catch(error => {
+                console.log('Could not play bell sound:', error);
+            });
+        } else {
+            console.warn('Bell sound not initialized');
+        }
         currentPoseIndex++;
         showCurrentPose(); // showCurrentPose will handle timer start for time-based items
     } else {
-        // Train completed - play bowl sound instead of bell
-        playBowlSound();
+        // Train completed - play completion sound
+        playCompletionSound();
         showCompletionModal();
     }
 }
