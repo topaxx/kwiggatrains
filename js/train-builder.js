@@ -211,18 +211,41 @@ function renderTrains() {
             if (trainItem) {
                 const trainId = parseInt(trainItem.dataset.trainId);
                 if (trainId && !isNaN(trainId)) {
-                    // Check if train is in any group
-                    const isInGroup = trainGroups.some(group => 
-                        group.trainIds && group.trainIds.includes(trainId)
-                    );
-                    if (isInGroup) {
+                    // Find which group this train belongs to
+                    let sourceGroup = null;
+                    for (const group of trainGroups) {
+                        if (group.trainIds && group.trainIds.includes(trainId)) {
+                            sourceGroup = group;
+                            break;
+                        }
+                    }
+                    
+                    if (sourceGroup) {
                         const dz = document.getElementById('train-drop-zone');
                         if (dz) {
                             dz.style.display = 'block';
-                            // Move drop zone to after groups
-                            const firstStandalone = trainsContainer.querySelector('.train-item:not(.train-group-content .train-item)');
-                            if (firstStandalone) {
-                                trainsContainer.insertBefore(dz, firstStandalone);
+                            // Find the group element and place drop zone right after it
+                            const groupElement = trainsContainer.querySelector(`.train-group[data-group-id="${sourceGroup.id}"]`);
+                            if (groupElement) {
+                                // Remove drop zone from current position if it exists
+                                if (dz.parentNode) {
+                                    dz.parentNode.removeChild(dz);
+                                }
+                                // Insert drop zone right after the group
+                                if (groupElement.nextSibling) {
+                                    trainsContainer.insertBefore(dz, groupElement.nextSibling);
+                                } else {
+                                    // If group is last, append after it
+                                    trainsContainer.appendChild(dz);
+                                }
+                            } else {
+                                // Fallback: place after all groups
+                                const firstStandalone = trainsContainer.querySelector('.train-item:not(.train-group-content .train-item)');
+                                if (firstStandalone) {
+                                    trainsContainer.insertBefore(dz, firstStandalone);
+                                } else {
+                                    trainsContainer.appendChild(dz);
+                                }
                             }
                         }
                     }
@@ -751,6 +774,12 @@ function showCreateGroupModal() {
     }
     if (createGroupModal) {
         createGroupModal.classList.add('active');
+        // Focus on the input field after modal is shown
+        setTimeout(() => {
+            if (groupNameInput) {
+                groupNameInput.focus();
+            }
+        }, 100);
     }
 }
 
