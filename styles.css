@@ -548,25 +548,61 @@ body:has(#main-screen.active) .main-footer {
 }
 
 .history-button {
-    flex: 1;
+    flex: 0 0 auto;
     background: #ca83ca;
     color: white;
     border: none;
     border-radius: 12px;
-    padding: 8px 12px;
+    padding: 8px;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 0;
     transition: transform 0.2s ease;
     margin-top: 0;
+    width: auto;
+    height: auto;
+    aspect-ratio: 1 / 1;
 }
 
 .history-button:hover {
     /* Remove hover animation */
+}
+
+.history-button i {
+    font-size: 1.2rem;
+}
+
+.daily-activities-button {
+    flex: 0 0 auto;
+    background: #f6ad55;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    transition: transform 0.2s ease;
+    margin-top: 0;
+    width: auto;
+    height: auto;
+    aspect-ratio: 1 / 1;
+}
+
+.daily-activities-button:hover {
+    /* Remove hover animation */
+}
+
+.daily-activities-button i {
+    font-size: 1.2rem;
 }
 
 .settings-button {
@@ -1369,6 +1405,29 @@ body:has(#main-screen.active) .main-footer {
     /* Remove hover animation */
 }
 
+/* Buttons in manage group modal */
+#manage-group-modal .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+}
+
+#manage-group-modal .modal-buttons .delete-button,
+#manage-group-modal .modal-buttons .next-button {
+    flex: 1;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+#manage-group-modal .modal-buttons .delete-button i,
+#manage-group-modal .modal-buttons .next-button i {
+    font-size: 1rem;
+}
+
 /* Delete Error Modal */
 #delete-error-modal .modal-content {
     max-width: 400px;
@@ -1671,6 +1730,232 @@ body:has(#main-screen.active) .main-footer {
 /* History styling */
 .history-content {
     padding: 0 20px 10px 20px;
+}
+
+/* Daily Activities styling */
+.daily-activities-content {
+    padding: 0 20px 10px 20px;
+}
+
+.daily-activities-content h1 {
+    margin-bottom: 30px;
+    margin-top: 0;
+}
+
+.daily-activities-list {
+    margin-top: 0;
+    margin-bottom: 30px;
+    max-height: none;
+    overflow-y: visible;
+    padding-right: 5px;
+}
+
+.daily-activity-item {
+    background: #5d6fbf;
+    border-radius: 8px;
+    padding: 25px 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 10px rgba(240, 147, 251, 0.3);
+    border: none;
+    position: relative;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    cursor: pointer;
+}
+
+.daily-activity-checkbox {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    flex-shrink: 0;
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: rgba(226, 232, 240, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 4px;
+}
+
+.daily-activity-checkbox:checked {
+    background-color: rgba(255, 255, 255, 0.6);
+    border-color: rgba(255, 255, 255, 0.9);
+}
+
+.daily-activity-checkbox:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #5d6fbf;
+    font-size: 16px;
+    font-weight: 900;
+    line-height: 1;
+    display: block;
+}
+
+.daily-activity-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-left: 40px;
+}
+
+.daily-activity-name {
+    font-size: clamp(1.2rem, 2rem, 1.8rem);
+    font-weight: 800;
+    color: #e2e8f0;
+    margin-bottom: 16px;
+    margin-top: -14px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    line-height: 1.2;
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.5px;
+}
+
+.daily-activity-item:has(.daily-activity-checkbox:checked) .daily-activity-name {
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+.daily-activity-duration {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    opacity: 0.95;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.daily-activity-remove-btn {
+    background: #ec4259;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    pointer-events: all;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+}
+
+.daily-activity-remove-btn:hover {
+    background: #d4364d;
+    transform: scale(1.1);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+}
+
+.daily-activities-completed-message {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    border-radius: 12px;
+    padding: 25px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-align: center;
+}
+
+.completed-icon {
+    font-size: 2.5rem;
+    color: white;
+    font-weight: 900;
+    flex-shrink: 0;
+}
+
+.completed-text {
+    flex: 1;
+    text-align: left;
+}
+
+.completed-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.completed-date {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.daily-activities-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.add-train-daily-activities-button {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 15px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.add-train-daily-activities-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.add-train-daily-activities-button i {
+    font-size: 1rem;
+}
+
+/* Custom scrollbar for daily activities list */
+.daily-activities-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.daily-activities-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.daily-activities-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.daily-activities-list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
 }
 
 /* History Source Toggle */

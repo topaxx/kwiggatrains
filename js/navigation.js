@@ -27,6 +27,7 @@ function showSettingsScreen() {
     window.scrollTo(0, 0);
 }
 
+
 function initializeSettings() {
     // Set completion sound dropdown to saved value
     const completionSoundSelect = document.getElementById('completion-sound-select');

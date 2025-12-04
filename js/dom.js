@@ -7,6 +7,7 @@ const trainsList = document.getElementById('trains-list');
 const addTrainBtn = document.getElementById('add-train-btn');
 const settingsBtn = document.getElementById('settings-btn');
 const showHistoryBtn = document.getElementById('show-history-btn');
+const showDailyActivitiesBtn = document.getElementById('show-daily-activities-btn');
 const backFromBuilder = document.getElementById('back-from-builder');
 const backFromExecution = document.getElementById('back-from-execution');
 const backFromHistory = document.getElementById('back-from-history');
@@ -155,3 +156,14 @@ const manageGroupNameInput = document.getElementById('manage-group-name-input');
 const groupTrainsList = document.getElementById('group-trains-list');
 const addTrainToGroupDropdown = document.getElementById('add-train-to-group-dropdown');
 const deleteGroupBtn = document.getElementById('delete-group-btn');
+
+// Daily Activities DOM elements
+const dailyActivitiesScreen = document.getElementById('daily-activities-screen');
+const backFromDailyActivities = document.getElementById('back-from-daily-activities');
+const dailyActivitiesList = document.getElementById('daily-activities-list');
+const addTrainDailyActivitiesBtn = document.getElementById('add-train-daily-activities-btn');
+const addTrainDailyActivitiesModal = document.getElementById('add-train-daily-activities-modal');
+const closeAddTrainDailyActivitiesModalBtn = document.getElementById('close-add-train-daily-activities-modal');
+const cancelAddTrainDailyActivitiesBtn = document.getElementById('cancel-add-train-daily-activities');
+const confirmAddTrainDailyActivitiesBtn = document.getElementById('confirm-add-train-daily-activities');
+const selectTrainDailyActivitiesDropdown = document.getElementById('select-train-daily-activities-dropdown');

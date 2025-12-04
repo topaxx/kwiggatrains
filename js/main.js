@@ -161,6 +161,30 @@ function setupEventListeners() {
                 console.error('Error calling showHistoryScreen:', error);
             }
         }
+        
+        const dailyActivitiesButton = event.target.closest('#show-daily-activities-btn');
+        if (dailyActivitiesButton) {
+            console.log('Daily Activities button clicked via delegation');
+            console.log('showDailyActivitiesScreen function available:', typeof window.showDailyActivitiesScreen);
+            if (checkForActiveModals()) {
+                console.log('Modal is active, ignoring Daily Activities click');
+                return;
+            }
+            event.preventDefault();
+            event.stopPropagation();
+            window.scrollTo(0, 0);
+            try {
+                if (typeof window.showDailyActivitiesScreen === 'function') {
+                    window.showDailyActivitiesScreen();
+                    console.log('showDailyActivitiesScreen called successfully');
+                } else {
+                    showDailyActivitiesScreen();
+                    console.log('showDailyActivitiesScreen called via navigation');
+                }
+            } catch (error) {
+                console.error('Error calling showDailyActivitiesScreen:', error);
+            }
+        }
     });
     
     // Backup: Direct event listeners for footer buttons
@@ -205,6 +229,12 @@ function setupEventListeners() {
         backFromSettings.addEventListener('click', showMainScreen);
     } else {
         console.warn('backFromSettings not found in DOM');
+    }
+    
+    if (backFromDailyActivities) {
+        backFromDailyActivities.addEventListener('click', showMainScreen);
+    } else {
+        console.warn('backFromDailyActivities not found in DOM');
     }
     
     // History source toggle listeners will be set up when history screen is shown
@@ -361,10 +391,6 @@ function setupEventListeners() {
         closeManageGroupModalBtn.addEventListener('click', hideManageGroupModal);
     }
     
-    if (cancelManageGroupBtn) {
-        cancelManageGroupBtn.addEventListener('click', hideManageGroupModal);
-    }
-    
     if (saveManageGroupBtn) {
         saveManageGroupBtn.addEventListener('click', saveManageGroup);
     }
@@ -435,6 +461,38 @@ function setupEventListeners() {
         
         completionDateInput.addEventListener('change', () => {
             updateAddTrainHistoryButtonState();
+        });
+    }
+    
+    // Daily Activities event listeners
+    if (addTrainDailyActivitiesBtn) {
+        addTrainDailyActivitiesBtn.addEventListener('click', showAddTrainDailyActivitiesModal);
+    } else {
+        console.warn('addTrainDailyActivitiesBtn not found in DOM');
+    }
+    
+    if (closeAddTrainDailyActivitiesModalBtn) {
+        closeAddTrainDailyActivitiesModalBtn.addEventListener('click', hideAddTrainDailyActivitiesModal);
+    } else {
+        console.warn('closeAddTrainDailyActivitiesModalBtn not found in DOM');
+    }
+    
+    if (cancelAddTrainDailyActivitiesBtn) {
+        cancelAddTrainDailyActivitiesBtn.addEventListener('click', hideAddTrainDailyActivitiesModal);
+    } else {
+        console.warn('cancelAddTrainDailyActivitiesBtn not found in DOM');
+    }
+    
+    if (confirmAddTrainDailyActivitiesBtn) {
+        confirmAddTrainDailyActivitiesBtn.addEventListener('click', confirmAddTrainToDailyActivities);
+    } else {
+        console.warn('confirmAddTrainDailyActivitiesBtn not found in DOM');
+    }
+    
+    // Enable/disable confirm button based on selection for daily activities
+    if (selectTrainDailyActivitiesDropdown) {
+        selectTrainDailyActivitiesDropdown.addEventListener('change', () => {
+            updateAddTrainDailyActivitiesButtonState();
         });
     }
 }

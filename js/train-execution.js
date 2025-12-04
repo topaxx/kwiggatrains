@@ -320,6 +320,23 @@ function logTrainCompletion() {
     // Save to localStorage
     localStorage.setItem('yogaCompletionLog', JSON.stringify(completionLog));
     
+    // Update daily activities completion if train is in daily activities
+    const dailyActivities = JSON.parse(localStorage.getItem('kwiggaDailyActivities') || '[]');
+    if (dailyActivities.includes(currentExecutionTrain.id)) {
+        const today = new Date().toISOString().split('T')[0];
+        let dailyActivitiesCompletions = JSON.parse(localStorage.getItem('kwiggaDailyActivitiesCompletions') || '{}');
+        
+        if (!dailyActivitiesCompletions[today]) {
+            dailyActivitiesCompletions[today] = [];
+        }
+        
+        if (!dailyActivitiesCompletions[today].includes(currentExecutionTrain.id)) {
+            dailyActivitiesCompletions[today].push(currentExecutionTrain.id);
+            localStorage.setItem('kwiggaDailyActivitiesCompletions', JSON.stringify(dailyActivitiesCompletions));
+            console.log('Daily activity completion updated for train:', currentExecutionTrain.id);
+        }
+    }
+    
     // Log to database if user is authenticated
     if (isAuthenticated && currentUser) {
         const detailedExercises = currentExecutionTrain ? currentExecutionTrain.poses : [];
