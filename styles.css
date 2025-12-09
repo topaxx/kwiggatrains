@@ -40,6 +40,45 @@ body {
     min-height: calc(100vh - 155px); /* Account for header + footer */
 }
 
+/* Main screen header with Add Train and Add Group buttons */
+.main-screen-header {
+    padding: 15px 0;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.main-screen-header .add-button {
+    flex: 1;
+    padding: 12px 20px;
+    font-size: 1rem;
+}
+
+.main-screen-header .create-group-button {
+    flex: 1;
+    padding: 12px 20px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Daily activities screen needs space for footer */
+#daily-activities-screen {
+    min-height: calc(100vh - 155px); /* Account for header + footer */
+}
+
+/* Settings screen needs space for footer */
+#settings-screen {
+    min-height: calc(100vh - 155px); /* Account for header + footer */
+}
+
+/* History screen needs space for footer */
+#history-screen {
+    min-height: calc(100vh - 155px); /* Account for header + footer */
+}
+
 .screen.active {
     display: block;
 }
@@ -181,13 +220,13 @@ body:has(.modal.active) .control-button {
     color: #667eea;
 }
 
-.create-group-button {
-    flex: 0 0 auto;
+.home-button {
+    flex: 1;
     background: #667eea;
     color: white;
     border: none;
     border-radius: 12px;
-    padding: 8px;
+    padding: 6px;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
@@ -197,9 +236,26 @@ body:has(.modal.active) .control-button {
     gap: 0;
     transition: transform 0.2s ease;
     margin-top: 0;
-    width: auto;
-    height: auto;
-    aspect-ratio: 1 / 1;
+    height: 45px;
+    max-width: 100%;
+}
+
+.home-button:hover {
+    /* Remove hover animation */
+}
+
+.home-button i {
+    font-size: 1rem;
+}
+
+.create-group-button {
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease;
 }
 
 .create-group-button:hover {
@@ -207,7 +263,7 @@ body:has(.modal.active) .control-button {
 }
 
 .create-group-button i {
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
 /* Train group styling */
@@ -394,13 +450,20 @@ body:has(.modal.active) .control-button {
     z-index: 1000;
     display: none; /* Hidden by default */
     flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     gap: 10px;
     height: 75px;
 }
 
-/* Show footer only when main screen is active */
-body:has(#main-screen.active) .main-footer {
+/* Show footer on all screens except train execution */
+body:has(.screen.active) .main-footer {
     display: flex;
+}
+
+/* Hide footer when train execution is active */
+body:has(#train-execution.active) .main-footer {
+    display: none;
 }
 
 .train-item {
@@ -548,12 +611,12 @@ body:has(#main-screen.active) .main-footer {
 }
 
 .history-button {
-    flex: 0 0 auto;
+    flex: 1;
     background: #ca83ca;
     color: white;
     border: none;
     border-radius: 12px;
-    padding: 8px;
+    padding: 6px;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
@@ -563,9 +626,8 @@ body:has(#main-screen.active) .main-footer {
     gap: 0;
     transition: transform 0.2s ease;
     margin-top: 0;
-    width: auto;
-    height: auto;
-    aspect-ratio: 1 / 1;
+    height: 45px;
+    max-width: 100%;
 }
 
 .history-button:hover {
@@ -573,16 +635,16 @@ body:has(#main-screen.active) .main-footer {
 }
 
 .history-button i {
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
 .daily-activities-button {
-    flex: 0 0 auto;
+    flex: 1;
     background: #f6ad55;
     color: white;
     border: none;
     border-radius: 12px;
-    padding: 8px;
+    padding: 6px;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
@@ -592,9 +654,8 @@ body:has(#main-screen.active) .main-footer {
     gap: 0;
     transition: transform 0.2s ease;
     margin-top: 0;
-    width: auto;
-    height: auto;
-    aspect-ratio: 1 / 1;
+    height: 45px;
+    max-width: 100%;
 }
 
 .daily-activities-button:hover {
@@ -602,16 +663,16 @@ body:has(#main-screen.active) .main-footer {
 }
 
 .daily-activities-button i {
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
 .settings-button {
-    flex: 0 0 auto;
+    flex: 1;
     background: #4a5568;
     color: white;
     border: none;
     border-radius: 12px;
-    padding: 8px;
+    padding: 6px;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
@@ -621,13 +682,16 @@ body:has(#main-screen.active) .main-footer {
     gap: 0;
     transition: transform 0.2s ease;
     margin-top: 0;
-    width: auto;
-    height: auto;
-    aspect-ratio: 1 / 1;
+    height: 45px;
+    max-width: 100%;
 }
 
 .settings-button:hover {
     /* Remove hover animation */
+}
+
+.settings-button i {
+    font-size: 1rem;
 }
 
 /* Train Builder styling */

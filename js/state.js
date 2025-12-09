@@ -23,6 +23,8 @@ let completionSound = null; // Audio object for completion sound
 // Get sound preferences from localStorage or use defaults
 let selectedCompletionSound = localStorage.getItem('completionSound') || 'bowlsound'; // Default to bowlsound
 let selectedBellSound = localStorage.getItem('bellSound') || 'bellsound'; // Default to bellsound
+// Get start screen preference from localStorage or use default
+let selectedStartScreen = localStorage.getItem('startScreen') || 'main'; // Default to main (list of trains)
 
 // Save defaults to localStorage if they don't exist (first time user)
 if (!localStorage.getItem('completionSound')) {
@@ -30,6 +32,9 @@ if (!localStorage.getItem('completionSound')) {
 }
 if (!localStorage.getItem('bellSound')) {
     localStorage.setItem('bellSound', selectedBellSound);
+}
+if (!localStorage.getItem('startScreen')) {
+    localStorage.setItem('startScreen', selectedStartScreen);
 }
 
 // Authentication state

@@ -19,6 +19,14 @@
         
         <!-- Main Screen - Train List -->
         <div id="main-screen" class="screen active">
+            <div class="main-screen-header">
+                <button id="add-train-btn" class="add-button">
+                    シ Add Train
+                </button>
+                <button id="create-group-btn" class="create-group-button">
+                    <i class="fas fa-folder-plus"></i> Add Group
+                </button>
+            </div>
             <div id="trains-loading" class="trains-loading" style="display: none;">
                 <i class="fa-solid fa-spinner fa-spin"></i>
                 <p>Loading trains...</p>
@@ -599,6 +607,25 @@
                 
                 <div class="settings-section">
                     <div class="settings-section-header">
+                        <h3>App Settings</h3>
+                    </div>
+                    <div class="settings-item">
+                        <div class="form-group">
+                            <label for="start-screen-select">
+                                <p style="font-size: 0.85rem; color: #718096; margin-top: 8px;">
+                                    Select which screen to show when the app starts
+                                </p>
+                            </label>
+                            <select id="start-screen-select" class="train-select-dropdown">
+                                <option value="main">List of Trains</option>
+                                <option value="daily">Daily Activities</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <div class="settings-section-header">
                         <h3>Sound Settings</h3>
                     </div>
                     <div class="settings-item">
@@ -702,11 +729,8 @@
 
         <!-- Global Footer -->
         <footer class="main-footer">
-            <button id="add-train-btn" class="add-button">
-                シ Add Train
-            </button>
-            <button id="create-group-btn" class="create-group-button">
-                <i class="fas fa-folder-plus"></i>
+            <button id="home-btn" class="home-button">
+                <i class="fas fa-home"></i>
             </button>
             <button id="show-daily-activities-btn" class="daily-activities-button">
                 <i class="fas fa-calendar-check"></i>

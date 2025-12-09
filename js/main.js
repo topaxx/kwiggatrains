@@ -18,6 +18,21 @@ async function init() {
     renderExercises();
     setupEventListeners();
     setupSettingsListeners();
+    
+    // Show the selected start screen
+    if (selectedStartScreen === 'daily') {
+        // Show daily activities screen
+        if (typeof showDailyActivitiesScreen === 'function' || typeof window.showDailyActivitiesScreen === 'function') {
+            const showDaily = showDailyActivitiesScreen || window.showDailyActivitiesScreen;
+            showDaily();
+        } else {
+            // Fallback to main screen if function not available
+            showMainScreen();
+        }
+    } else {
+        // Default to main screen (list of trains)
+        showMainScreen();
+    }
 }
 
 // Function to check if any modals are active and blocking interactions
@@ -53,6 +68,22 @@ function setupEventListeners() {
         window.scrollTo(0, 0);
         showTrainBuilder();
     });
+    
+    if (homeBtn) {
+        homeBtn.addEventListener('click', (event) => {
+            console.log('Home button clicked');
+            if (checkForActiveModals()) {
+                console.log('Modal is active, ignoring Home click');
+                return;
+            }
+            event.preventDefault();
+            event.stopPropagation();
+            window.scrollTo(0, 0);
+            showMainScreen();
+        });
+    } else {
+        console.warn('homeBtn not found in DOM');
+    }
     backFromBuilder.addEventListener('click', showMainScreen);
     backFromExecution.addEventListener('click', showMainScreen);
     // Use event delegation for Save Train button to ensure it works
@@ -547,6 +578,21 @@ function setupSettingsListeners() {
             } else {
                 console.error('updateBellSound function not found');
             }
+        });
+    }
+    
+    const startScreenSelect = document.getElementById('start-screen-select');
+    if (startScreenSelect) {
+        // Clone to remove existing listeners
+        const newSelect = startScreenSelect.cloneNode(true);
+        newSelect.value = startScreenSelect.value;
+        startScreenSelect.parentNode.replaceChild(newSelect, startScreenSelect);
+        
+        newSelect.addEventListener('change', (e) => {
+            const selectedScreen = e.target.value;
+            console.log('Start screen changed to:', selectedScreen);
+            // Update and save the selection
+            updateStartScreen(selectedScreen);
         });
     }
 }

@@ -40,10 +40,23 @@ function initializeSettings() {
     if (bellSoundSelect) {
         bellSoundSelect.value = selectedBellSound;
     }
+    
+    // Set start screen dropdown to saved value
+    const startScreenSelect = document.getElementById('start-screen-select');
+    if (startScreenSelect) {
+        startScreenSelect.value = selectedStartScreen;
+    }
+}
+
+// Update start screen preference
+function updateStartScreen(screenName) {
+    selectedStartScreen = screenName;
+    localStorage.setItem('startScreen', screenName);
 }
 
 // Make showSettingsScreen globally available
 window.showSettingsScreen = showSettingsScreen;
+window.updateStartScreen = updateStartScreen;
 
 
 function showTrainBuilder() {

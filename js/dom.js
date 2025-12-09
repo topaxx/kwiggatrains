@@ -5,6 +5,7 @@ const trainExecution = document.getElementById('train-execution');
 const historyScreen = document.getElementById('history-screen');
 const trainsList = document.getElementById('trains-list');
 const addTrainBtn = document.getElementById('add-train-btn');
+const homeBtn = document.getElementById('home-btn');
 const settingsBtn = document.getElementById('settings-btn');
 const showHistoryBtn = document.getElementById('show-history-btn');
 const showDailyActivitiesBtn = document.getElementById('show-daily-activities-btn');

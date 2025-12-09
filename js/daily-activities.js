@@ -25,7 +25,11 @@ function renderDailyActivities() {
     // Get today's date string (YYYY-MM-DD)
     const today = new Date().toISOString().split('T')[0];
     
-    // Get today's completions
+    // Check if we need to reset completions based on the last daily activities completion log
+    resetDailyActivitiesIfNewDay();
+    
+    // Get today's completions (after potential reset)
+    dailyActivitiesCompletions = JSON.parse(localStorage.getItem('kwiggaDailyActivitiesCompletions') || '{}');
     const todayCompletions = dailyActivitiesCompletions[today] || [];
 
     // Load trains from localStorage
@@ -185,6 +189,59 @@ function handleDailyActivityClick(event, trainId) {
 
 // Make handleDailyActivityClick globally available
 window.handleDailyActivityClick = handleDailyActivityClick;
+
+// Reset daily activities completions if it's a new day since the last completion log
+function resetDailyActivitiesIfNewDay() {
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Load completion log to find the last daily activities completion
+    const completionLog = JSON.parse(localStorage.getItem('yogaCompletionLog') || '[]');
+    
+    // Find the most recent daily activities completion entry
+    const dailyActivityCompletions = completionLog
+        .filter(entry => entry.dailyActivitiesCompleted)
+        .sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
+    
+    // Load current completions
+    let completions = JSON.parse(localStorage.getItem('kwiggaDailyActivitiesCompletions') || '{}');
+    const todayCompletions = completions[today] || [];
+    
+    // Check if there's a completion log for today
+    const hasCompletionLogForToday = completionLog.some(entry => {
+        if (!entry.dailyActivitiesCompleted) return false;
+        const entryDate = new Date(entry.completedAt).toISOString().split('T')[0];
+        return entryDate === today;
+    });
+    
+    // If there's already a completion log for today, don't reset
+    if (hasCompletionLogForToday) {
+        return;
+    }
+    
+    // If there's no previous completion log, only reset if there are completions for today
+    if (dailyActivityCompletions.length === 0) {
+        if (todayCompletions.length > 0) {
+            completions[today] = [];
+            localStorage.setItem('kwiggaDailyActivitiesCompletions', JSON.stringify(completions));
+            console.log('Daily activities completions reset - no previous completion log');
+        }
+        return;
+    }
+    
+    // Get the date of the last completion log
+    const lastCompletion = dailyActivityCompletions[0];
+    const lastCompletionDate = new Date(lastCompletion.completedAt).toISOString().split('T')[0];
+    
+    // If it's a new day since the last completion, reset today's completions
+    if (lastCompletionDate < today) {
+        // New day - reset completions for today if they exist
+        if (todayCompletions.length > 0) {
+            completions[today] = [];
+            localStorage.setItem('kwiggaDailyActivitiesCompletions', JSON.stringify(completions));
+            console.log('Daily activities completions reset for new day (last completion was on', lastCompletionDate + ')');
+        }
+    }
+}
 
 // Remove train from daily activities
 function removeTrainFromDailyActivities(trainId) {
