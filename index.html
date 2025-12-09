@@ -228,12 +228,8 @@
 
         <!-- Daily Activities Screen -->
         <div id="daily-activities-screen" class="screen">
-            <div class="screen-header">
-                <button id="back-from-daily-activities" class="back-button"><i class="fas fa-arrow-left"></i></button>
-            </div>
-            
             <div class="daily-activities-content">
-                <h1>Daily Activities</h1>
+                <h1>Daily Trains</h1>
                 
                 <div id="daily-activities-list" class="daily-activities-list">
                     <!-- Daily activities will be added here dynamically -->
@@ -243,6 +239,26 @@
                     <button id="add-train-daily-activities-btn" class="add-train-daily-activities-button">
                         <i class="fas fa-plus"></i> Add Train
                     </button>
+                    <button id="reset-daily-activities-btn" class="reset-daily-activities-button">
+                        <i class="fas fa-redo"></i> Reset Daily Trains
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Remove Daily Activity Confirmation Modal -->
+        <div id="remove-daily-activity-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Delete daily activity?</h3>
+                    <button id="close-remove-daily-activity-modal" class="close-button">×</button>
+                </div>
+                <div class="modal-body">
+                    <p id="remove-daily-activity-confirmation-text"></p>
+                    <div class="modal-buttons">
+                        <button id="cancel-remove-daily-activity" class="cancel-button">Cancel</button>
+                        <button id="confirm-remove-daily-activity" class="delete-button">Delete</button>
+                    </div>
                 </div>
             </div>
         </div>

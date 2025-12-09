@@ -5,15 +5,61 @@ function showDailyActivitiesScreen() {
     hideAllScreens();
     dailyActivitiesScreen.classList.add('active');
     stopTrainExecution();
-    // Load data from localStorage
+    // Load data from localStorage - reload to get latest completion status
     dailyActivities = JSON.parse(localStorage.getItem('kwiggaDailyActivities') || '[]');
     dailyActivitiesCompletions = JSON.parse(localStorage.getItem('kwiggaDailyActivitiesCompletions') || '{}');
+    
+    console.log('Showing daily activities screen, completions:', dailyActivitiesCompletions);
+    
     renderDailyActivities();
+    setupDailyActivitiesEventDelegation();
     window.scrollTo(0, 0);
+}
+
+// Setup event delegation for daily activities remove buttons
+function setupDailyActivitiesEventDelegation() {
+    // Get reference to daily activities list
+    const list = document.getElementById('daily-activities-list');
+    if (list) {
+        // Add event delegation listener (using capture phase to ensure it fires)
+        list.addEventListener('click', handleDailyActivitiesListClick, true);
+    }
+}
+
+// Handle clicks on daily activities list (event delegation)
+function handleDailyActivitiesListClick(event) {
+    // Check if clicked on remove button or its icon
+    const removeBtn = event.target.closest('.daily-activity-remove-btn');
+    if (removeBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        // Get train ID from the parent item
+        const activityItem = removeBtn.closest('.daily-activity-item');
+        if (activityItem) {
+            const trainId = activityItem.getAttribute('data-train-id');
+            if (trainId) {
+                const trainIdNum = typeof trainId === 'string' ? parseInt(trainId) : trainId;
+                console.log('Remove button clicked for train ID:', trainIdNum);
+                
+                // Show confirmation modal
+                if (typeof window.showRemoveDailyActivityConfirmation === 'function') {
+                    window.showRemoveDailyActivityConfirmation(trainIdNum);
+                } else if (typeof showRemoveDailyActivityConfirmation === 'function') {
+                    showRemoveDailyActivityConfirmation(trainIdNum);
+                } else {
+                    console.error('showRemoveDailyActivityConfirmation function not available');
+                }
+                return;
+            }
+        }
+    }
 }
 
 // Make showDailyActivitiesScreen globally available
 window.showDailyActivitiesScreen = showDailyActivitiesScreen;
+// Make renderDailyActivities globally available
+window.renderDailyActivities = renderDailyActivities;
 
 // Render daily activities list
 function renderDailyActivities() {
@@ -25,12 +71,31 @@ function renderDailyActivities() {
     // Get today's date string (YYYY-MM-DD)
     const today = new Date().toISOString().split('T')[0];
     
-    // Check if we need to reset completions based on the last daily activities completion log
-    resetDailyActivitiesIfNewDay();
+    // Get today's completions FIRST before reset check to preserve any just-completed trains
+    dailyActivitiesCompletions = JSON.parse(localStorage.getItem('kwiggaDailyActivitiesCompletions') || '{}');
+    const todayCompletionsBeforeReset = dailyActivitiesCompletions[today] || [];
     
-    // Get today's completions (after potential reset)
+    // Check if we need to reset completions based on the last daily activities completion log
+    // BUT only if we're not coming back from a train completion (check completion log for recent entries)
+    const completionLog = JSON.parse(localStorage.getItem('yogaCompletionLog') || '[]');
+    const recentCompletions = completionLog.filter(entry => {
+        const entryDate = new Date(entry.completedAt).toISOString().split('T')[0];
+        return entryDate === today;
+    });
+    
+    // Only reset if there are no recent completions today (to avoid resetting right after completing a train)
+    // Also check if there are completions in todayCompletionsBeforeReset - if so, don't reset
+    if (recentCompletions.length === 0 && todayCompletionsBeforeReset.length === 0) {
+        resetDailyActivitiesIfNewDay();
+    } else {
+        console.log('Skipping reset - recent completions found for today:', recentCompletions.length, 'or completions already exist:', todayCompletionsBeforeReset.length);
+    }
+    
+    // Get today's completions (after potential reset) - reload from localStorage to ensure latest data
     dailyActivitiesCompletions = JSON.parse(localStorage.getItem('kwiggaDailyActivitiesCompletions') || '{}');
     const todayCompletions = dailyActivitiesCompletions[today] || [];
+    
+    console.log('Rendering daily activities, today:', today, 'completions before reset:', todayCompletionsBeforeReset, 'completions after reset:', todayCompletions);
 
     // Load trains from localStorage
     trains = JSON.parse(localStorage.getItem('kwiggaTrains') || '[]');
@@ -82,8 +147,17 @@ function renderDailyActivities() {
             return;
         }
 
-        // Check if this train is completed today
-        const isCompleted = todayCompletions.includes(trainId);
+        // Check if this train is completed today (compare as numbers for consistency)
+        const trainIdNum = typeof trainId === 'string' ? parseInt(trainId) : trainId;
+        const trainIdFromTrain = typeof train.id === 'string' ? parseInt(train.id) : train.id;
+        
+        // Use train.id directly since we're already working with the train object
+        const isCompleted = todayCompletions.some(id => {
+            const numId = typeof id === 'string' ? parseInt(id) : id;
+            return numId === trainIdFromTrain;
+        });
+        
+        console.log('Train:', train.name, 'train.id:', train.id, 'trainIdFromTrain:', trainIdFromTrain, 'isCompleted:', isCompleted, 'todayCompletions:', todayCompletions);
         
         // Calculate train stats
         let totalTime = 0;
@@ -119,13 +193,13 @@ function renderDailyActivities() {
                 <input type="checkbox" 
                        class="daily-activity-checkbox" 
                        data-train-id="${train.id}"
-                       ${isCompleted ? 'checked' : ''}
+                       ${isCompleted ? 'checked="checked"' : ''}
                        onchange="toggleDailyActivityCompletion(${train.id})">
                 <div class="daily-activity-content">
                     <div class="daily-activity-name">${train.name}</div>
                     <div class="daily-activity-duration">${displayText}</div>
                 </div>
-                <button class="daily-activity-remove-btn" onclick="event.stopPropagation(); removeTrainFromDailyActivities(${train.id})" title="Remove from daily activities">
+                <button class="daily-activity-remove-btn" title="Remove from daily activities">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
@@ -179,16 +253,47 @@ function handleDailyActivityClick(event, trainId) {
         return;
     }
     
-    // Toggle the checkbox
-    const checkbox = document.querySelector(`.daily-activity-checkbox[data-train-id="${trainId}"]`);
-    if (checkbox) {
-        checkbox.checked = !checkbox.checked;
-        toggleDailyActivityCompletion(trainId);
+    // Start train execution - load trains from localStorage to ensure we have the latest data
+    const allTrains = JSON.parse(localStorage.getItem('kwiggaTrains') || '[]');
+    const train = allTrains.find(t => t.id === trainId);
+    if (train) {
+        // Check if showTrainExecution is available (from train-execution.js)
+        // Pass 'daily' as the fromScreen parameter to indicate we're starting from daily activities
+        if (typeof showTrainExecution === 'function') {
+            showTrainExecution(train, 'daily');
+        } else if (typeof window.showTrainExecution === 'function') {
+            window.showTrainExecution(train, 'daily');
+        } else {
+            console.error('showTrainExecution function not available');
+        }
+    } else {
+        console.error('Train not found with id:', trainId);
     }
 }
 
 // Make handleDailyActivityClick globally available
 window.handleDailyActivityClick = handleDailyActivityClick;
+
+// Reset daily activities completions for today
+function resetDailyActivities() {
+    const today = new Date().toISOString().split('T')[0];
+    let completions = JSON.parse(localStorage.getItem('kwiggaDailyActivitiesCompletions') || '{}');
+    
+    // Reset today's completions
+    completions[today] = [];
+    localStorage.setItem('kwiggaDailyActivitiesCompletions', JSON.stringify(completions));
+    
+    // Update global variable
+    dailyActivitiesCompletions = completions;
+    
+    // Re-render to show updated checkboxes
+    renderDailyActivities();
+    
+    console.log('Daily activities reset for today:', today);
+}
+
+// Make resetDailyActivities globally available
+window.resetDailyActivities = resetDailyActivities;
 
 // Reset daily activities completions if it's a new day since the last completion log
 function resetDailyActivitiesIfNewDay() {
@@ -218,12 +323,23 @@ function resetDailyActivitiesIfNewDay() {
         return;
     }
     
-    // If there's no previous completion log, only reset if there are completions for today
+    // If there's no previous completion log, check if there are any regular train completions for today
+    // If there are, don't reset (user might have just completed a train)
+    const todayRegularCompletions = completionLog.filter(entry => {
+        if (entry.dailyActivitiesCompleted) return false; // Skip daily activities completions
+        const entryDate = new Date(entry.completedAt).toISOString().split('T')[0];
+        return entryDate === today;
+    });
+    
     if (dailyActivityCompletions.length === 0) {
-        if (todayCompletions.length > 0) {
+        // Only reset if there are completions for today AND no regular completions today
+        // This prevents resetting right after completing a train
+        if (todayCompletions.length > 0 && todayRegularCompletions.length === 0) {
             completions[today] = [];
             localStorage.setItem('kwiggaDailyActivitiesCompletions', JSON.stringify(completions));
-            console.log('Daily activities completions reset - no previous completion log');
+            console.log('Daily activities completions reset - no previous completion log and no regular completions today');
+        } else if (todayCompletions.length > 0 && todayRegularCompletions.length > 0) {
+            console.log('Keeping completions - regular train completions found for today:', todayRegularCompletions.length);
         }
         return;
     }
@@ -243,15 +359,77 @@ function resetDailyActivitiesIfNewDay() {
     }
 }
 
-// Remove train from daily activities
-function removeTrainFromDailyActivities(trainId) {
-    dailyActivities = dailyActivities.filter(id => id !== trainId);
-    localStorage.setItem('kwiggaDailyActivities', JSON.stringify(dailyActivities));
-    renderDailyActivities();
+// Show confirmation modal before removing train from daily activities
+function showRemoveDailyActivityConfirmation(trainId) {
+    console.log('showRemoveDailyActivityConfirmation called with trainId:', trainId);
+    
+    // Load trains to get the train name
+    const allTrains = JSON.parse(localStorage.getItem('kwiggaTrains') || '[]');
+    const train = allTrains.find(t => {
+        const trainIdNum = typeof t.id === 'string' ? parseInt(t.id) : t.id;
+        const searchIdNum = typeof trainId === 'string' ? parseInt(trainId) : trainId;
+        return trainIdNum === searchIdNum;
+    });
+    
+    if (train) {
+        // Store the train ID to remove
+        window.trainToRemoveFromDaily = trainId;
+        
+        // Update confirmation text - just show the train name
+        const confirmationText = document.getElementById('remove-daily-activity-confirmation-text');
+        if (confirmationText) {
+            confirmationText.innerHTML = `<strong>${train.name}</strong>`;
+        } else {
+            console.error('remove-daily-activity-confirmation-text element not found');
+        }
+        
+        // Show modal
+        const modal = document.getElementById('remove-daily-activity-modal');
+        if (modal) {
+            modal.classList.add('active');
+            console.log('Modal shown');
+        } else {
+            console.error('remove-daily-activity-modal element not found');
+        }
+    } else {
+        console.error('Train not found with id:', trainId);
+    }
 }
 
-// Make removeTrainFromDailyActivities globally available
-window.removeTrainFromDailyActivities = removeTrainFromDailyActivities;
+// Hide remove daily activity confirmation modal
+function hideRemoveDailyActivityModal() {
+    const modal = document.getElementById('remove-daily-activity-modal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+    window.trainToRemoveFromDaily = null;
+}
+
+// Remove train from daily activities (called after confirmation)
+function removeTrainFromDailyActivitiesInternal(trainId) {
+    console.log('Removing train from daily activities:', trainId);
+    // Convert IDs to numbers for consistent comparison
+    const trainIdNum = typeof trainId === 'string' ? parseInt(trainId) : trainId;
+    dailyActivities = dailyActivities.filter(id => {
+        const idNum = typeof id === 'string' ? parseInt(id) : id;
+        return idNum !== trainIdNum;
+    });
+    localStorage.setItem('kwiggaDailyActivities', JSON.stringify(dailyActivities));
+    renderDailyActivities();
+    hideRemoveDailyActivityModal();
+}
+
+// Confirm remove daily activity
+function confirmRemoveDailyActivity() {
+    if (window.trainToRemoveFromDaily !== null && window.trainToRemoveFromDaily !== undefined) {
+        removeTrainFromDailyActivitiesInternal(window.trainToRemoveFromDaily);
+    }
+}
+
+// Make functions globally available
+window.showRemoveDailyActivityConfirmation = showRemoveDailyActivityConfirmation;
+window.hideRemoveDailyActivityModal = hideRemoveDailyActivityModal;
+window.confirmRemoveDailyActivity = confirmRemoveDailyActivity;
 
 // Show add train modal
 function showAddTrainDailyActivitiesModal() {

@@ -339,7 +339,7 @@ function createTrainElement(train) {
     trainElement.addEventListener('click', (e) => {
         // Only trigger if not clicking on action buttons and not dragging
         if (!e.target.closest('.train-actions') && !trainElement.classList.contains('dragging')) {
-            showTrainExecution(train);
+            showTrainExecution(train, 'main');
         }
     });
     

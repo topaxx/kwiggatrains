@@ -502,6 +502,31 @@ function setupEventListeners() {
         console.warn('addTrainDailyActivitiesBtn not found in DOM');
     }
     
+    if (resetDailyActivitiesBtn) {
+        resetDailyActivitiesBtn.addEventListener('click', resetDailyActivities);
+    } else {
+        console.warn('resetDailyActivitiesBtn not found in DOM');
+    }
+    
+    // Remove daily activity confirmation modal event listeners
+    if (closeRemoveDailyActivityModalBtn) {
+        closeRemoveDailyActivityModalBtn.addEventListener('click', hideRemoveDailyActivityModal);
+    } else {
+        console.warn('closeRemoveDailyActivityModalBtn not found in DOM');
+    }
+    
+    if (cancelRemoveDailyActivityBtn) {
+        cancelRemoveDailyActivityBtn.addEventListener('click', hideRemoveDailyActivityModal);
+    } else {
+        console.warn('cancelRemoveDailyActivityBtn not found in DOM');
+    }
+    
+    if (confirmRemoveDailyActivityBtn) {
+        confirmRemoveDailyActivityBtn.addEventListener('click', confirmRemoveDailyActivity);
+    } else {
+        console.warn('confirmRemoveDailyActivityBtn not found in DOM');
+    }
+    
     if (closeAddTrainDailyActivitiesModalBtn) {
         closeAddTrainDailyActivitiesModalBtn.addEventListener('click', hideAddTrainDailyActivitiesModal);
     } else {

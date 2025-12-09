@@ -17,6 +17,7 @@ let currentTimeLeft = 0; // Track remaining time for pause/resume
 let completionLog = JSON.parse(localStorage.getItem('yogaCompletionLog') || '[]');
 let dailyActivities = JSON.parse(localStorage.getItem('kwiggaDailyActivities') || '[]'); // List of train IDs for daily activities
 let dailyActivitiesCompletions = JSON.parse(localStorage.getItem('kwiggaDailyActivitiesCompletions') || '{}'); // Track completions by date { "YYYY-MM-DD": [trainId1, trainId2, ...] }
+let previousScreenBeforeExecution = null; // Track which screen was active before starting train execution
 let bellSound = null; // Audio object for bell sound
 let bowlSound = null; // Audio object for bowl sound
 let completionSound = null; // Audio object for completion sound

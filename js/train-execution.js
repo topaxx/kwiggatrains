@@ -1,6 +1,27 @@
 // Train Execution Functions
 
-function showTrainExecution(train) {
+function showTrainExecution(train, fromScreen = null) {
+    // Store which screen was active before starting execution
+    // If fromScreen is provided, use it; otherwise detect from DOM
+    if (fromScreen) {
+        previousScreenBeforeExecution = fromScreen;
+    } else {
+        const activeScreen = document.querySelector('.screen.active');
+        if (activeScreen) {
+            if (activeScreen.id === 'daily-activities-screen') {
+                previousScreenBeforeExecution = 'daily';
+            } else if (activeScreen.id === 'main-screen') {
+                previousScreenBeforeExecution = 'main';
+            } else {
+                previousScreenBeforeExecution = 'main'; // Default to main
+            }
+        } else {
+            previousScreenBeforeExecution = 'main'; // Default to main if no active screen
+        }
+    }
+    
+    console.log('Starting train execution from screen:', previousScreenBeforeExecution);
+    
     hideAllScreens();
     trainExecution.classList.add('active');
     currentExecutionTrain = train;
@@ -265,7 +286,63 @@ function hideCompletionModal() {
     completionModal.classList.remove('active');
     // Stop train execution and all sounds
     stopTrainExecution();
-    showMainScreen();
+    
+    console.log('Hiding completion modal, previous screen was:', previousScreenBeforeExecution);
+    
+    // Verify completion was saved before navigating
+    if (previousScreenBeforeExecution === 'daily' && currentExecutionTrain) {
+        const today = new Date().toISOString().split('T')[0];
+        const savedCompletions = JSON.parse(localStorage.getItem('kwiggaDailyActivitiesCompletions') || '{}');
+        const trainId = typeof currentExecutionTrain.id === 'string' ? parseInt(currentExecutionTrain.id) : currentExecutionTrain.id;
+        console.log('Checking saved completions for train:', trainId, 'today:', today, 'saved:', savedCompletions[today]);
+    }
+    
+    // Return to the screen that was active before starting the train
+    if (previousScreenBeforeExecution === 'daily') {
+        console.log('Returning to daily activities screen');
+        
+        // Verify completion was saved before navigating
+        if (currentExecutionTrain) {
+            const today = new Date().toISOString().split('T')[0];
+            const savedCompletions = JSON.parse(localStorage.getItem('kwiggaDailyActivitiesCompletions') || '{}');
+            const trainId = typeof currentExecutionTrain.id === 'string' ? parseInt(currentExecutionTrain.id) : currentExecutionTrain.id;
+            console.log('Before navigation - saved completions for today:', savedCompletions[today], 'train ID:', trainId);
+        }
+        
+        // Small delay to ensure localStorage is written
+        setTimeout(() => {
+            // Return to daily activities screen and refresh it to show updated checkbox
+            if (typeof window.showDailyActivitiesScreen === 'function') {
+                window.showDailyActivitiesScreen();
+                // Force a re-render after a short delay to ensure checkbox is updated
+                setTimeout(() => {
+                    if (typeof renderDailyActivities === 'function') {
+                        renderDailyActivities();
+                    } else if (typeof window.renderDailyActivities === 'function') {
+                        window.renderDailyActivities();
+                    }
+                }, 200);
+            } else if (typeof showDailyActivitiesScreen === 'function') {
+                showDailyActivitiesScreen();
+                setTimeout(() => {
+                    if (typeof renderDailyActivities === 'function') {
+                        renderDailyActivities();
+                    }
+                }, 200);
+            } else {
+                console.error('showDailyActivitiesScreen not available, falling back to main screen');
+                showMainScreen(); // Fallback to main screen
+            }
+        }, 100);
+    } else {
+        console.log('Returning to main screen');
+        // Return to main screen
+        showMainScreen();
+    }
+    
+    // Reset previous screen tracking
+    previousScreenBeforeExecution = null;
+    
     // Refresh completion log from localStorage in case it was updated
     completionLog = JSON.parse(localStorage.getItem('yogaCompletionLog') || '[]');
 }
@@ -322,7 +399,16 @@ function logTrainCompletion() {
     
     // Update daily activities completion if train is in daily activities
     const dailyActivities = JSON.parse(localStorage.getItem('kwiggaDailyActivities') || '[]');
-    if (dailyActivities.includes(currentExecutionTrain.id)) {
+    // Convert train ID to number for consistent comparison
+    const trainId = typeof currentExecutionTrain.id === 'string' ? parseInt(currentExecutionTrain.id) : currentExecutionTrain.id;
+    
+    // Check if train is in daily activities (compare as numbers)
+    const isInDailyActivities = dailyActivities.some(id => {
+        const numId = typeof id === 'string' ? parseInt(id) : id;
+        return numId === trainId;
+    });
+    
+    if (isInDailyActivities) {
         const today = new Date().toISOString().split('T')[0];
         let dailyActivitiesCompletions = JSON.parse(localStorage.getItem('kwiggaDailyActivitiesCompletions') || '{}');
         
@@ -330,11 +416,25 @@ function logTrainCompletion() {
             dailyActivitiesCompletions[today] = [];
         }
         
-        if (!dailyActivitiesCompletions[today].includes(currentExecutionTrain.id)) {
-            dailyActivitiesCompletions[today].push(currentExecutionTrain.id);
+        // Check if already completed (compare as numbers)
+        const alreadyCompleted = dailyActivitiesCompletions[today].some(id => {
+            const numId = typeof id === 'string' ? parseInt(id) : id;
+            return numId === trainId;
+        });
+        
+        if (!alreadyCompleted) {
+            dailyActivitiesCompletions[today].push(trainId);
             localStorage.setItem('kwiggaDailyActivitiesCompletions', JSON.stringify(dailyActivitiesCompletions));
-            console.log('Daily activity completion updated for train:', currentExecutionTrain.id);
+            console.log('Daily activity completion updated for train:', trainId, 'completions:', dailyActivitiesCompletions[today]);
+            console.log('Saved to localStorage, verifying...');
+            // Verify it was saved
+            const verify = JSON.parse(localStorage.getItem('kwiggaDailyActivitiesCompletions') || '{}');
+            console.log('Verification - saved completions:', verify[today]);
+        } else {
+            console.log('Train already marked as completed:', trainId);
         }
+    } else {
+        console.log('Train not in daily activities:', trainId, 'daily activities:', dailyActivities);
     }
     
     // Log to database if user is authenticated
@@ -345,5 +445,8 @@ function logTrainCompletion() {
     
     console.log('Completion logged successfully. Total entries:', completionLog.length);
 }
+
+// Make showTrainExecution globally available
+window.showTrainExecution = showTrainExecution;
 
 // Note: formatDuration function moved to navigation.js for better module organization
