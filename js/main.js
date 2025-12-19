@@ -2,6 +2,11 @@
 
 // Initialize app
 async function init() {
+    // Preload all audio files first to ensure they're cached locally
+    if (typeof preloadAllAudioFiles === 'function') {
+        preloadAllAudioFiles();
+    }
+    
     initBellSound();
     initBowlSound();
     initCompletionSound();

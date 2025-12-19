@@ -47,5 +47,12 @@ let auth0Client = null;
 const supabaseUrl = 'https://ujbesovzjszhxdncomdo.supabase.co'; // Replace with your Supabase URL
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqYmVzb3Z6anN6aHhkbmNvbWRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1MzU2NDYsImV4cCI6MjA3NjExMTY0Nn0.fLCooJ6HpBHJiE_JZArNq-1rjmF_8qJFWpItyk1i-eU'; // Replace with your Supabase anon key
 
-// Create client for database operations
-const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+// Create client for database operations (only if not already created)
+// Use var to make it globally available and avoid redeclaration errors
+var supabase;
+if (typeof window.supabaseClient === 'undefined') {
+    supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+    window.supabaseClient = supabase; // Store in window for global access
+} else {
+    supabase = window.supabaseClient; // Use existing instance
+}

@@ -1,8 +1,60 @@
 // Audio Management Functions
 
+// Preload all audio files to ensure they're cached locally
+function preloadAllAudioFiles() {
+    const audioFiles = [
+        'sounds/bellsound.mp3',
+        'sounds/bellsound2.wav',
+        'sounds/bellsound3.wav',
+        'sounds/bowlsound.mp3',
+        'sounds/bowlsound2.wav',
+        'sounds/bowlsound3.wav'
+    ];
+    
+    // Store references to prevent garbage collection
+    if (!window.preloadedAudioFiles) {
+        window.preloadedAudioFiles = [];
+    }
+    
+    // Preload all audio files - use fetch to download and cache, then create Audio objects
+    audioFiles.forEach(file => {
+        // First, fetch the file to download and cache it
+        fetch(file, { 
+            cache: 'force-cache',
+            method: 'GET'
+        }).then(response => {
+            if (response.ok) {
+                // Create Audio object with original file path (browser will use cached version)
+                const audio = new Audio(file);
+                audio.preload = 'auto';
+                audio.volume = 0; // Silent preload
+                
+                // Force browser to start loading by calling load()
+                audio.load();
+                
+                // Store reference to prevent garbage collection
+                window.preloadedAudioFiles.push({ file, audio });
+                console.log(`✅ Preloading: ${file}`);
+            }
+        }).catch(error => {
+            console.warn(`⚠️ Could not preload ${file}:`, error);
+            // Fallback: create Audio object anyway (will try to load when needed)
+            const audio = new Audio(file);
+            audio.preload = 'auto';
+            audio.volume = 0;
+            audio.load();
+            window.preloadedAudioFiles.push({ file, audio });
+        });
+    });
+    
+    console.log('✅ Audio preloading started for offline use');
+}
+
 // Initialize bell sound based on user preference
 function initBellSound() {
-    const soundFile = getBellSoundFile(selectedBellSound);
+    // Check if selectedBellSound is available (from state.js)
+    const bellSoundName = typeof selectedBellSound !== 'undefined' ? selectedBellSound : 'bellsound';
+    const soundFile = getBellSoundFile(bellSoundName);
     if (soundFile) {
         bellSound = new Audio(soundFile);
         bellSound.preload = 'auto';
@@ -46,7 +98,9 @@ function initBowlSound() {
 
 // Initialize completion sound based on user preference
 function initCompletionSound() {
-    const soundFile = getCompletionSoundFile(selectedCompletionSound);
+    // Check if selectedCompletionSound is available (from state.js)
+    const completionSoundName = typeof selectedCompletionSound !== 'undefined' ? selectedCompletionSound : 'bowlsound';
+    const soundFile = getCompletionSoundFile(completionSoundName);
     if (soundFile) {
         completionSound = new Audio(soundFile);
         completionSound.preload = 'auto';
@@ -216,3 +270,6 @@ window.updateBellSound = updateBellSound;
 // Make preview functions globally available
 window.previewBellSound = previewBellSound;
 window.previewCompletionSound = previewCompletionSound;
+
+// Make preload function globally available
+window.preloadAllAudioFiles = preloadAllAudioFiles;
