@@ -453,9 +453,54 @@ function hideAddTrainDailyActivitiesModal() {
     updateAddTrainDailyActivitiesButtonState();
 }
 
-// Load trains into dropdown (excluding already added trains)
+// Calculate train stats (time/reps) for display
+function calculateTrainStats(train) {
+    let totalTime = 0;
+    let totalReps = 0;
+    let hasTimeItems = false;
+    let hasRepsItems = false;
+
+    // Check if train has poses array
+    if (train.poses && Array.isArray(train.poses) && train.poses.length > 0) {
+        train.poses.forEach(item => {
+            if (!item) return; // Skip null/undefined items
+            
+            const duration = item.duration || 0;
+            
+            // Use same logic as renderDailyActivities: check type === 'exercise' AND unit === 'reps'
+            // Also check if unit is 'reps' directly (for backwards compatibility)
+            if ((item.type === 'exercise' && item.unit === 'reps') || item.unit === 'reps') {
+                totalReps += duration;
+                hasRepsItems = true;
+            } else {
+                totalTime += duration;
+                hasTimeItems = true;
+            }
+        });
+    }
+
+    let displayText = '';
+    if (hasTimeItems && hasRepsItems) {
+        const minutes = Math.floor(totalTime / 60);
+        const seconds = totalTime % 60;
+        displayText = `${minutes}:${seconds.toString().padStart(2, '0')} + ${totalReps} reps`;
+    } else if (hasRepsItems) {
+        displayText = `${totalReps} reps`;
+    } else if (hasTimeItems) {
+        const minutes = Math.floor(totalTime / 60);
+        const seconds = totalTime % 60;
+        displayText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
+    return displayText;
+}
+
+// Load trains into dropdown (including already added trains - allows duplicates)
 function loadTrainsIntoDailyActivitiesDropdown() {
-    if (!selectTrainDailyActivitiesDropdown) return;
+    if (!selectTrainDailyActivitiesDropdown) {
+        console.error('selectTrainDailyActivitiesDropdown not found');
+        return;
+    }
     
     // Clear existing options
     selectTrainDailyActivitiesDropdown.innerHTML = '<option value="">-- Select a train --</option>';
@@ -463,25 +508,40 @@ function loadTrainsIntoDailyActivitiesDropdown() {
     // Load trains from localStorage
     const savedTrains = JSON.parse(localStorage.getItem('kwiggaTrains') || '[]');
     
-    // Filter out trains that are already in daily activities
-    const availableTrains = savedTrains.filter(train => !dailyActivities.includes(train.id));
+    console.log('Loading trains into dropdown. Total trains:', savedTrains.length);
+    console.log('Current daily activities:', dailyActivities);
     
-    if (availableTrains.length === 0) {
+    // Show ALL trains - NO filtering (allows adding same train multiple times)
+    if (savedTrains.length === 0) {
         const option = document.createElement('option');
         option.value = '';
-        option.textContent = 'No trains available or all trains already added';
+        option.textContent = 'No trains available';
         option.disabled = true;
         selectTrainDailyActivitiesDropdown.appendChild(option);
         return;
     }
     
-    // Add each train as an option
-    availableTrains.forEach(train => {
+    // Add each train as an option with time/reps info
+    savedTrains.forEach(train => {
         const option = document.createElement('option');
         option.value = train.id;
-        option.textContent = train.name || `Train #${train.id}`;
+        
+        // Calculate train stats
+        const statsText = calculateTrainStats(train);
+        
+        // Build display text with stats in brackets
+        let displayText = train.name || `Train #${train.id}`;
+        if (statsText && statsText.trim() !== '') {
+            displayText += ` (${statsText})`;
+        }
+        
+        option.textContent = displayText;
         selectTrainDailyActivitiesDropdown.appendChild(option);
+        
+        console.log(`Added train to dropdown: ${displayText}`, { trainId: train.id, statsText, poses: train.poses });
     });
+    
+    console.log('Dropdown populated with', savedTrains.length, 'trains');
 }
 
 // Confirm adding train to daily activities
@@ -493,14 +553,7 @@ function confirmAddTrainToDailyActivities() {
         return;
     }
 
-    // Check if train is already in daily activities
-    if (dailyActivities.includes(selectedTrainId)) {
-        console.warn('Train already in daily activities');
-        hideAddTrainDailyActivitiesModal();
-        return;
-    }
-
-    // Add train to daily activities
+    // Add train to daily activities (allows duplicates - same train can be added multiple times)
     dailyActivities.push(selectedTrainId);
     localStorage.setItem('kwiggaDailyActivities', JSON.stringify(dailyActivities));
 
